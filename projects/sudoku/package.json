@@ -1,0 +1,11 @@
+{
+  "name": "sudoku",
+  "version": "0.1.0",
+  "peerDependencies": {
+    "@angular/common": "^7.1.0",
+    "@angular/core": "^7.1.0",
+    "@ng-bootstrap/ng-bootstrap": "^4.0.1",
+    "bootstrap": "^4.2.1",
+    "font-awesome": "^4.7.0"
+  }
+}

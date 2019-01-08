@@ -1,0 +1,18 @@
+<div class="col-6 mw-100 center bg-white shadow-lg border rounded">
+	<div *ngIf="!board?.length" class="board-size d-flex align-items-center">
+		<span class="ml-auto mr-auto">
+			<i class="fa fa-refresh fa-5x fa-spin" aria-hidden="true"></i>
+		</span>
+	</div>
+	<span *ngIf="board?.length">
+		<div *ngFor="let row of [0, 1, 2];" class="row">
+			<sudoku-quadrant
+				*ngFor="let col of [1, 2, 3];"
+				class="quadrant-size"
+				[class.first-row]="row === 0"
+				[quadrant]="((row * 3) + col) - 1"
+				[board]="board"
+				[reveal]="reveal"></sudoku-quadrant>
+		</div>
+	</span>
+</div>
