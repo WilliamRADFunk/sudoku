@@ -1,5 +1,5 @@
 {
-  "compileOnSave": false,
+  "compileOnSave": true,
   "compilerOptions": {
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
@@ -20,10 +20,10 @@
     ],
     "paths": {
       "sudoku": [
-        "dist/sudoku"
+        "projects/sudoku/src"
       ],
       "sudoku/*": [
-        "dist/sudoku/*"
+        "projects/sudoku/src/*"
       ]
     }
   }
