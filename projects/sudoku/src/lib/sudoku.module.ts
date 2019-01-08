@@ -8,13 +8,13 @@ import { CellComponent } from './cell/cell.component';
 import { QuadrantComponent } from './quadrant/quadrant.component';
 
 @NgModule({
-  declarations: [
-    SudokuComponent,
-    CellComponent,
-    QuadrantComponent,
-    GameBoardComponent
-  ],
-  imports: [ CommonModule, SudokuRoutingModule ],
-  exports: [ SudokuComponent ]
+	declarations: [
+		SudokuComponent,
+		CellComponent,
+		QuadrantComponent,
+		GameBoardComponent
+	],
+	imports:  [CommonModule, SudokuRoutingModule ],
+	exports: [ SudokuComponent ]
 })
-export class SudokuModule { }
+export class SudokuModule {}

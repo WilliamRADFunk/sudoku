@@ -1,20 +1,20 @@
 .cell-size {
-    font-size: 2.5vw;
-    height: 4vw;
-    min-height: 4vw;
-    min-width: 4vw;
-    width: 4vw;
-  
-    &:nth-child(n) {
-    	border: 1px solid #DEE2E6;
-    }
-  
-    & .flags {
+	font-size: 2.5vw;
+	height: 4vw;
+	min-height: 4vw;
+	min-width: 4vw;
+	width: 4vw;
+
+	&:nth-child(n) {
+		border: 1px solid #DEE2E6;
+	}
+
+	& .flags {
 		color: #FF0000;
 		font-size: 1.15vw;
 		font-weight: lighter;
 		line-height: 1.15vw;
-  
+
 		& .flag {
 			position: absolute;
 		}
@@ -63,5 +63,5 @@
 			right: 0;
 			bottom: 0;
 		}
-    }
+	}
 }

@@ -13,8 +13,7 @@ describe('QuadrantComponent', () => {
 				QuadrantComponent,
 				CellComponent
 			]
-		})
-		.compileComponents();
+		}).compileComponents();
 	}));
 
 	beforeEach(() => {

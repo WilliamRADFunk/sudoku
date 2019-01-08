@@ -1,5 +1,4 @@
 import { Component, OnChanges, Input, SimpleChanges } from '@angular/core';
-import { BoardHandlerService } from '../services/board-handler.service';
 import { Cell } from '../models/cell';
 
 @Component({

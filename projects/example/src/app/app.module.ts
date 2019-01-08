@@ -6,15 +6,15 @@ import { AppComponent } from './app.component';
 import { SudokuModule } from 'sudoku';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
-  imports: [
-    BrowserModule,
-    NgbModule,
-    SudokuModule
-  ],
-  providers: [],
-  bootstrap: [AppComponent]
+	declarations: [
+		AppComponent
+	],
+	imports: [
+		BrowserModule,
+		NgbModule,
+		SudokuModule
+	],
+	providers: [],
+	bootstrap: [AppComponent]
 })
 export class AppModule { }

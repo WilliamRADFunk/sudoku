@@ -4,7 +4,7 @@ import { Cell } from './models/cell';
 import { Subscription } from 'rxjs';
 
 @Component({
-	selector: 'sudoku',
+	selector: 'su-do-ku',
 	templateUrl: './sudoku.component.html',
 	styleUrls: ['./sudoku.component.scss']
 })

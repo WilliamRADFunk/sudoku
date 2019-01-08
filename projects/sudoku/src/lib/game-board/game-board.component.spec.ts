@@ -15,8 +15,7 @@ describe('GameBoardComponent', () => {
 				QuadrantComponent,
 				CellComponent
 			]
-		})
-			.compileComponents();
+		}).compileComponents();
 	}));
 
 	beforeEach(() => {

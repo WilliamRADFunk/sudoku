@@ -3,8 +3,6 @@ import { Cell } from '../models/cell';
 import { BoardHandlerService } from '../services/board-handler.service';
 import { Subscription } from 'rxjs';
 
-let index = 0;
-
 @Component({
 	selector: 'sudoku-cell',
 	templateUrl: './cell.component.html',
