@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, Input, Optional } from '@angular/core';
 import { BoardHandlerService } from './services/board-handler.service';
 import { Cell } from './models/cell';
 import { Subscription } from 'rxjs';
@@ -11,7 +11,8 @@ import { Subscription } from 'rxjs';
 export class SudokuComponent implements OnDestroy, OnInit {
 	activeControl: number = 0;
 	activeControlMode: boolean = true;
-	board: Cell[][];
+    board: Cell[][];
+    @Input() isSolo?: boolean;
 	reveal: boolean = false;
 	subscriptions: Subscription[] = [];
 	title: string = 'sudoku';
