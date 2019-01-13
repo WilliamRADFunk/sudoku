@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, Input, Optional } from '@angular/core';
+import { Component, OnDestroy, OnInit, Input } from '@angular/core';
 import { BoardHandlerService } from './services/board-handler.service';
 import { Cell } from './models/cell';
 import { Subscription } from 'rxjs';
@@ -6,7 +6,8 @@ import { Subscription } from 'rxjs';
 @Component({
 	selector: 'su-do-ku',
 	templateUrl: './sudoku.component.html',
-	styleUrls: ['./sudoku.component.scss']
+	styleUrls: ['./sudoku.component.scss'],
+	providers: [BoardHandlerService]
 })
 export class SudokuComponent implements OnDestroy, OnInit {
 	activeControl: number = 0;

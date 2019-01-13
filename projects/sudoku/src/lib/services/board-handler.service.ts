@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+
 import { Cell } from '../models/cell';
-import { Subject, BehaviorSubject } from 'rxjs';
 
 const quadrantCenters = {
 	0: [1, 1],
@@ -40,9 +41,7 @@ const placements: [number, number][] = [
 
 const opts = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 const clueCutoff = 71;
-@Injectable({
-	providedIn: 'root'
-})
+@Injectable()
 export class BoardHandlerService {
 	private activeControlDigitLocal: number = 0;
 	private activeControlModeLocal: boolean = true;
