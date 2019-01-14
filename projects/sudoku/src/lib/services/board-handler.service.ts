@@ -41,7 +41,9 @@ const placements: [number, number][] = [
 
 const opts = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 const clueCutoff = 71;
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class BoardHandlerService {
 	private activeControlDigitLocal: number = 0;
 	private activeControlModeLocal: boolean = true;

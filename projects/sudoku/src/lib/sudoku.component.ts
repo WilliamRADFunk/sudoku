@@ -6,8 +6,7 @@ import { Subscription } from 'rxjs';
 @Component({
 	selector: 'su-do-ku',
 	templateUrl: './sudoku.component.html',
-	styleUrls: ['./sudoku.component.scss'],
-	providers: [BoardHandlerService]
+	styleUrls: ['./sudoku.component.scss']
 })
 export class SudokuComponent implements OnDestroy, OnInit {
 	activeControl: number = 0;
