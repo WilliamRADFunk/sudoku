@@ -1,3 +1,16 @@
-<su-do-ku [isDev]=true [isSolo]="false" [inputPrimers]="[1, 2, 3, 4, 5, 6, 7, 8, 9]"></su-do-ku>
-<!-- <su-do-ku [isDev]=true [isSolo]="false" [inputPrimers]="[1, 2, 3, 4, 5, 6, 7, 8, 9]"></su-do-ku>
-<su-do-ku [isDev]=true [isSolo]="false" [inputPrimers]="[1, 2, 3, 4, 5, 6, 7, 8, 9]"></su-do-ku> -->
+<su-do-ku
+    [isDev]=true
+    [isSolo]="false"
+    (boardUpdate)="boardChanged($event)"></su-do-ku>
+
+<div *ngIf="topLvlBoard">
+    <su-do-ku [isDev]=true [isSolo]="false" [inputPrimers]="getPrimers(0)"></su-do-ku>
+    <su-do-ku [isDev]=true [isSolo]="false" [inputPrimers]="getPrimers(1)"></su-do-ku>
+    <su-do-ku [isDev]=true [isSolo]="false" [inputPrimers]="getPrimers(2)"></su-do-ku>
+    <su-do-ku [isDev]=true [isSolo]="false" [inputPrimers]="getPrimers(3)"></su-do-ku>
+    <su-do-ku [isDev]=true [isSolo]="false" [inputPrimers]="getPrimers(4)"></su-do-ku>
+    <su-do-ku [isDev]=true [isSolo]="false" [inputPrimers]="getPrimers(5)"></su-do-ku>
+    <su-do-ku [isDev]=true [isSolo]="false" [inputPrimers]="getPrimers(6)"></su-do-ku>
+    <su-do-ku [isDev]=true [isSolo]="false" [inputPrimers]="getPrimers(7)"></su-do-ku>
+    <su-do-ku [isDev]=true [isSolo]="false" [inputPrimers]="getPrimers(8)"></su-do-ku>
+</div>

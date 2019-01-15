@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, Input } from '@angular/core';
+import { Component, OnDestroy, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { BoardHandlerService } from './services/board-handler.service';
 import { Cell } from './models/cell';
 import { Subscription } from 'rxjs';
@@ -13,6 +13,7 @@ export class SudokuComponent implements OnDestroy, OnInit {
 	activeControl: number = 0;
 	activeControlMode: boolean = true;
     board: Cell[][];
+    @Output() boardUpdate: EventEmitter<Cell[][]> = new EventEmitter<Cell[][]>();
     @Input() inputPrimers?: [number, number, number, number, number, number, number, number, number];
     @Input() isDev?: boolean;
     @Input() isSolo?: boolean;
@@ -28,7 +29,8 @@ export class SudokuComponent implements OnDestroy, OnInit {
 	}
 
 	ngOnInit(): void {
-		this.board = this.boardHandlerService.boardBuilder(this.isSolo ? null : this.inputPrimers);
+        this.board = this.boardHandlerService.boardBuilder(this.isSolo ? null : this.inputPrimers);
+        this.boardUpdate.emit(JSON.parse(JSON.stringify(this.board)));
 		this.subscriptions.push(this.boardHandlerService.activeControlDigit.subscribe(num => {
 			this.activeControl = num;
 		}));
