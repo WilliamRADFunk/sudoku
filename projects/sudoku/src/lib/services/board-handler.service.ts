@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 import { Cell } from '../models/cell';
+import { CellMaker } from '../utils/CellMaker';
 
 const quadrantCenters = {
 	0: [1, 1],
@@ -39,17 +40,22 @@ const placements: [number, number][] = [
 	[8, 0], [8, 1], [8, 2], [8, 3], [8, 4], [8, 5], [8, 6], [8, 7], [8, 8],
 ];
 
+const primerPlacements: [number, number][] = [
+	[1, 1], [1, 4], [1, 7],
+	[4, 1], [4, 4], [4, 7],
+	[7, 1], [7, 4], [7, 7],
+];
+
 const opts = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 const clueCutoff = 71;
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable()
 export class BoardHandlerService {
 	private activeControlDigitLocal: number = 0;
 	private activeControlModeLocal: boolean = true;
 	private board: Cell[][];
 	private clueCount: number = 81;
-	private gameOverLocal: boolean = false;
+    private gameOverLocal: boolean = false;
+    private primers: [number, number, number, number, number, number, number, number, number];
 	private shuffledPlacements: [number, number][];
 
 	activeControlDigit: BehaviorSubject<number> = new BehaviorSubject<number>(this.activeControlDigitLocal);
@@ -63,17 +69,24 @@ export class BoardHandlerService {
 		this.activeControlDigit.next(this.activeControlDigitLocal);
 	}
 
-	boardBuilder(): Cell[][] {
+	boardBuilder(primers?: [number, number, number, number, number, number, number, number, number]): Cell[][] {
+        this.primers = primers || null;
 		const start = new Date().getTime();
 		this.gameOverLocal = false;
 		this.gameOver.next(this.gameOverLocal);
 		// Retries if a generated board requires too many clues to be unique.
 		do {
-			this.board = [[], [], [], [], [], [], [], [], []];
+			this.board = [ [], [].fill(null, 0, 9), [], [], [].fill(null, 0, 9), [], [], [].fill(null, 0, 9), [] ];
+            if (primers) {
+                primerPlacements.forEach((pl, index) => {
+                    this.board[pl[0]][pl[1]] = CellMaker(primers[index], [pl[0], pl[1], index], [], true);
+                });
+            }
 			this.clueCount = 81;
-			this.shuffledPlacements = this.shuffle(placements.slice());
+            this.shuffledPlacements = this.shuffle(placements.slice());
+            console.log('boardBuilder', 'Trying again?');
 			this.fillCell(0, 0);
-		} while (this.obscureCells());
+		} while (!this.obscureCells());
 		console.log(
 			'BuildTime: ',
 			Math.ceil((new Date().getTime() - start) / 1000),
@@ -85,7 +98,7 @@ export class BoardHandlerService {
 
 	clickCell(row: number, col: number): void {
 		const cell = this.getCell(row, col);
-		// Clues are immutable, moveon.
+		// Clues can't be changed, moveon.
 		if (cell.isClue) {
 			return;
 		}
@@ -118,14 +131,19 @@ export class BoardHandlerService {
 			row++;
 			col = 0;
 		}
-		if (row >= 9) { return true; }
+        if (row >= 9) { return true; }
+        const primer = this.board[row][col];
+        if (primer && primer.immutable) {
+            return this.fillCell(row, col + 1);
+        }
 
 		const neighbors = this.getNeighbors(row, col);
 		const options = this.shuffle(opts.filter(y => !neighbors.includes(y)));
 
 		let counter = 0;
 		const cell: Cell = {
-			flagValues: [],
+            flagValues: [],
+            immutable: false,
 			isClue: true,
 			neighbors: neighbors,
 			position: [row, col, quadLookup[row][col]],
@@ -141,7 +159,7 @@ export class BoardHandlerService {
 			cell.value = options[counter];
 			cell.userAssignedValue = options[counter];
 			this.board[row][col] = cell;
-			counter++;
+            counter++;
 		} while (!this.fillCell(row, col + 1));
 
 		return true;
@@ -211,7 +229,9 @@ export class BoardHandlerService {
 	}
 
 	obscureCells(): boolean {
+        console.log('obscureCells', '---------------Starting Anew----------------');
 		for (let i = 0; i < this.shuffledPlacements.length; i++) {
+            console.log('obscureCells', i, Math.abs(this.clueCount - 81));
 			const place = this.shuffledPlacements[i];
 
 			this.board[place[0]][place[1]].isClue = false;
@@ -221,16 +241,17 @@ export class BoardHandlerService {
 				this.board[place[0]][place[1]].isClue = true;
 				this.board[place[0]][place[1]].userAssignedValue = this.board[place[0]][place[1]].value;
 				this.clueCount--;
-			}
+            }
 			// Cutoff if too many clues needed before cutoff
 			// (Board too complex. Make new one.)
 			if (this.clueCount <= 66) {
-				return true;
+                console.log('obscureCells', 'Too many clues needed');
+				return false;
 			}
 			// The last cutoff amount (71 las checked) is good enough. Rest can be clues.
 			if (i >= clueCutoff) {
 				this.clueCount -= (81 - clueCutoff - 1);
-				return false;
+				return true;
 			}
 		}
 	}

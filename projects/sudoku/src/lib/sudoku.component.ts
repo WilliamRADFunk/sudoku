@@ -6,12 +6,15 @@ import { Subscription } from 'rxjs';
 @Component({
 	selector: 'su-do-ku',
 	templateUrl: './sudoku.component.html',
-	styleUrls: ['./sudoku.component.scss']
+    styleUrls: ['./sudoku.component.scss'],
+    providers: [ BoardHandlerService ]
 })
 export class SudokuComponent implements OnDestroy, OnInit {
 	activeControl: number = 0;
 	activeControlMode: boolean = true;
     board: Cell[][];
+    @Input() inputPrimers?: [number, number, number, number, number, number, number, number, number];
+    @Input() isDev?: boolean;
     @Input() isSolo?: boolean;
 	reveal: boolean = false;
 	subscriptions: Subscription[] = [];
@@ -25,7 +28,7 @@ export class SudokuComponent implements OnDestroy, OnInit {
 	}
 
 	ngOnInit(): void {
-		this.board = this.boardHandlerService.boardBuilder();
+		this.board = this.boardHandlerService.boardBuilder(this.isSolo ? null : this.inputPrimers);
 		this.subscriptions.push(this.boardHandlerService.activeControlDigit.subscribe(num => {
 			this.activeControl = num;
 		}));
