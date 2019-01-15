@@ -53,7 +53,10 @@ export class BoardHandlerService {
 	private activeControlDigitLocal: number = 0;
 	private activeControlModeLocal: boolean = true;
 	private board: Cell[][];
-	private clueCount: number = 81;
+    private clueCount: number = 81;
+    private fillBail = false;
+    private fillCounter = 0;
+    private fillRowLast = 0;
     private gameOverLocal: boolean = false;
     private primers: [number, number, number, number, number, number, number, number, number];
 	private shuffledPlacements: [number, number][];
@@ -73,7 +76,8 @@ export class BoardHandlerService {
         this.primers = primers || null;
 		const start = new Date().getTime();
 		this.gameOverLocal = false;
-		this.gameOver.next(this.gameOverLocal);
+        this.gameOver.next(this.gameOverLocal);
+        let successfulBuild = true;
 		// Retries if a generated board requires too many clues to be unique.
 		do {
 			this.board = [ [], [].fill(null, 0, 9), [], [], [].fill(null, 0, 9), [], [], [].fill(null, 0, 9), [] ];
@@ -84,9 +88,12 @@ export class BoardHandlerService {
             }
 			this.clueCount = 81;
             this.shuffledPlacements = this.shuffle(placements.slice());
-            console.log('boardBuilder', 'Trying again?');
-			this.fillCell(0, 0);
-		} while (!this.obscureCells());
+            console.log('Bad Board', 'Trying again?');
+            this.fillCounter = 0;
+            this.fillRowLast = 0;
+            this.fillBail = false;
+			successfulBuild = this.fillCell(0, 0);
+		} while (!successfulBuild || !this.obscureCells());
 		console.log(
 			'BuildTime: ',
 			Math.ceil((new Date().getTime() - start) / 1000),
@@ -132,13 +139,27 @@ export class BoardHandlerService {
 			col = 0;
 		}
         if (row >= 9) { return true; }
-        const primer = this.board[row][col];
-        if (primer && primer.immutable) {
-            return this.fillCell(row, col + 1);
-        }
+        // Max attempts to make this board attempt reached.
+        // Go straight back to the beginning.
+        // Do not pass Go. Do not collect another recursive loop.
+        if (this.fillBail) { return false; }
 
 		const neighbors = this.getNeighbors(row, col);
-		const options = this.shuffle(opts.filter(y => !neighbors.includes(y)));
+        const options = this.shuffle(opts.filter(y => !neighbors.includes(y)));
+        // Chosen based off cells in upper level.
+        const primer = this.board[row][col];
+        if (primer && primer.immutable) {
+            // If the same row is checked in... a row, this is a bad board config.
+            if (this.fillRowLast === row && this.fillCounter > 1000) {
+                this.fillBail = true;
+                return false;
+            } else {
+                this.fillRowLast = row;
+                this.fillCounter++;
+            }
+            primer.neighbors = neighbors;
+            return this.fillCell(row, col + 1);
+        }
 
 		let counter = 0;
 		const cell: Cell = {
@@ -229,9 +250,7 @@ export class BoardHandlerService {
 	}
 
 	obscureCells(): boolean {
-        console.log('obscureCells', '---------------Starting Anew----------------');
 		for (let i = 0; i < this.shuffledPlacements.length; i++) {
-            console.log('obscureCells', i, Math.abs(this.clueCount - 81));
 			const place = this.shuffledPlacements[i];
 
 			this.board[place[0]][place[1]].isClue = false;
@@ -245,7 +264,6 @@ export class BoardHandlerService {
 			// Cutoff if too many clues needed before cutoff
 			// (Board too complex. Make new one.)
 			if (this.clueCount <= 66) {
-                console.log('obscureCells', 'Too many clues needed');
 				return false;
 			}
 			// The last cutoff amount (71 las checked) is good enough. Rest can be clues.

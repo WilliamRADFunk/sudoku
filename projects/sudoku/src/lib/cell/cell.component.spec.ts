@@ -25,7 +25,8 @@ describe('CellComponent', () => {
 
 	beforeEach(() => {
 		const cell: Cell = {
-			flagValues: [],
+            flagValues: [],
+            immutable: false,
 			isClue: false,
 			neighbors: [],
 			position: [0, 0, 0],
