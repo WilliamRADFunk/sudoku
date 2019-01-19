@@ -1,5 +1,5 @@
 import { Component, OnChanges, Input, SimpleChanges } from '@angular/core';
-import { Cell } from '../models/cell';
+import { Board } from '../models/board';
 
 @Component({
 	selector: 'sudoku-game-board',
@@ -7,7 +7,7 @@ import { Cell } from '../models/cell';
 	styleUrls: ['./game-board.component.scss']
 })
 export class GameBoardComponent implements OnChanges {
-	@Input() board: Cell[][];
+	@Input() board: Board;
 	@Input() reveal: boolean;
 
 	constructor() { }

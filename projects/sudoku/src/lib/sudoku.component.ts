@@ -2,6 +2,8 @@ import { Component, OnDestroy, OnInit, Input, Output, EventEmitter } from '@angu
 import { BoardHandlerService } from './services/board-handler.service';
 import { Cell } from './models/cell';
 import { Subscription } from 'rxjs';
+import { Board } from './models/board';
+import { Row } from './models/row';
 
 @Component({
 	selector: 'su-do-ku',
@@ -12,9 +14,9 @@ import { Subscription } from 'rxjs';
 export class SudokuComponent implements OnDestroy, OnInit {
 	activeControl: number = 0;
 	activeControlMode: boolean = true;
-    board: Cell[][];
-    @Output() boardUpdate: EventEmitter<Cell[][]> = new EventEmitter<Cell[][]>();
-    @Input() inputPrimers?: [number, number, number, number, number, number, number, number, number];
+    board: Board;
+    @Output() boardUpdate: EventEmitter<Board> = new EventEmitter<Board>();
+    @Input() inputPrimers?: Row;
     @Input() isDev?: boolean;
     @Input() isSolo?: boolean;
 	reveal: boolean = false;

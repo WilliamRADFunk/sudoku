@@ -3,6 +3,8 @@ import { BehaviorSubject } from 'rxjs';
 
 import { Cell } from '../models/cell';
 import { CellMaker } from '../utils/CellMaker';
+import { Board } from '../models/board';
+import { Row } from '../models/row';
 
 const quadrantCenters = {
 	0: [1, 1],
@@ -52,13 +54,13 @@ const clueCutoff = 71;
 export class BoardHandlerService {
 	private activeControlDigitLocal: number = 0;
 	private activeControlModeLocal: boolean = true;
-	private board: Cell[][];
+	private board: Board;
     private clueCount: number = 81;
     private fillBail = false;
     private fillCounter = 0;
     private fillRowLast = 0;
     private gameOverLocal: boolean = false;
-    private primers: [number, number, number, number, number, number, number, number, number];
+    private primers: Row;
 	private shuffledPlacements: [number, number][];
 
 	activeControlDigit: BehaviorSubject<number> = new BehaviorSubject<number>(this.activeControlDigitLocal);
@@ -72,7 +74,7 @@ export class BoardHandlerService {
 		this.activeControlDigit.next(this.activeControlDigitLocal);
 	}
 
-	boardBuilder(primers?: [number, number, number, number, number, number, number, number, number]): Cell[][] {
+	boardBuilder(primers?: Row): Board {
         this.primers = primers || null;
 		const start = new Date().getTime();
 		this.gameOverLocal = false;
@@ -306,7 +308,7 @@ export class BoardHandlerService {
 		return this.solveCheck(index + 1);
 	}
 
-	stringify(b: Cell[][]): string {
+	stringify(b: Board): string {
 		let map = '';
 		b.forEach(row => {
 			map += row.map(c => c.userAssignedValue + '').reduce((str, val) => {

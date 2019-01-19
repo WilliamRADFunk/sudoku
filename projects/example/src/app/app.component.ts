@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Cell } from 'sudoku';
+import { Board } from 'sudoku';
 
 const quadrantPositions: [number, number][][] = [
     [ [0, 0], [0, 1], [0, 2], [1, 0], [1, 1], [1, 2], [2, 0], [2, 1], [2, 2] ],
@@ -19,9 +19,9 @@ const quadrantPositions: [number, number][][] = [
 	styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-    topLvlBoard: Cell[][];
+    topLvlBoard: Board;
 
-    boardChanged(board: Cell[][]): void {
+    boardChanged(board: Board): void {
         this.topLvlBoard = board;
     }
 

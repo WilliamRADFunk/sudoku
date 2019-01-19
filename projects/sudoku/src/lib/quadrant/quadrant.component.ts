@@ -1,5 +1,5 @@
 import { Component, OnChanges, Input, SimpleChanges } from '@angular/core';
-import { Cell } from '../models/cell';
+import { Board } from '../models/board';
 
 @Component({
 	selector: 'sudoku-quadrant',
@@ -8,7 +8,7 @@ import { Cell } from '../models/cell';
 })
 export class QuadrantComponent implements OnChanges {
 	@Input() quadrant: number;
-	@Input() board: Cell[][];
+	@Input() board: Board;
 	@Input() reveal: boolean;
 
 	showQuadrant: boolean = true;
