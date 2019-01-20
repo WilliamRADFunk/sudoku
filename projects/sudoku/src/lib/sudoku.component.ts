@@ -52,9 +52,7 @@ export class SudokuComponent implements OnDestroy, OnInit {
 		this.board = null;
 		setTimeout(() => {
             this.board = this.boardHandlerService.boardBuilder(
-                this.isSolo ? null : this.inputPrimers,
-                (this.level || 0),
-                (this.parentQuadrant || 0));
+                this.isSolo ? null : this.inputPrimers, this.level, this.parentQuadrant);
         }, 250);
 	}
 

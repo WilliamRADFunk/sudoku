@@ -270,15 +270,23 @@ export class BoardHandlerService {
 			currCell.userAssignedValue = 0;
 			// Has to be a clue to make a unique solution
 			if (currCell.clueByParent || !this.guessAtCell(0)) {
-				currCell.isClue = true;
+                currCell.isClue = true;
 				currCell.userAssignedValue = currCell.value;
 				this.clueCount--;
+            }
+            // The parent chose to hide this connected cell.
+            // If this board can't support this iteration without making it a clue, start again.
+            if (currCell.isClue && currCell.hiddenByParent) {
+                return false;
             }
 			// Cutoff if too many clues needed before cutoff
 			// (Board too complex. Make new one.)
 			if (this.clueCount <= 66) {
-				return false;
-			}
+                return false;
+            }
+            if (i >= clueCutoff && this.shuffledPlacements.slice(i).some(p => this.board.cellStates[p[0]][p[1]].hiddenByParent)) {
+                return false;
+            }
 			// The last cutoff amount (71 last checked) is good enough. Rest can be clues.
 			if (i >= clueCutoff) {
 				this.clueCount -= (81 - clueCutoff - 1);

@@ -1,6 +1,7 @@
 export interface Cell {
     clueByParent?: boolean;
     flagValues: number[];
+    hiddenByParent?: boolean;
     immutable: boolean;
     isClue: boolean;
     locked?: boolean;

@@ -55,10 +55,10 @@ export class BoardOverlordService {
         level: number,
         parentQuad: number,
         isUp: boolean,
-        isComplete: boolean): void {
+        isComplete: boolean): boolean {
         // Reached the last level and beyond. Climb out of the rabbit hole.
         if (level <= -1 || level >= this.boardsByLevel.length) {
-            return;
+            return isComplete;
         }
         // Set the cell and lock it if necessary.
         console.log('setConnectedCells', level, parentQuad, this.boardsByLevel);
@@ -67,31 +67,33 @@ export class BoardOverlordService {
         currCell.userAssignedValue = value;
         if (isComplete) {
             currCell.locked = true;
-        }
-        // Call to check for win state on this board.
-        // If winstate --> isComplete = true.
-        // If not --> isComplete = false;
-        isComplete = true;
-        for (let r = 0; r < 9; r++) {
-            for (let c = 0; c < 9; c++) {
-                if (currentBoard.cellStates[r][c].userAssignedValue !== currentBoard.cellStates[r][c].value) {
-                    isComplete = false;
-                    break;
+        } else {
+            // Call to check for win state on this board.
+            // If winstate --> isComplete = true.
+            // If not --> isComplete = false;
+            isComplete = true;
+            for (let r = 0; r < 9; r++) {
+                for (let c = 0; c < 9; c++) {
+                    if (currentBoard.cellStates[r][c].userAssignedValue !== currentBoard.cellStates[r][c].value) {
+                        isComplete = false;
+                        break;
+                    }
                 }
+                if (!isComplete) { break; }
             }
-            if (!isComplete) { break; }
         }
         // Move onto the next level.
         if (isUp) {
             const primer = primerPlacements.findIndex(p => p[0] === row && p[1] === col);
             if (primer > -1) {
                 const nextRowCell = quadrantPositions[parentQuad][primer];
-                this.setConnectedCells(
+                console.log('setConnectedCells', 'going up', nextRowCell, Math.floor(currentBoard.parentQuadrant / 9));
+                return this.setConnectedCells(
                     value,
                     nextRowCell[0],
                     nextRowCell[1],
-                    Number(level) + 1,
-                    currentBoard.parentQuadrant,
+                    Number(level) - 1,
+                    Math.floor(currentBoard.parentQuadrant / 9),
                     true,
                     isComplete);
             } // else simply falls off and therefore returns void as its cell isn't upwardly relevant.
@@ -99,13 +101,13 @@ export class BoardOverlordService {
         } else {
             const primerIndex = quadrantPositions[currCell.position[2]].findIndex(cell => (cell[0] === row && cell[1] === col));
             const nextRowCell = primerPlacements[primerIndex];
-            console.log('setConnectedCells', 'going down', nextRowCell);
-            this.setConnectedCells(
+            console.log('setConnectedCells', 'going down', nextRowCell, (level * 9) + currCell.position[2]);
+            return this.setConnectedCells(
                 value,
                 nextRowCell[0],
                 nextRowCell[1],
                 Number(level) + 1,
-                currentBoard.parentQuadrant,
+                (level * 9) + currCell.position[2],
                 false,
                 isComplete);
         }

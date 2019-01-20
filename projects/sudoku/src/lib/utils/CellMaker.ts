@@ -9,6 +9,7 @@ export function CellMaker(
     return {
         clueByParent: !!isParentClue,
         flagValues: [],
+        hiddenByParent: !isParentClue,
         immutable: !!isPrimer,
         isClue: true,
         neighbors: neighbors || [],
