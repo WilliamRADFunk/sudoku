@@ -9,6 +9,8 @@ import { Board } from '../models/board';
 export class QuadrantComponent implements OnChanges {
 	@Input() quadrant: number;
 	@Input() board: Board;
+    @Input() level: number;
+    @Input() parentQuadrant: number;
 	@Input() reveal: boolean;
 
 	showQuadrant: boolean = true;
@@ -21,7 +23,7 @@ export class QuadrantComponent implements OnChanges {
 			this.board = e.board.currentValue;
 			setTimeout(() => { this.showQuadrant = true; }, 0);
 		}
-	}
+    }
 
 	getCol(inner: number): number {
 		return ((this.quadrant % 3) * 3) + inner;

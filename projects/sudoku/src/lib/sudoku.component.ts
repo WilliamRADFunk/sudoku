@@ -4,6 +4,7 @@ import { Cell } from './models/cell';
 import { Subscription } from 'rxjs';
 import { Board } from './models/board';
 import { Row } from './models/row';
+import { BoardOverlordService } from './services/board-overlord.service';
 
 @Component({
 	selector: 'su-do-ku',
@@ -16,9 +17,11 @@ export class SudokuComponent implements OnDestroy, OnInit {
 	activeControlMode: boolean = true;
     board: Board;
     @Output() boardUpdate: EventEmitter<Board> = new EventEmitter<Board>();
-    @Input() inputPrimers?: Row;
+    @Input() inputPrimers: Row;
     @Input() isDev?: boolean;
     @Input() isSolo?: boolean;
+    @Input() level: number;
+    @Input() parentQuadrant: number;
 	reveal: boolean = false;
 	subscriptions: Subscription[] = [];
 	title: string = 'sudoku';
@@ -31,7 +34,7 @@ export class SudokuComponent implements OnDestroy, OnInit {
 	}
 
 	ngOnInit(): void {
-        this.board = this.boardHandlerService.boardBuilder(this.isSolo ? null : this.inputPrimers);
+        this.board = this.boardHandlerService.boardBuilder(this.isSolo ? null : this.inputPrimers, this.level, this.parentQuadrant);
         this.boardUpdate.emit(JSON.parse(JSON.stringify(this.board)));
 		this.subscriptions.push(this.boardHandlerService.activeControlDigit.subscribe(num => {
 			this.activeControl = num;
@@ -46,8 +49,13 @@ export class SudokuComponent implements OnDestroy, OnInit {
 	}
 
 	rebuildBoard(): void {
-		this.board = [];
-		setTimeout(() => { this.board = this.boardHandlerService.boardBuilder(); }, 250);
+		this.board = null;
+		setTimeout(() => {
+            this.board = this.boardHandlerService.boardBuilder(
+                this.isSolo ? null : this.inputPrimers,
+                (this.level || 0),
+                (this.parentQuadrant || 0));
+        }, 250);
 	}
 
 	toggleControls(): void {

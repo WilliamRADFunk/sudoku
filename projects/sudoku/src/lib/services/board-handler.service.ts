@@ -5,6 +5,7 @@ import { Cell } from '../models/cell';
 import { CellMaker } from '../utils/CellMaker';
 import { Board } from '../models/board';
 import { Row } from '../models/row';
+import { BoardOverlordService } from './board-overlord.service';
 
 const quadrantCenters = {
 	0: [1, 1],
@@ -67,25 +68,32 @@ export class BoardHandlerService {
 	activeControlMode: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(this.activeControlModeLocal);
 	gameOver: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(this.gameOverLocal);
 
-	constructor() { }
+	constructor(private readonly boardOverlordService: BoardOverlordService) { }
 
 	activateDigitControl(num: number): void {
 		this.activeControlDigitLocal = num;
 		this.activeControlDigit.next(this.activeControlDigitLocal);
 	}
 
-	boardBuilder(primers?: Row): Board {
+	boardBuilder(primers: Row, level: number, parentQuadrant: number): Board {
         this.primers = primers || null;
 		const start = new Date().getTime();
 		this.gameOverLocal = false;
         this.gameOver.next(this.gameOverLocal);
         let successfulBuild = true;
+        this.board = {
+            cellStates: [],
+            isSolved: false,
+            level: level,
+            parentQuadrant: parentQuadrant
+        };
 		// Retries if a generated board requires too many clues to be unique.
 		do {
-			this.board = [ [], [].fill(null, 0, 9), [], [], [].fill(null, 0, 9), [], [], [].fill(null, 0, 9), [] ];
-            if (primers) {
+			this.board.cellStates = [ [], [].fill(null, 0, 9), [], [], [].fill(null, 0, 9), [], [], [].fill(null, 0, 9), [] ];
+            if (this.primers) {
                 primerPlacements.forEach((pl, index) => {
-                    this.board[pl[0]][pl[1]] = CellMaker(primers[index], [pl[0], pl[1], index], [], true);
+                    this.board.cellStates[pl[0]][pl[1]] = CellMaker(
+                        this.primers[index].value, [pl[0], pl[1], index], [], true, this.primers[index].isClue);
                 });
             }
 			this.clueCount = 81;
@@ -101,11 +109,11 @@ export class BoardHandlerService {
 			Math.ceil((new Date().getTime() - start) / 1000),
 			'Seconds, ',
 			(81 - this.clueCount), 'Clues');
-
-		return this.board.slice();
+        this.boardOverlordService.registerBoard(this.board);
+		return JSON.parse(JSON.stringify(this.board));
 	}
 
-	clickCell(row: number, col: number): void {
+	clickCell(row: number, col: number, level: number, parentQuad: number): void {
 		const cell = this.getCell(row, col);
 		// Clues can't be changed, moveon.
 		if (cell.isClue) {
@@ -121,7 +129,9 @@ export class BoardHandlerService {
 				this.gameOverLocal = true;
 				this.gameOver.next(this.gameOverLocal);
 				console.log('Winner. Winner. Chicken Dinner!');
-			}
+            }
+            console.log('BoardHandlerService', 'clickCell', 'boardUpdated', level, parentQuad);
+            this.boardOverlordService.boardUpdated(cell.userAssignedValue, row, col, level, parentQuad, this.gameOverLocal);
 			return;
 		}
 		// In flag mode, user adds or removes "potential" digits from view.
@@ -132,8 +142,7 @@ export class BoardHandlerService {
 			return;
 		}
 		cell.flagValues = filterFlags;
-	}
-
+    }
 
 	fillCell(row: number, col: number): boolean {
 		if (col >= 9) {
@@ -146,10 +155,10 @@ export class BoardHandlerService {
         // Do not pass Go. Do not collect another recursive loop.
         if (this.fillBail) { return false; }
 
-		const neighbors = this.getNeighbors(row, col);
+        const neighbors = this.getNeighbors(row, col);
         const options = this.shuffle(opts.filter(y => !neighbors.includes(y)));
         // Chosen based off cells in upper level.
-        const primer = this.board[row][col];
+        const primer = this.board.cellStates[row][col];
         if (primer && primer.immutable) {
             // If the same row is checked in... a row, this is a bad board config.
             if (this.fillRowLast === row && this.fillCounter > 1000) {
@@ -165,6 +174,7 @@ export class BoardHandlerService {
 
 		let counter = 0;
 		const cell: Cell = {
+            clueByParent: false,
             flagValues: [],
             immutable: false,
 			isClue: true,
@@ -176,12 +186,12 @@ export class BoardHandlerService {
 
 		do {
 			if (!options[counter] || counter >= 9) {
-				this.board[row][col] = null;
+				this.board.cellStates[row][col] = null;
 				return false;
 			}
 			cell.value = options[counter];
 			cell.userAssignedValue = options[counter];
-			this.board[row][col] = cell;
+			this.board.cellStates[row][col] = cell;
             counter++;
 		} while (!this.fillCell(row, col + 1));
 
@@ -194,7 +204,7 @@ export class BoardHandlerService {
 		}
 
 		const place = placements[index];
-		if (this.board[place[0]][place[1]].isClue) {
+		if (this.board.cellStates[place[0]][place[1]].isClue) {
 			return this.guessAtCell(index + 1);
 		}
 
@@ -209,11 +219,11 @@ export class BoardHandlerService {
 
 		let counter = 0;
 		for (let i = 0; i < options.length; i++) {
-			this.board[place[0]][place[1]].userAssignedValue = options[i];
+			this.board.cellStates[place[0]][place[1]].userAssignedValue = options[i];
 			if (this.guessAtCell(index + 1)) {
 				counter++;
 			}
-			this.board[place[0]][place[1]].userAssignedValue = 0;
+			this.board.cellStates[place[0]][place[1]].userAssignedValue = 0;
 			if (counter > 1) { break; }
 		}
 
@@ -225,24 +235,24 @@ export class BoardHandlerService {
 	}
 
 	getCell(row: number, col: number): Cell {
-		return this.board[row][col];
+		return this.board.cellStates[row][col];
 	}
 
 	getNeighbors(row: number, col: number, skipQuad?: boolean): number[] {
 		const neighbors = [
-			...this.board[row].slice(0, col).filter(c => c && c.userAssignedValue).map(c => c.userAssignedValue),
-			...this.board[row].slice(col + 1, 9).filter(c => c && c.userAssignedValue).map(c => c.userAssignedValue)
+			...this.board.cellStates[row].slice(0, col).filter(c => c && c.userAssignedValue).map(c => c.userAssignedValue),
+			...this.board.cellStates[row].slice(col + 1, 9).filter(c => c && c.userAssignedValue).map(c => c.userAssignedValue)
 		];
 		for (let i = 0; i < 9; i++) {
-			if (i === row || !(this.board[i][col] && this.board[i][col].userAssignedValue)) { continue; }
-			neighbors.push(this.board[i][col].userAssignedValue);
+			if (i === row || !(this.board.cellStates[i][col] && this.board.cellStates[i][col].userAssignedValue)) { continue; }
+			neighbors.push(this.board.cellStates[i][col].userAssignedValue);
 		}
 
 		if (!skipQuad) {
 			const quadCenter = quadrantCenters[quadLookup[row][col]];
 			for (let j = -1; j < 2; j++) {
 				for (let k = -1; k < 2; k++) {
-					const cell = this.board[quadCenter[0] + j][quadCenter[1] + k];
+					const cell = this.board.cellStates[quadCenter[0] + j][quadCenter[1] + k];
 					const val = cell && cell.userAssignedValue;
 					if (val) { neighbors.push(val); }
 				}
@@ -253,14 +263,15 @@ export class BoardHandlerService {
 
 	obscureCells(): boolean {
 		for (let i = 0; i < this.shuffledPlacements.length; i++) {
-			const place = this.shuffledPlacements[i];
+            const place = this.shuffledPlacements[i];
+            const currCell = this.board.cellStates[place[0]][place[1]];
 
-			this.board[place[0]][place[1]].isClue = false;
-			this.board[place[0]][place[1]].userAssignedValue = 0;
+			currCell.isClue = false;
+			currCell.userAssignedValue = 0;
 			// Has to be a clue to make a unique solution
-			if (!this.guessAtCell(0)) {
-				this.board[place[0]][place[1]].isClue = true;
-				this.board[place[0]][place[1]].userAssignedValue = this.board[place[0]][place[1]].value;
+			if (currCell.clueByParent || !this.guessAtCell(0)) {
+				currCell.isClue = true;
+				currCell.userAssignedValue = currCell.value;
 				this.clueCount--;
             }
 			// Cutoff if too many clues needed before cutoff
@@ -268,7 +279,7 @@ export class BoardHandlerService {
 			if (this.clueCount <= 66) {
 				return false;
 			}
-			// The last cutoff amount (71 las checked) is good enough. Rest can be clues.
+			// The last cutoff amount (71 last checked) is good enough. Rest can be clues.
 			if (i >= clueCutoff) {
 				this.clueCount -= (81 - clueCutoff - 1);
 				return true;
@@ -294,11 +305,11 @@ export class BoardHandlerService {
 			return true;
 		}
 		const place = placements[index];
-		if (this.board[place[0]][place[1]].isClue) {
+		if (this.board.cellStates[place[0]][place[1]].isClue) {
 			return this.solveCheck(index + 1);
 		}
 		const neighbors = this.getNeighbors(place[0], place[1], true);
-		const choice = this.board[place[0]][place[1]].userAssignedValue;
+		const choice = this.board.cellStates[place[0]][place[1]].userAssignedValue;
 		if (!choice) {
 			return false;
 		}
@@ -310,7 +321,7 @@ export class BoardHandlerService {
 
 	stringify(b: Board): string {
 		let map = '';
-		b.forEach(row => {
+		b.cellStates.forEach(row => {
 			map += row.map(c => c.userAssignedValue + '').reduce((str, val) => {
 				return str += val;
 			});

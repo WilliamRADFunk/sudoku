@@ -19,7 +19,12 @@ describe('QuadrantComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(QuadrantComponent);
 		component = fixture.componentInstance;
-		component.board = [];
+		component.board = {
+            cellStates: [],
+            isSolved: false,
+            level: 0,
+            parentQuadrant: 0
+        };
 		component.quadrant = 0;
 		component.reveal = false;
 		component.showQuadrant = false;

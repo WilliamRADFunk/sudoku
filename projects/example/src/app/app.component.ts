@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Board } from 'sudoku';
+import { Board, Cell } from 'sudoku';
 
 const quadrantPositions: [number, number][][] = [
     [ [0, 0], [0, 1], [0, 2], [1, 0], [1, 1], [1, 2], [2, 0], [2, 1], [2, 2] ],
@@ -25,10 +25,10 @@ export class AppComponent {
         this.topLvlBoard = board;
     }
 
-    getPrimers(quadrant: number): number[] {
+    getPrimers(quadrant: number): Cell[] {
         const quadPosList = quadrantPositions[quadrant].slice();
         return quadPosList.map(pos => {
-            return this.topLvlBoard[pos[0]][pos[1]].value;
+            return this.topLvlBoard.cellStates[pos[0]][pos[1]];
         });
     }
 }

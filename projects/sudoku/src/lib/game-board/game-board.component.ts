@@ -7,15 +7,21 @@ import { Board } from '../models/board';
 	styleUrls: ['./game-board.component.scss']
 })
 export class GameBoardComponent implements OnChanges {
-	@Input() board: Board;
+    @Input() board: Board;
+    isLoading: boolean = true;
+    @Input() level: number;
+    @Input() parentQuadrant: number;
 	@Input() reveal: boolean;
 
 	constructor() { }
 
 	ngOnChanges(e: SimpleChanges) {
-		if (e.board) {
-			this.board = [];
-			setTimeout(() => { this.board = e.board.currentValue; }, 0);
+		if (e.board && e.board.currentValue) {
+			this.board.cellStates = [];
+			setTimeout(() => {
+                this.board = e.board.currentValue;
+                this.isLoading = false;
+            }, 0);
 		}
 	}
 }

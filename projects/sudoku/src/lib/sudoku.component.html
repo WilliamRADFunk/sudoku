@@ -8,12 +8,12 @@
                 <button
                     class="btn btn-sm btn-primary shadow rounded ml-sm-5 mr-2 mr-sm-0"
                     (click)="toggleReveal()"
-                    [disabled]="!board?.length"
+                    [disabled]="!board"
                     type="button">{{reveal ? 'Hide' : 'Show'}}</button>
                 <button
                     class="btn btn-sm btn-primary shadow rounded ml-sm-5 ml-2"
                     (click)="rebuildBoard()"
-                    [disabled]="!board?.length"
+                    [disabled]="!board"
                     type="button">Rebuild</button>
             </span>
 		</div>
@@ -21,7 +21,7 @@
 	</div>
 	<div class="d-flex justify-content-center mt-2 mt-sm-5">
 		<div class="col-3"></div>
-		<sudoku-game-board [board]="board" [reveal]="reveal"></sudoku-game-board>
+		<sudoku-game-board [board]="board" [reveal]="reveal" [level]="level" [parentQuadrant]="parentQuadrant"></sudoku-game-board>
 		<div class="col-3"></div>
 	</div>
 	<div class="d-flex justify-content-center mt-2 mt-sm-5">
@@ -31,52 +31,52 @@
 				<button *ngIf="activeControlMode"
 					class="btn btn-info shadow fa fa-pencil"
 					(click)="toggleControls()"
-					[disabled]="!board?.length"
+					[disabled]="!board"
 					type="button"></button>
 				<button *ngIf="!activeControlMode"
 					class="btn btn-info shadow fa fa-flag"
 					(click)="toggleControls()"
-					[disabled]="!board?.length"
+					[disabled]="!board"
 					type="button"></button>
 				<button *ngFor="let num of [1, 2, 3, 4, 5, 6, 7, 8, 9]"
 					class="btn shadow"
 					[class.btn-success]="activeControl === num"
 					[class.btn-info]="activeControl !== num"
 					(click)="pressedDigitControl(num)"
-					[disabled]="!board?.length"
+					[disabled]="!board"
 					type="button">{{ num }}</button>
 				<button
 					class="btn shadow fa fa-eraser"
 					[class.btn-success]="!activeControl"
 					[class.btn-info]="activeControl"
 					(click)="pressedDigitControl(0)"
-					[disabled]="!board?.length"
+					[disabled]="!board"
 					type="button"></button>
 			</div>
 			<div class="btn-group btn-group-lg d-none d-lg-inline-block">
 				<button *ngIf="activeControlMode"
 					class="btn btn-info shadow fa fa-pencil"
 					(click)="toggleControls()"
-					[disabled]="!board?.length"
+					[disabled]="!board"
 					type="button"></button>
 				<button *ngIf="!activeControlMode"
 					class="btn btn-info shadow fa fa-flag"
 					(click)="toggleControls()"
-					[disabled]="!board?.length"
+					[disabled]="!board"
 					type="button"></button>
 				<button *ngFor="let num of [1, 2, 3, 4, 5, 6, 7, 8, 9]"
 					class="btn shadow"
 					[class.btn-success]="activeControl === num"
 					[class.btn-info]="activeControl !== num"
 					(click)="pressedDigitControl(num)"
-					[disabled]="!board?.length"
+					[disabled]="!board"
 					type="button">{{ num }}</button>
 				<button
 					class="btn shadow fa fa-eraser"
 					[class.btn-success]="!activeControl"
 					[class.btn-info]="activeControl"
 					(click)="pressedDigitControl(0)"
-					[disabled]="!board?.length"
+					[disabled]="!board"
 					type="button"></button>
 			</div>
 		</div>

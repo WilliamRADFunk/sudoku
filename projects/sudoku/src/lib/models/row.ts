@@ -1,1 +1,3 @@
-export type Row = [number, number, number, number, number, number, number, number, number];
+import { Cell } from './cell';
+
+export type Row = [Cell, Cell, Cell, Cell, Cell, Cell, Cell, Cell, Cell];

@@ -21,7 +21,12 @@ describe('GameBoardComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(GameBoardComponent);
 		component = fixture.componentInstance;
-		component.board = [];
+		component.board = {
+            cellStates: [],
+            isSolved: false,
+            level: 0,
+            parentQuadrant: 0
+        };
 		component.reveal = false;
 		fixture.detectChanges();
 	});

@@ -1,3 +1,8 @@
 import { Cell } from './cell';
 
-export type Board = Cell[][];
+export interface Board {
+    cellStates: Cell[][];
+    isSolved: boolean;
+    level: number;
+    parentQuadrant: number;
+}

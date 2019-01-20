@@ -2,7 +2,7 @@
 	class="cell-size align-middle text-center"
 	[class.bg-success]="gameOver"
 	[class.text-white]="gameOver">
-	<div class="font-weight-bold">{{ cell.value }}</div>
+	<div class="font-weight-bold clue-text">{{ cell.value }}</div>
 </div>
 
 <div *ngIf="!cell.isClue"
@@ -16,7 +16,8 @@
 	</span>
 	<span *ngIf="!reveal">
 		<div *ngIf="activeControlMode && cell.userAssignedValue"
-			class="align-middle text-center">{{ cell.userAssignedValue}}</div>
+            class="align-middle text-center"
+            [class.locked-cell-text]="cell.locked">{{ cell.userAssignedValue}}</div>
 		<div *ngIf="!activeControlMode"
 			class="flags">
 			<span *ngFor="let flag of cell.flagValues" class="flag flag-{{flag}}">{{ flag }}</span>

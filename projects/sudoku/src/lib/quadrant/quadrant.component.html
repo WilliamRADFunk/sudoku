@@ -2,7 +2,9 @@
 	<div *ngFor="let row of [0, 1, 2];" class="row no-gutters">
 		<sudoku-cell
 			*ngFor="let col of [0, 1, 2];"
-			[position]="[getRow(row), getCol(col), quadrant]"
+            [level]="level"
+            [position]="[getRow(row), getCol(col), quadrant]"
+            [parentQuadrant]="parentQuadrant"
 			[reveal]="reveal"></sudoku-cell>
 	</div>
 </div>
