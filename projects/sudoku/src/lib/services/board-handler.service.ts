@@ -130,8 +130,7 @@ export class BoardHandlerService {
 				this.gameOver.next(this.gameOverLocal);
 				console.log('Winner. Winner. Chicken Dinner!');
             }
-            console.log('BoardHandlerService', 'clickCell', 'boardUpdated', level, parentQuad);
-            this.boardOverlordService.boardUpdated(cell.userAssignedValue, row, col, level, parentQuad, this.gameOverLocal);
+            this.boardOverlordService.boardUpdated(cell.userAssignedValue, row, col, level, parentQuad);
 			return;
 		}
 		// In flag mode, user adds or removes "potential" digits from view.
