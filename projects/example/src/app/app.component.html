@@ -5,14 +5,12 @@
     level="0"
     parentQuadrant="0"></su-do-ku>
 
-<div *ngIf="topLvlBoard">
-    <su-do-ku [isDev]=true [isSolo]="false" [inputPrimers]="getPrimers(0)" level="1" parentQuadrant="0"></su-do-ku>
-    <su-do-ku [isDev]=true [isSolo]="false" [inputPrimers]="getPrimers(1)" level="1" parentQuadrant="1"></su-do-ku>
-    <su-do-ku [isDev]=true [isSolo]="false" [inputPrimers]="getPrimers(2)" level="1" parentQuadrant="2"></su-do-ku>
-    <su-do-ku [isDev]=true [isSolo]="false" [inputPrimers]="getPrimers(3)" level="1" parentQuadrant="3"></su-do-ku>
-    <su-do-ku [isDev]=true [isSolo]="false" [inputPrimers]="getPrimers(4)" level="1" parentQuadrant="4"></su-do-ku>
-    <su-do-ku [isDev]=true [isSolo]="false" [inputPrimers]="getPrimers(5)" level="1" parentQuadrant="5"></su-do-ku>
-    <su-do-ku [isDev]=true [isSolo]="false" [inputPrimers]="getPrimers(6)" level="1" parentQuadrant="6"></su-do-ku>
-    <su-do-ku [isDev]=true [isSolo]="false" [inputPrimers]="getPrimers(7)" level="1" parentQuadrant="7"></su-do-ku>
-    <su-do-ku [isDev]=true [isSolo]="false" [inputPrimers]="getPrimers(8)" level="1" parentQuadrant="8"></su-do-ku>
+<div *ngIf="boardsByLevel[0]?.length">
+    <su-do-ku *ngFor="let s of subBoardIterations; let i = index;"
+        (boardUpdate)="boardChanged($event)"
+        [isDev]=true
+        [isSolo]="false"
+        [inputPrimers]="getPrimers(i, getLevel(i) - 1)"
+        [level]="getLevel(i)"
+        [parentQuadrant]="getParentQuadrant(i)"></su-do-ku>
 </div>

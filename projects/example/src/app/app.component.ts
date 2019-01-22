@@ -19,16 +19,53 @@ const quadrantPositions: [number, number][][] = [
 	styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-    topLvlBoard: Board;
+    public readonly boardsByLevel: Board[][] = [];
+    subBoardIterations: number[] = [];
+    numOfLevels = 3;
+    mainCounter: number = 0;
+    startTime: number;
 
-    boardChanged(board: Board): void {
-        this.topLvlBoard = board;
+    constructor() {
+        let count = 0;
+        for (let i = 1; i < Math.pow(9, this.numOfLevels - 1) + 1; i++) {
+            count++;
+            this.subBoardIterations.push(i);
+        }
+        this.startTime = new Date().getTime();
+        console.log('Boards: ', count + 1);
     }
 
-    getPrimers(quadrant: number): Cell[] {
+    boardChanged(board: Board): void {
+        this.mainCounter++;
+        if (!this.boardsByLevel[board.level]) {
+            this.boardsByLevel[board.level] = [];
+        }
+        this.boardsByLevel[board.level][board.parentQuadrant] = board;
+        if (this.mainCounter >= Math.pow(9, this.numOfLevels - 1)) {
+            console.log(`Total Time to build ${this.numOfLevels} levels: ${(new Date().getTime() - this.startTime) / 60000}`);
+        }
+    }
+
+    getLevel(index: number): number {
+        const level = Math.floor(this.log9(Math.max(index, 1))) + 1;
+        return level;
+    }
+
+    getParentQuadrant(index: number): number {
+        return Math.max(Math.floor(this.log9(index + 1)) - 9, 0);
+    }
+
+    getPrimers(index: number, relatedLevel: number): Cell[] {
+        const quadrant = index % 9;
         const quadPosList = quadrantPositions[quadrant].slice();
         return quadPosList.map(pos => {
-            return this.topLvlBoard.cellStates[pos[0]][pos[1]];
+            return JSON.parse(JSON.stringify(
+                this.boardsByLevel[relatedLevel][Math.max(Math.floor(this.log9(index + 1)) - 9, 0)].cellStates[pos[0]][pos[1]]
+            ));
         });
+    }
+
+    log9(n) {
+        return Math.log(n) / (9 ? Math.log(9) : 1);
     }
 }
