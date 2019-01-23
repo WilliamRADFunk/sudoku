@@ -1,16 +1,2 @@
-<su-do-ku
-    (boardUpdate)="boardChanged($event)"
-    [isDev]=true
-    [isSolo]="false"
-    level="0"
-    parentQuadrant="0"></su-do-ku>
-
-<div *ngIf="boardsByLevel[0]?.length">
-    <su-do-ku *ngFor="let s of subBoardIterations; let i = index;"
-        (boardUpdate)="boardChanged($event)"
-        [isDev]=true
-        [isSolo]="false"
-        [inputPrimers]="getPrimers(i, getLevel(i) - 1)"
-        [level]="getLevel(i)"
-        [parentQuadrant]="getParentQuadrant(i)"></su-do-ku>
-</div>
+<sudoku-start-menu *ngIf="!levels" (levelSelected)="startGame($event)"></sudoku-start-menu>
+<sudoku-play-area *ngIf="levels" [levels]="levels"></sudoku-play-area>
