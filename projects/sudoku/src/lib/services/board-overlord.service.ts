@@ -162,13 +162,13 @@ export class BoardOverlordService {
         } else {
             const primerIndex = quadrantPositions[currCell.position[2]].findIndex(cell => (cell[0] === row && cell[1] === col));
             const nextRowCell = primerPlacements[primerIndex];
-            console.log('setConnectedCells', 'going down', nextRowCell, (level * 9) + currCell.position[2]);
+            console.log('setConnectedCells', 'going down', nextRowCell, ((level - 1) * 9) + currCell.position[2]);
             this.setConnectedCells(
                 value,
                 nextRowCell[0],
                 nextRowCell[1],
                 Number(level) + 1,
-                (level * 9) + currCell.position[2],
+                ((level - 1) * 9) + currCell.position[2],
                 false);
         }
     }

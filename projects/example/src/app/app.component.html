@@ -1,2 +1,3 @@
 <sudoku-start-menu *ngIf="!levels" (levelSelected)="startGame($event)"></sudoku-start-menu>
-<sudoku-play-area *ngIf="levels" [levels]="levels"></sudoku-play-area>
+<sudoku-loading-view [class.d-none]="loadedAmount === 0 || isDoneLoading()"></sudoku-loading-view>
+<sudoku-play-area *ngIf="levels" [levels]="levels" [class.d-none]="!isDoneLoading()"></sudoku-play-area>

@@ -1,5 +1,6 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Board, Cell } from 'sudoku';
+import { LoadTrackerService } from '../services/load-tracker.service';
 
 const quadrantPositions: [number, number][][] = [
     [ [0, 0], [0, 1], [0, 2], [1, 0], [1, 1], [1, 2], [2, 0], [2, 1], [2, 2] ],
@@ -25,28 +26,30 @@ export class PlayAreaComponent implements OnInit {
     startTime: number;
     subBoardIterations: number[] = [];
 
-    constructor() { }
+    constructor(private readonly loadTrackerService: LoadTrackerService) { }
 
     ngOnInit() {
-        if (this.levels > 1) {
-            let count = 0;
-            for (let i = 1; i < Math.pow(9, this.levels - 1) + 1; i++) {
-                count++;
-                this.subBoardIterations.push(i);
+        this.startTime = new Date().getTime();
+        this.loadTrackerService.currLoadAmount.subscribe(amt => {
+            console.log('Load Amount', amt);
+            if (amt < 100) {
+                setTimeout(() => { this.subBoardIterations.push(this.mainCounter); }, 250);
+            } else {
+                console.log(`Total Time to build ${this.levels} levels: ${(new Date().getTime() - this.startTime) / 60000}`);
             }
-            this.startTime = new Date().getTime();
-            console.log('Boards: ', count + 1);
-        }
+        });
     }
 
-    boardChanged(board: Board): void {
+    async boardChanged(board: Board): Promise<void> {
         this.mainCounter++;
         if (!this.boardsByLevel[board.level]) {
             this.boardsByLevel[board.level] = [];
         }
         this.boardsByLevel[board.level][board.parentQuadrant] = board;
-        if (this.mainCounter >= Math.pow(9, this.levels - 1)) {
-            console.log(`Total Time to build ${this.levels} levels: ${(new Date().getTime() - this.startTime) / 60000}`);
+        if (this.levels > 1) {
+            this.loadTrackerService.updateLoad((this.mainCounter / (Math.pow(9, this.levels - 1) + 1)) * 100);
+        } else {
+            this.loadTrackerService.updateLoad(100);
         }
     }
 
@@ -56,6 +59,7 @@ export class PlayAreaComponent implements OnInit {
     }
 
     getParentQuadrant(index: number): number {
+        // console.log(index, Math.floor(this.log9(index + 1)));
         return Math.max(Math.floor(this.log9(index + 1)) - 9, 0);
     }
 

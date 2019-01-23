@@ -6,12 +6,14 @@ import { AppComponent } from './app.component';
 import { PlayAreaComponent } from './play-area/play-area.component';
 import { SudokuModule } from 'sudoku';
 import { StartMenuComponent } from './start-menu/start-menu.component';
+import { LoadingViewComponent } from './loading-view/loading-view.component';
 
 @NgModule({
 	declarations: [
         AppComponent,
         PlayAreaComponent,
-        StartMenuComponent
+        StartMenuComponent,
+        LoadingViewComponent
 	],
 	imports: [
 		BrowserModule,
