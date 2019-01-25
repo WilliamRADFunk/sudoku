@@ -10,7 +10,7 @@ export class GameBoardComponent implements OnChanges {
     @Input() board: Board;
     isLoading: boolean = true;
     @Input() level: number;
-    @Input() parentQuadrant: number;
+    @Input() boardRegistryIndex: number;
 	@Input() reveal: boolean;
 
 	constructor() { }

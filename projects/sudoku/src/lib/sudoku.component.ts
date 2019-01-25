@@ -21,7 +21,7 @@ export class SudokuComponent implements OnDestroy, OnInit {
     @Input() isDev?: boolean;
     @Input() isSolo?: boolean;
     @Input() level: number;
-    @Input() parentQuadrant: number;
+    @Input() boardRegistryIndex: number;
 	reveal: boolean = false;
 	subscriptions: Subscription[] = [];
 	title: string = 'sudoku';
@@ -34,7 +34,7 @@ export class SudokuComponent implements OnDestroy, OnInit {
 	}
 
 	ngOnInit(): void {
-        this.board = this.boardHandlerService.boardBuilder(this.isSolo ? null : this.inputPrimers, this.level, this.parentQuadrant);
+        this.board = this.boardHandlerService.boardBuilder(this.isSolo ? null : this.inputPrimers, this.level, this.boardRegistryIndex);
         this.boardUpdate.emit(JSON.parse(JSON.stringify(this.board)));
 		this.subscriptions.push(this.boardHandlerService.activeControlDigit.subscribe(num => {
 			this.activeControl = num;
@@ -52,7 +52,7 @@ export class SudokuComponent implements OnDestroy, OnInit {
 		this.board = null;
 		setTimeout(() => {
             this.board = this.boardHandlerService.boardBuilder(
-                this.isSolo ? null : this.inputPrimers, this.level, this.parentQuadrant);
+                this.isSolo ? null : this.inputPrimers, this.level, this.boardRegistryIndex);
         }, 250);
 	}
 

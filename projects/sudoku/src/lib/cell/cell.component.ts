@@ -14,7 +14,7 @@ export class CellComponent implements OnDestroy, OnInit {
 	gameOver: boolean;
     @Input() level: number;
     @Input() position: [number, number, number];
-    @Input() parentQuadrant: number;
+    @Input() boardRegistryIndex: number;
 	@Input() reveal: boolean;
 	subscriptions: Subscription[] = [];
 
@@ -36,6 +36,6 @@ export class CellComponent implements OnDestroy, OnInit {
 	}
 
 	cellClicked() {
-		this.boardHandler.clickCell(this.position[0], this.position[1], this.level, this.parentQuadrant);
+		this.boardHandler.clickCell(this.position[0], this.position[1], this.level, this.boardRegistryIndex);
 	}
 }

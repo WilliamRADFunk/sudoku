@@ -4,7 +4,7 @@
 			*ngFor="let col of [0, 1, 2];"
             [level]="level"
             [position]="[getRow(row), getCol(col), quadrant]"
-            [parentQuadrant]="parentQuadrant"
+            [boardRegistryIndex]="boardRegistryIndex"
 			[reveal]="reveal"></sudoku-cell>
 	</div>
 </div>

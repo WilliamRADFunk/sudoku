@@ -22,9 +22,10 @@ const quadrantPositions: [number, number][][] = [
 export class PlayAreaComponent implements OnInit {
     public readonly boardsByLevel: Board[][] = [];
     @Input() levels: number;
-    mainCounter: number = 0;
-    startTime: number;
+    private mainCounter: number = 0;
+    private startTime: number;
     subBoardIterations: number[] = [];
+    private totalNumberOfBoards: number = 0;
 
     constructor(private readonly loadTrackerService: LoadTrackerService) { }
 
@@ -38,39 +39,56 @@ export class PlayAreaComponent implements OnInit {
                 console.log(`Total Time to build ${this.levels} levels: ${(new Date().getTime() - this.startTime) / 60000}`);
             }
         });
+        for (let i = 0; i < this.levels; i++) {
+            this.totalNumberOfBoards += Math.pow(9, i);
+        }
     }
 
-    async boardChanged(board: Board): Promise<void> {
+    boardChanged(board: Board): void {
         this.mainCounter++;
         if (!this.boardsByLevel[board.level]) {
             this.boardsByLevel[board.level] = [];
         }
-        this.boardsByLevel[board.level][board.parentQuadrant] = board;
+        this.boardsByLevel[board.level][board.boardRegistryIndex] = board;
         if (this.levels > 1) {
-            this.loadTrackerService.updateLoad((this.mainCounter / (Math.pow(9, this.levels - 1) + 1)) * 100);
+            this.loadTrackerService.updateLoad((this.mainCounter / this.totalNumberOfBoards) * 100);
         } else {
             this.loadTrackerService.updateLoad(100);
         }
     }
-
+    // TODO: Still fine-tuning.
     getLevel(index: number): number {
-        const level = Math.floor(this.log9(Math.max(index, 1))) + 1;
-        return level;
+        if (index < 9) {
+            return 1;
+        }
+        let remainder = index;
+        for (let i = 0; i < this.levels; i++) {
+            remainder -= Math.max(Math.pow(9, i) - 1, 0);
+            if (remainder <= 0) {
+                return i;
+            }
+        }
     }
 
-    getParentQuadrant(index: number): number {
-        // console.log(index, Math.floor(this.log9(index + 1)));
-        return Math.max(Math.floor(this.log9(index + 1)) - 9, 0);
+    getBoardRegistryIndex(index: number): number {
+        if (!index) {
+            return 0;
+        } else if (this.getLevel(index) > 1) {
+            return Math.abs(index - this.boardsByLevel[this.getLevel(index) - 1].length);
+        } else {
+            return Math.abs(index + 1 - this.boardsByLevel[this.getLevel(index) - 1].length);
+        }
     }
 
     getPrimers(index: number, relatedLevel: number): Cell[] {
         const quadrant = index % 9;
         const quadPosList = quadrantPositions[quadrant].slice();
-        return quadPosList.map(pos => {
-            return JSON.parse(JSON.stringify(
-                this.boardsByLevel[relatedLevel][Math.max(Math.floor(this.log9(index + 1)) - 9, 0)].cellStates[pos[0]][pos[1]]
-            ));
-        });
+        let parentBoardIndex = 0;
+        if (index) {
+            parentBoardIndex = Math.floor(Math.abs(index - this.boardsByLevel[this.getLevel(index) - 1].length) / 9);
+        }
+        const boardInQuestion = this.boardsByLevel[relatedLevel][parentBoardIndex].cellStates;
+        return quadPosList.map(pos => JSON.parse(JSON.stringify(boardInQuestion[pos[0]][pos[1]])));
     }
 
     log9(n) {

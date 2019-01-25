@@ -75,7 +75,7 @@ export class BoardHandlerService {
 		this.activeControlDigit.next(this.activeControlDigitLocal);
 	}
 
-	boardBuilder(primers: Row, level: number, parentQuadrant: number): Board {
+	boardBuilder(primers: Row, level: number, boardRegistryIndex: number): Board {
         this.primers = primers || null;
 		const start = new Date().getTime();
 		this.gameOverLocal = false;
@@ -85,7 +85,7 @@ export class BoardHandlerService {
             cellStates: [],
             isSolved: false,
             level: level,
-            parentQuadrant: parentQuadrant
+            boardRegistryIndex: boardRegistryIndex
         };
 		// Retries if a generated board requires too many clues to be unique.
 		do {
@@ -113,7 +113,7 @@ export class BoardHandlerService {
 		return JSON.parse(JSON.stringify(this.board));
 	}
 
-	clickCell(row: number, col: number, level: number, parentQuad: number): void {
+	clickCell(row: number, col: number, level: number, registeredIndex: number): void {
 		const cell = this.getCell(row, col);
 		// Clues can't be changed, moveon.
 		if (cell.isClue) {
@@ -130,8 +130,8 @@ export class BoardHandlerService {
 				this.gameOver.next(this.gameOverLocal);
 				console.log('Winner. Winner. Chicken Dinner!');
             }
-            console.log('BoardHandlerService', 'clickCell', 'boardUpdated', level, parentQuad);
-            this.boardOverlordService.boardUpdated(cell.userAssignedValue, row, col, level, parentQuad);
+            console.log('BoardHandlerService', 'clickCell', 'boardUpdated', level, registeredIndex);
+            this.boardOverlordService.boardUpdated(cell.userAssignedValue, row, col, level, registeredIndex);
 			return;
 		}
 		// In flag mode, user adds or removes "potential" digits from view.

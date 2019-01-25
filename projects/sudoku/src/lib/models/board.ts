@@ -4,5 +4,5 @@ export interface Board {
     cellStates: Cell[][];
     isSolved: boolean;
     level: number;
-    parentQuadrant: number;
+    boardRegistryIndex: number;
 }

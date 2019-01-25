@@ -10,7 +10,7 @@ export class QuadrantComponent implements OnChanges {
 	@Input() quadrant: number;
 	@Input() board: Board;
     @Input() level: number;
-    @Input() parentQuadrant: number;
+    @Input() boardRegistryIndex: number;
 	@Input() reveal: boolean;
 
 	showQuadrant: boolean = true;
