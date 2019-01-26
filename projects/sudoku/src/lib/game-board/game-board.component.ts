@@ -17,7 +17,6 @@ export class GameBoardComponent implements OnChanges {
 
 	ngOnChanges(e: SimpleChanges) {
 		if (e.board && e.board.currentValue) {
-			this.board.cellStates = [];
 			setTimeout(() => {
                 this.board = e.board.currentValue;
                 this.isLoading = false;

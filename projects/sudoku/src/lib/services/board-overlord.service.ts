@@ -154,7 +154,7 @@ export class BoardOverlordService {
         if (isUp) {
             const primer = primerPlacements.findIndex(p => p[0] === row && p[1] === col);
             if (primer > -1) {
-                const nextRowCell = quadrantPositions[Math.floor(registeredIndex / 9) + (registeredIndex % 9)][primer];
+                const nextRowCell = quadrantPositions[registeredIndex % 9][primer];
                 console.log('setConnectedCells', 'going up', nextRowCell, Math.floor(registeredIndex / 9));
                 this.setConnectedCells(
                     value,
@@ -168,13 +168,13 @@ export class BoardOverlordService {
         } else {
             const primerIndex = quadrantPositions[currCell.position[2]].findIndex(cell => (cell[0] === row && cell[1] === col));
             const nextRowCell = primerPlacements[primerIndex];
-            console.log('setConnectedCells', 'going down', nextRowCell, (level * 9) + currCell.position[2]);
+            console.log('setConnectedCells', 'going down', nextRowCell, (registeredIndex * 9) + currCell.position[2]);
             this.setConnectedCells(
                 value,
                 nextRowCell[0],
                 nextRowCell[1],
                 Number(level) + 1,
-                (level * 9) + currCell.position[2],
+                (registeredIndex * 9) + currCell.position[2],
                 false);
         }
     }

@@ -56,16 +56,15 @@ export class PlayAreaComponent implements OnInit {
             this.loadTrackerService.updateLoad(100);
         }
     }
-    // TODO: Still fine-tuning.
     getLevel(index: number): number {
-        if (index < 9) {
+        if (!index) {
             return 1;
         }
         let remainder = index;
-        for (let i = 0; i < this.levels; i++) {
-            remainder -= Math.max(Math.pow(9, i) - 1, 0);
-            if (remainder <= 0) {
-                return i;
+        for (let i = 1; i < this.levels; i++) {
+            remainder -= Math.pow(9, i);
+            if (remainder < 0) {
+                return Math.max(i, 1);
             }
         }
     }
@@ -85,7 +84,7 @@ export class PlayAreaComponent implements OnInit {
         const quadPosList = quadrantPositions[quadrant].slice();
         let parentBoardIndex = 0;
         if (index) {
-            parentBoardIndex = Math.floor(Math.abs(index - this.boardsByLevel[this.getLevel(index) - 1].length) / 9);
+            parentBoardIndex = Math.floor(Math.abs(index - this.boardsByLevel[relatedLevel].length) / 9);
         }
         const boardInQuestion = this.boardsByLevel[relatedLevel][parentBoardIndex].cellStates;
         return quadPosList.map(pos => JSON.parse(JSON.stringify(boardInQuestion[pos[0]][pos[1]])));

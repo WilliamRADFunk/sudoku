@@ -98,7 +98,7 @@ export class BoardHandlerService {
             }
 			this.clueCount = 81;
             this.shuffledPlacements = this.shuffle(placements.slice());
-            console.log('Bad Board', 'Trying again?');
+            // console.log('Bad Board', 'Trying again?');
             this.fillCounter = 0;
             this.fillRowLast = 0;
             this.fillBail = false;
