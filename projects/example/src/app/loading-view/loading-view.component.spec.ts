@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { LoadingViewComponent } from './loading-view.component';
+import { LoadTrackerService } from '../services/load-tracker.service';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 describe('LoadingViewComponent', () => {
   let component: LoadingViewComponent;
@@ -8,7 +10,9 @@ describe('LoadingViewComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ LoadingViewComponent ]
+      imports: [ NgbModule ],
+      declarations: [ LoadingViewComponent ],
+      providers: [ LoadTrackerService ]
     })
     .compileComponents();
   }));

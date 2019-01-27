@@ -1,6 +1,7 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnDestroy, OnInit, Input } from '@angular/core';
 import { Board, Cell } from 'sudoku';
 import { LoadTrackerService } from '../services/load-tracker.service';
+import { Subscription } from 'rxjs';
 
 const quadrantPositions: [number, number][][] = [
     [ [0, 0], [0, 1], [0, 2], [1, 0], [1, 1], [1, 2], [2, 0], [2, 1], [2, 2] ],
@@ -19,15 +20,22 @@ const quadrantPositions: [number, number][][] = [
   templateUrl: './play-area.component.html',
   styleUrls: ['./play-area.component.scss']
 })
-export class PlayAreaComponent implements OnInit {
+export class PlayAreaComponent implements OnDestroy, OnInit {
     public readonly boardsByLevel: Board[][] = [];
     @Input() levels: number;
     private mainCounter: number = 0;
     private startTime: number;
+    sub: Subscription;
     subBoardIterations: number[] = [];
     private totalNumberOfBoards: number = 0;
 
     constructor(private readonly loadTrackerService: LoadTrackerService) { }
+
+    ngOnDestroy() {
+        if (this.sub) {
+            this.sub.unsubscribe();
+        }
+    }
 
     ngOnInit() {
         this.startTime = new Date().getTime();

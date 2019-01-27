@@ -1,6 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PlayAreaComponent } from './play-area.component';
+import { LoadTrackerService } from '../services/load-tracker.service';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { SudokuModule } from 'sudoku';
 
 describe('PlayAreaComponent', () => {
   let component: PlayAreaComponent;
@@ -8,7 +11,14 @@ describe('PlayAreaComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PlayAreaComponent ]
+      imports: [
+        NgbModule,
+        SudokuModule
+      ],
+      declarations: [
+        PlayAreaComponent
+      ],
+      providers: [ LoadTrackerService ]
     })
     .compileComponents();
   }));
@@ -16,6 +26,7 @@ describe('PlayAreaComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(PlayAreaComponent);
     component = fixture.componentInstance;
+    component.levels = 1;
     fixture.detectChanges();
   });
 

@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { StartMenuComponent } from './start-menu.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 describe('StartMenuComponent', () => {
   let component: StartMenuComponent;
@@ -8,6 +9,7 @@ describe('StartMenuComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [ NgbModule ],
       declarations: [ StartMenuComponent ]
     })
     .compileComponents();

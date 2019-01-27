@@ -23,7 +23,7 @@ describe('QuadrantComponent', () => {
             cellStates: [],
             isSolved: false,
             level: 0,
-            parentQuadrant: 0
+            boardRegistryIndex: 0
         };
 		component.quadrant = 0;
 		component.reveal = false;

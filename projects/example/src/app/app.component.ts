@@ -15,7 +15,9 @@ export class AppComponent implements OnDestroy, OnInit {
     constructor(private readonly loadTrackerService: LoadTrackerService) {}
 
     ngOnDestroy() {
-        this.sub.unsubscribe();
+        if (this.sub) {
+            this.sub.unsubscribe();
+        }
     }
 
     ngOnInit() {

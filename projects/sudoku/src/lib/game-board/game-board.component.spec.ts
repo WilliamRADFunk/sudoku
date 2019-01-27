@@ -25,7 +25,7 @@ describe('GameBoardComponent', () => {
             cellStates: [],
             isSolved: false,
             level: 0,
-            parentQuadrant: 0
+            boardRegistryIndex: 0
         };
 		component.reveal = false;
 		fixture.detectChanges();

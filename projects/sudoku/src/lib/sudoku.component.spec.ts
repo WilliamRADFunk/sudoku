@@ -27,6 +27,11 @@ describe('SudokuComponent', () => {
 	it('should create the app', () => {
 		const fixture = TestBed.createComponent(SudokuComponent);
 		const app = fixture.debugElement.componentInstance;
+		app.inputPrimers = [];
+		app.level = 1;
+		app.boardRegistryIndex = 0;
+		app.isSolo = true;
+		app.isDev = false;
 		expect(app).toBeTruthy();
 	});
 
