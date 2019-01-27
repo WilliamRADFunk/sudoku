@@ -1,8 +1,8 @@
 <!--The content below is only a placeholder and can be replaced.-->
 <div class="container-fluid">
 	<div class="d-flex justify-content-center">
-		<div class="col-3"></div>
-		<div class="col-6 text-center text-white mt-5">
+		<div class="col-2"></div>
+		<div class="col-8 text-center text-white mt-5">
             <span class="h1 d-block d-sm-inline-block mb-2 mb-sm-0">SuDoKu</span>
             <span *ngIf="isDev">
                 <button
@@ -17,16 +17,16 @@
                     type="button">Rebuild</button>
             </span>
 		</div>
-		<div class="col-3"></div>
+		<div class="col-2"></div>
 	</div>
 	<div class="d-flex justify-content-center mt-2 mt-sm-5">
-		<div class="col-3"></div>
+		<div class="col-2"></div>
 		<sudoku-game-board [board]="board" [reveal]="reveal" [level]="level" [boardRegistryIndex]="boardRegistryIndex"></sudoku-game-board>
-		<div class="col-3"></div>
+		<div class="col-2"></div>
 	</div>
 	<div class="d-flex justify-content-center mt-2 mt-sm-5">
-		<div class="col-xl-3"></div>
-		<div class="col-12 col-xl-6 text-center">
+		<div class="col-xl-2"></div>
+		<div class="col-12 col-xl-8 text-center">
 			<div class="btn-group btn-group-sm d-inline-block d-lg-none">
 				<button *ngIf="activeControlMode"
 					class="btn btn-info shadow fa fa-pencil"
@@ -80,7 +80,7 @@
 					type="button"></button>
 			</div>
 		</div>
-		<div class="col-xl-3"></div>
+		<div class="col-xl-2"></div>
 	</div>
 </div>
 

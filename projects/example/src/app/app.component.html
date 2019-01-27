@@ -1,3 +1,28 @@
-<sudoku-start-menu *ngIf="!levels" (levelSelected)="startGame($event)"></sudoku-start-menu>
-<sudoku-loading-view [class.d-none]="loadedAmount === 0 || isDoneLoading()"></sudoku-loading-view>
-<sudoku-play-area *ngIf="levels" [levels]="levels" [class.d-none]="!isDoneLoading()"></sudoku-play-area>
+<div class="row">
+    <div class="col-2 w-100">
+        <span *ngIf="levels && levels > 1" [style.visibility]="isDoneLoading() ? 'visible' : 'hidden'">
+            <span class=" d-block text-center text-white"><u>Level</u></span>
+            <div class="btn-group btn-group-sm d-inline-block">
+                <button *ngFor="let lvl of getLevelArray(); let i = index;"
+                    class="btn shadow"
+                    [class.btn-success]="chosenViewLevel === i + 1"
+                    [class.btn-info]="chosenViewLevel !== i + 1"
+                    (click)="choseLevelView(i + 1)"
+                    type="button">{{ i + 1 }}</button>
+            </div>
+            <!-- <button *ngFor="let lvl of getLevelArray(); let i = index;"
+                class="btn btn-sm btn-info d-block"
+                type="button">
+                Level: {{i + 1}}
+            </button> -->
+        </span>
+    </div>
+    <div class="col-8 w-100">
+        <sudoku-start-menu *ngIf="!levels" (levelSelected)="startGame($event)"></sudoku-start-menu>
+        <sudoku-loading-view [class.d-none]="loadedAmount === 0 || isDoneLoading()"></sudoku-loading-view>
+        <sudoku-play-area *ngIf="levels" [levels]="levels" [class.d-none]="!isDoneLoading()"></sudoku-play-area>
+    </div>
+    <div class="col-2 w-100">
+        <span *ngIf="levels" [style.visibility]="isDoneLoading() ? 'visible' : 'hidden'"></span>
+    </div>
+</div>
