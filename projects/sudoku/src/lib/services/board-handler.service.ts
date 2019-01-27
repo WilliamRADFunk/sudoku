@@ -116,7 +116,7 @@ export class BoardHandlerService {
 	clickCell(row: number, col: number, level: number, registeredIndex: number): void {
 		const cell = this.getCell(row, col);
 		// Clues can't be changed, moveon.
-		if (cell.isClue) {
+		if (cell.isClue || cell.locked) {
 			return;
 		}
 		// In permanent mode, user changes official digit and checks game state.

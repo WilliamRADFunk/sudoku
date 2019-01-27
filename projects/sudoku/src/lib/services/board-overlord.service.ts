@@ -105,24 +105,24 @@ export class BoardOverlordService {
             const primer = primerPlacements.findIndex(p => p[0] === row && p[1] === col);
             if (primer > -1) {
                 const nextRowCell = quadrantPositions[registeredIndex][primer];
-                console.log('lockWinCells', 'going up', nextRowCell, Math.floor(currentBoard.boardRegistryIndex / 9));
+                console.log('lockWinCells', 'going up', nextRowCell, Math.floor(registeredIndex / 9));
                 this.lockWinCells(
                     nextRowCell[0],
                     nextRowCell[1],
                     Number(level) - 1,
-                    Math.floor(currentBoard.boardRegistryIndex / 9),
+                    Math.floor(registeredIndex / 9),
                     true);
             } // else simply falls off and therefore returns void as its cell isn't upwardly relevant.
         // isDown
         } else {
             const primerIndex = quadrantPositions[currCell.position[2]].findIndex(cell => (cell[0] === row && cell[1] === col));
             const nextRowCell = primerPlacements[primerIndex];
-            console.log('lockWinCells', 'going down', nextRowCell, (level * 9) + currCell.position[2]);
+            console.log('lockWinCells', 'going down', nextRowCell, (registeredIndex * 9) + currCell.position[2]);
             this.lockWinCells(
                 nextRowCell[0],
                 nextRowCell[1],
                 Number(level) + 1,
-                (level * 9) + currCell.position[2],
+                (registeredIndex * 9) + currCell.position[2],
                 false);
         }
     }
