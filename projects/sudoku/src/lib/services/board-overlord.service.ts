@@ -89,6 +89,10 @@ export class BoardOverlordService {
         return count;
     }
 
+    getLevelLength(level: number): number {
+        return this.boardsByLevel[level].length;
+    }
+
     lockWinCells(row: number, col: number, level: number, registeredIndex: number, isUp: boolean) {
         // Reached the last level and beyond. Climb out of the rabbit hole.
         if (level <= -1 || level >= this.boardsByLevel.length) {
