@@ -27,6 +27,7 @@ describe('PlayAreaComponent', () => {
     fixture = TestBed.createComponent(PlayAreaComponent);
     component = fixture.componentInstance;
     component.levels = 1;
+    component.activeBoardIndex = -1;
     fixture.detectChanges();
   });
 
