@@ -21,6 +21,7 @@ const quadrantPositions: [number, number][][] = [
   styleUrls: ['./play-area.component.scss']
 })
 export class PlayAreaComponent implements OnDestroy, OnInit {
+    @Input() activeBoardIndex: number;
     public readonly boardsByLevel: Board[][] = [];
     @Input() levels: number;
     private mainCounter: number = 0;
@@ -40,11 +41,11 @@ export class PlayAreaComponent implements OnDestroy, OnInit {
     ngOnInit() {
         this.startTime = new Date().getTime();
         this.loadTrackerService.currLoadAmount.subscribe(amt => {
-            console.log('Load Amount', amt);
+            console.log('Load Amount', amt + '%');
             if (amt < 100) {
                 setTimeout(() => { this.subBoardIterations.push(this.mainCounter); }, 250);
             } else {
-                console.log(`Total Time to build ${this.levels} levels: ${(new Date().getTime() - this.startTime) / 60000}`);
+                console.log(`Total Time to build ${this.levels} levels: ${(new Date().getTime() - this.startTime) / 60000} minutes`);
             }
         });
         for (let i = 0; i < this.levels; i++) {

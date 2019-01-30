@@ -6,6 +6,11 @@ $enable-shadows: true;
 $fa-font-path: '~font-awesome/fonts';
 @import '~font-awesome/scss/font-awesome';
 
+html {
+  width: 100%;
+}
+
 body {
   background-color: #C62F2C;
+  width: 99%;
 }

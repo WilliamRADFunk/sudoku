@@ -1,25 +1,26 @@
 <div class="row">
     <div class="col-2 w-100 text-center">
         <span *ngIf="levels && levels > 1" [style.visibility]="isDoneLoading() ? 'visible' : 'hidden'">
+            <span class=" d-block text-white mb-5 mt-5">Board # {{ this.activeBoard + 2 }} of {{ totalNumberOfBoards }}</span>
             <span class=" d-block text-white mt-5"><u>Level 1</u></span>
             <div class="btn-group btn-group-sm d-inline-block mt-3">
                 <button
                     class="btn shadow"
-                    [class.btn-success]="chosenViewBoard === 0"
-                    [class.btn-warning]="chosenViewBoard > 0"
-                    (click)="choseBoardView(0)"
+                    [class.btn-success]="chosenViewBoard.length === 1"
+                    [class.btn-warning]="chosenViewBoard.length > 1"
+                    (click)="choseBoardView(-1, 0)"
                     type="button">{{ 1 }}</button>
             </div>
-            <span *ngIf="chosenViewBoard >= 0">
+            <span *ngIf="chosenViewBoard.length >= 1">
                 <div *ngFor="let lvl of getLevelsExposed(); let i = index;">
                     <span class=" d-block text-white mt-5"><u>Level {{ i + 2 }}</u></span>
                     <div class="btn-group btn-group-sm d-inline-block mt-3">
                         <button *ngFor="let num of [1, 2, 3, 4, 5, 6, 7, 8, 9];"
                             class="btn shadow"
-                            [class.btn-success]="chosenViewBoard === (i * 9) + num"
-                            [class.btn-warning]="getMidLevel(num)"
-                            [class.btn-info]="chosenViewBoard !== (i * 9) + num"
-                            (click)="choseBoardView((i * 9) + num)"
+                            [class.btn-success]="chosenViewBoard.length <= (i + 2) && chosenViewBoard[i + 1] === num - 1"
+                            [class.btn-warning]="chosenViewBoard.length > (i + 2) && chosenViewBoard[i + 1] === num - 1"
+                            [class.btn-info]="chosenViewBoard[i + 1] !== num - 1"
+                            (click)="choseBoardView((num - 1), (i + 1))"
                             type="button">{{ num }}</button>
                     </div>
                 </div>
@@ -29,7 +30,10 @@
     <div class="col-8 w-100">
         <sudoku-start-menu *ngIf="!levels" (levelSelected)="startGame($event)"></sudoku-start-menu>
         <sudoku-loading-view [class.d-none]="loadedAmount === 0 || isDoneLoading()"></sudoku-loading-view>
-        <sudoku-play-area *ngIf="levels" [levels]="levels" [class.d-none]="!isDoneLoading()"></sudoku-play-area>
+        <sudoku-play-area *ngIf="levels"
+            [class.d-none]="!isDoneLoading()"
+            [activeBoardIndex]="activeBoard"
+            [levels]="levels"></sudoku-play-area>
     </div>
     <div class="col-2 w-100">
         <span *ngIf="levels" [style.visibility]="isDoneLoading() ? 'visible' : 'hidden'"></span>

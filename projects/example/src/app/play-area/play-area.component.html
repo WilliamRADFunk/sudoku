@@ -3,7 +3,8 @@
     [isDev]=true
     [isSolo]="false"
     level="0"
-    boardRegistryIndex="0"></su-do-ku>
+    boardRegistryIndex="0"
+    [class.d-none]="activeBoardIndex !== -1"></su-do-ku>
 
 <div *ngIf="boardsByLevel[0]?.length">
     <su-do-ku *ngFor="let s of subBoardIterations; let i = index;"
@@ -12,5 +13,6 @@
         [isSolo]="false"
         [inputPrimers]="getPrimers(i, getLevel(i) - 1)"
         [level]="getLevel(i)"
-        [boardRegistryIndex]="getBoardRegistryIndex(i)"></su-do-ku>
+        [boardRegistryIndex]="getBoardRegistryIndex(i)"
+        [class.d-none]="activeBoardIndex !== i"></su-do-ku>
 </div>

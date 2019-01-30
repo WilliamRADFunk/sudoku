@@ -27,6 +27,7 @@
                     [class.btn-info]="activeLevel !== num"
                     (click)="levelChange(num)"
                     [ngbTooltip]="getTooltipMsg(num)"
+                    placement="bottom"
                     type="button">{{ num }}</button>
             </div>
         </div>

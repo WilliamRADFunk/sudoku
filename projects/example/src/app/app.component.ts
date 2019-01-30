@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { LoadTrackerService } from './services/load-tracker.service';
 import { Subscription } from 'rxjs';
-import { BoardOverlordService } from 'sudoku/lib/services/board-overlord.service';
+
+import { LoadTrackerService } from './services/load-tracker.service';
 
 @Component({
 	selector: 'app-root',
@@ -9,14 +9,14 @@ import { BoardOverlordService } from 'sudoku/lib/services/board-overlord.service
 	styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnDestroy, OnInit {
-    chosenViewBoard: number = 0;
+    activeBoard: number = -1;
+    chosenViewBoard: number[] = [-1];
     levels: number;
     loadedAmount: number = 0;
     sub: Subscription;
+    totalNumberOfBoards: number = 0;
 
-    constructor(
-        private readonly boardOverlordService: BoardOverlordService,
-        private readonly loadTrackerService: LoadTrackerService) {}
+    constructor(private readonly loadTrackerService: LoadTrackerService) {}
 
     ngOnDestroy() {
         if (this.sub) {
@@ -25,14 +25,17 @@ export class AppComponent implements OnDestroy, OnInit {
     }
 
     ngOnInit() {
-        console.log('levels', this.levels);
         this.loadTrackerService.currLoadAmount.subscribe(amt => {
             setTimeout(() => { this.loadedAmount = amt; }, 200);
         });
     }
 
-    choseBoardView(num: number) {
-        this.chosenViewBoard = num;
+    choseBoardView(num: number, level: number) {
+        if (level < this.chosenViewBoard.length - 1) {
+            this.chosenViewBoard.length = level + 1;
+        }
+        this.chosenViewBoard[level || 0] = num;
+        this.updateActiveBoard();
     }
 
     getLevelArray() {
@@ -40,28 +43,51 @@ export class AppComponent implements OnDestroy, OnInit {
     }
 
     getLevelsExposed() {
-        if (!this.chosenViewBoard) {
+        if (this.chosenViewBoard.length === -1) {
             return [1];
         }
-        let remainder = this.chosenViewBoard + 9;
-        for (let i = 1; i < this.levels; i++) {
-            remainder -= Math.pow(9, i);
-            if (remainder < 0) {
-                console.log('getLevelsExposed', Array(Math.max(i, 1)).fill(1));
-                return Array(Math.max(i, 1)).fill(1);
-            }
-        }
-    }
-
-    getMidLevel(num) {
-        return (num === Math.floor(this.chosenViewBoard / 9));
+        return this.chosenViewBoard.length < this.levels ? Array(this.chosenViewBoard.length) : Array(this.levels - 1);
     }
 
     isDoneLoading() {
         return this.loadedAmount >= 100;
     }
 
+    powerFactorial(n) {
+        if (n <= 0) {
+            return 0;
+        }
+        return Math.pow(9, n) + Math.pow(9, (n - 1));
+    }
+
     startGame(level: number): void {
         this.levels = level;
+        for (let i = 0; i < this.levels; i++) {
+            this.totalNumberOfBoards += Math.pow(9, i);
+        }
+    }
+
+    updateActiveBoard() {
+        // Only 0 index is single top level board.
+        if (this.chosenViewBoard.length === 1) {
+            this.activeBoard = -1;
+            return;
+        }
+        // 1st index has no multiplier. It's 0-8 indices.
+        if (this.chosenViewBoard.length === 2) {
+            this.activeBoard = this.chosenViewBoard[1];
+            return;
+        }
+        // A convoluted way of navigating through an exponentially
+        // increasing number of connected boards.
+        let index = this.powerFactorial(this.chosenViewBoard.length - 2) - 1;
+        for (let i = 2; i <= this.chosenViewBoard.length - 1; i++) {
+            index += this.chosenViewBoard[i - 1] * Math.pow(9, (i - 1));
+        }
+        index += this.chosenViewBoard[this.chosenViewBoard.length - 1];
+        if (this.chosenViewBoard.length > 3) {
+            index += 1;
+        }
+        this.activeBoard = index;
     }
 }
