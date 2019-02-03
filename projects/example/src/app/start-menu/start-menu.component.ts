@@ -14,13 +14,16 @@ export class StartMenuComponent {
     getTooltipMsg(num: number): string {
         switch (num) {
             case 1: {
-                return 'Build time less than 5 seconds';
+                return 'Build time less than 2 seconds';
             }
             case 2: {
-                return 'Build time can take up to a minute';
+                return 'Build time less than 10 seconds';
             }
             case 3: {
-                return 'Build time can take between 5 and 8 minutes';
+                return 'Build time can take up to 2 minutes';
+            }
+            case 4: {
+                return 'Build time can take up to 10 minutes';
             }
             default: {
                 return 'Not a valid option';
@@ -29,7 +32,7 @@ export class StartMenuComponent {
     }
 
     levelChange(level: number): void {
-        this.activeLevel = (level >= 1 && 3 >= level) ? level : 1;
+        this.activeLevel = (level >= 1 && 4 >= level) ? level : 1;
     }
 
     startGame(): void {

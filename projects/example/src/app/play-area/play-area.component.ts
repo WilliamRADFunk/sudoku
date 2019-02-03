@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit, Input } from '@angular/core';
 import { Board, Cell } from 'sudoku';
 import { LoadTrackerService } from '../services/load-tracker.service';
 import { Subscription } from 'rxjs';
+import { BoardOverlordService } from 'sudoku/lib/services/board-overlord.service';
 
 const quadrantPositions: [number, number][][] = [
     [ [0, 0], [0, 1], [0, 2], [1, 0], [1, 1], [1, 2], [2, 0], [2, 1], [2, 2] ],
@@ -30,7 +31,9 @@ export class PlayAreaComponent implements OnDestroy, OnInit {
     subBoardIterations: number[] = [];
     private totalNumberOfBoards: number = 0;
 
-    constructor(private readonly loadTrackerService: LoadTrackerService) { }
+    constructor(
+        private readonly boardOverlordService: BoardOverlordService,
+        private readonly loadTrackerService: LoadTrackerService) { }
 
     ngOnDestroy() {
         if (this.sub) {
@@ -41,11 +44,17 @@ export class PlayAreaComponent implements OnDestroy, OnInit {
     ngOnInit() {
         this.startTime = new Date().getTime();
         this.loadTrackerService.currLoadAmount.subscribe(amt => {
-            console.log('Load Amount', amt + '%');
             if (amt < 100) {
                 setTimeout(() => { this.subBoardIterations.push(this.mainCounter); }, 250);
             } else {
                 console.log(`Total Time to build ${this.levels} levels: ${(new Date().getTime() - this.startTime) / 60000} minutes`);
+                let boardBuildMsg = 'Number of boards by seconds:\n';
+                this.boardOverlordService.getBoardBuildTimes().forEach((quantity, index) => {
+                    if (quantity) {
+                        boardBuildMsg += `Boards taking ${index} second${quantity === 1 ? '' : 's'}: ${quantity}\n`;
+                    }
+                });
+                console.log(boardBuildMsg);
             }
         });
         for (let i = 0; i < this.levels; i++) {

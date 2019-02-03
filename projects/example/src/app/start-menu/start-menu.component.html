@@ -21,12 +21,13 @@
 	<div class="d-flex justify-content-center">
 		<div class="col text-center text-white mt-1">
             <div class="btn-group btn-group-lg d-lg-inline-block">
-                <button *ngFor="let num of [1, 2, 3]"
+                <button *ngFor="let num of [1, 2, 3, 4]"
                     class="btn shadow"
                     [class.btn-success]="activeLevel === num"
                     [class.btn-info]="activeLevel !== num"
                     (click)="levelChange(num)"
                     [ngbTooltip]="getTooltipMsg(num)"
+                    tooltipClass="sudoku-tooltip"
                     placement="bottom"
                     type="button">{{ num }}</button>
             </div>

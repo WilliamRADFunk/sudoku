@@ -50,7 +50,7 @@ const primerPlacements: [number, number][] = [
 ];
 
 const opts = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-const clueCutoff = 71;
+const clueCutoff = 68;
 @Injectable()
 export class BoardHandlerService {
 	private activeControlDigitLocal: number = 0;
@@ -98,17 +98,14 @@ export class BoardHandlerService {
             }
 			this.clueCount = 81;
             this.shuffledPlacements = this.shuffle(placements.slice());
-            // console.log('Bad Board', 'Trying again?');
             this.fillCounter = 0;
             this.fillRowLast = 0;
             this.fillBail = false;
 			successfulBuild = this.fillCell(0, 0);
-		} while (!successfulBuild || !this.obscureCells());
-		console.log(
-			'BuildTime: ',
-			Math.ceil((new Date().getTime() - start) / 1000),
-			'Seconds, ',
-			(81 - this.clueCount), 'Clues');
+        } while (!successfulBuild || !this.obscureCells());
+        const timeTaken = (new Date().getTime() - start) / 1000;
+		console.log('BuildTime: ', timeTaken, 'Seconds, ', (81 - this.clueCount), 'Clues');
+        this.boardOverlordService.updateBoardBuildTimes(Math.ceil(timeTaken));
         this.boardOverlordService.registerBoard(this.board);
 		return JSON.parse(JSON.stringify(this.board));
 	}

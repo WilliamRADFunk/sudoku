@@ -24,6 +24,7 @@ const primerPlacements: [number, number][] = [
 })
 export class BoardOverlordService {
     private boardsByLevel: Board[][] = [];
+    private boardBuildTimes: number[] = Array(20).fill(0);
     private oldWinBoards: [number, number][] = [];
     private newWinBoards: [number, number][] = [];
 
@@ -89,6 +90,10 @@ export class BoardOverlordService {
         return count;
     }
 
+    getBoardBuildTimes(): number[] {
+        return this.boardBuildTimes.slice();
+    }
+
     getLevelLength(level: number): number {
         return this.boardsByLevel[level].length;
     }
@@ -140,7 +145,8 @@ export class BoardOverlordService {
             'registerBoard',
             this.boardsByLevel[0].length,
             this.boardsByLevel[1] && this.boardsByLevel[1].length,
-            this.boardsByLevel[2] && this.boardsByLevel[2].length);
+            this.boardsByLevel[2] && this.boardsByLevel[2].length,
+            this.boardsByLevel[3] && this.boardsByLevel[3].length);
     }
 
     setConnectedCells(value: number, row: number, col: number, level: number, registeredIndex: number, isUp: boolean): void {
@@ -181,5 +187,8 @@ export class BoardOverlordService {
                 (registeredIndex * 9) + currCell.position[2],
                 false);
         }
+    }
+    updateBoardBuildTimes(seconds: number): void {
+        this.boardBuildTimes[seconds]++;
     }
 }
