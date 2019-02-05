@@ -1,7 +1,9 @@
 import { TestBed, async } from '@angular/core/testing';
-import { AppComponent } from './app.component';
-import { SudokuModule } from 'sudoku';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+
+import { SudokuModule } from 'sudoku';
+
+import { AppComponent } from './app.component';
 import { LoadTrackerService } from './services/load-tracker.service';
 import { StartMenuComponent } from './start-menu/start-menu.component';
 import { LoadingViewComponent } from './loading-view/loading-view.component';
@@ -20,12 +22,14 @@ describe('AppComponent', () => {
 				LoadingViewComponent,
 				PlayAreaComponent
 			],
-			providers: [ LoadTrackerService ]
-		}).compileComponents();
+			providers: [
+                LoadTrackerService
+            ]
+		});
 	}));
 
 	it('should create the app', () => {
-		const fixture = TestBed.createComponent(AppComponent);
+        const fixture = TestBed.createComponent(AppComponent);
 		const app = fixture.debugElement.componentInstance;
 		expect(app).toBeTruthy();
 	});

@@ -1,8 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+
+import { SudokuModule } from 'sudoku';
 
 import { LoadingViewComponent } from './loading-view.component';
 import { LoadTrackerService } from '../services/load-tracker.service';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 describe('LoadingViewComponent', () => {
   let component: LoadingViewComponent;
@@ -10,16 +12,23 @@ describe('LoadingViewComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ NgbModule ],
-      declarations: [ LoadingViewComponent ],
-      providers: [ LoadTrackerService ]
-    })
-    .compileComponents();
+        imports: [
+            NgbModule,
+            SudokuModule
+        ],
+        declarations: [
+            LoadingViewComponent
+        ],
+        providers: [
+            LoadTrackerService
+        ]
+    }).compileComponents();
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(LoadingViewComponent);
     component = fixture.componentInstance;
+    component.loadedAmount = 0;
     fixture.detectChanges();
   });
 
