@@ -28,7 +28,6 @@ describe('CellComponent', () => {
             flagValues: [],
             immutable: false,
 			isClue: false,
-			neighbors: [],
 			position: [0, 0, 0],
 			userAssignedValue: null,
 			value: null

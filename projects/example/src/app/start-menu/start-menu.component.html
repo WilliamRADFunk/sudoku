@@ -30,7 +30,8 @@
                     [ngbTooltip]="getTooltipMsg(num)"
                     tooltipClass="sudoku-tooltip"
                     placement="bottom"
-                    type="button">{{ num }}</button>
+                    type="button"
+                    [disabled]="num === 4">{{ num }}</button>
             </div>
         </div>
     </div>
