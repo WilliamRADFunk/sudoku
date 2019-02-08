@@ -15,12 +15,15 @@ body {
   width: 99%;
 }
 
-.sudoku-tooltip .tooltip-inner {
-    background-color: aliceblue;
-    border: 5px solid #B19CD9;
-    box-shadow: 2px 2px 2px 2px #333333;
-    color: #000000;
-}
-.sudoku-tooltip .arrow::before {
-    border-bottom-color: #B19CD9;
+.sudoku-tooltip {
+    & .tooltip-inner {
+        background-color: aliceblue;
+        border: 5px solid #B19CD9;
+        box-shadow: 2px 2px 2px 2px #333333;
+        color: #000000;
+        min-width: 200px;
+    }
+    & .arrow::before {
+        border-bottom-color: #B19CD9;
+    }
 }

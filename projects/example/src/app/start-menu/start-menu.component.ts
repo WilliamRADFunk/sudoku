@@ -23,7 +23,7 @@ export class StartMenuComponent {
                 return 'Build time can take up to 2 minutes';
             }
             case 4: {
-                return 'Build time can take more than minutes';
+                return 'Build time can take more than 10 minutes';
             }
             default: {
                 return 'Not a valid option';

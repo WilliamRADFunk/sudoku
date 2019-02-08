@@ -93,7 +93,7 @@ export class BoardHandlerService {
             if (this.primers) {
                 primerPlacements.forEach((pl, index) => {
                     this.board.cellStates[pl[0]][pl[1]] = CellMaker(
-                        this.primers[index].value, [pl[0], pl[1], index], [], true, this.primers[index].isClue);
+                        this.primers[index].value, [pl[0], pl[1], index], true, this.primers[index].isClue);
                 });
             }
 			this.clueCount = 81;
@@ -165,7 +165,6 @@ export class BoardHandlerService {
                 this.fillRowLast = row;
                 this.fillCounter++;
             }
-            primer.neighbors = neighbors;
             return this.fillCell(row, col + 1);
         }
 
@@ -175,7 +174,6 @@ export class BoardHandlerService {
             flagValues: [],
             immutable: false,
 			isClue: true,
-			neighbors: neighbors,
 			position: [row, col, quadLookup[row][col]],
 			userAssignedValue: 0,
 			value: 0

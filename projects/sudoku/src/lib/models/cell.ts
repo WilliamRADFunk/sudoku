@@ -5,7 +5,6 @@ export interface Cell {
     immutable: boolean;
     isClue: boolean;
     locked?: boolean;
-	neighbors: number[];
 	position: [number, number, number];
 	userAssignedValue: number;
 	value: number;

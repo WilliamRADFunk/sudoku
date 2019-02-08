@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve example",
+    "start": "ng serve example --disableHostCheck=true",
     "build": "run-s lint test:sudoku clean build:lib test:example build:example copy:configs",
     "build:example": "ng build example --prod --base-href=/applications/sudoku/",
     "build:lib": "ng build sudoku",
