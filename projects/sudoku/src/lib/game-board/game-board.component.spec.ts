@@ -23,6 +23,7 @@ describe('GameBoardComponent', () => {
 		component = fixture.componentInstance;
 		component.board = {
             cellStates: [],
+            inputPrimers: [],
             isSolved: false,
             level: 0,
             boardRegistryIndex: 0

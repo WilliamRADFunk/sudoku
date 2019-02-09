@@ -1,12 +1,12 @@
 <su-do-ku *ngIf="activeBoardIndex === -1 && activeBoard"
-    [isDev]="isDev"
+    isDev=true
     [isSolo]="isSolo"
     [board]="activeBoard"
     level="0"
     boardRegistryIndex="0"></su-do-ku>
 
 <su-do-ku *ngIf="activeBoardIndex !== -1"
-    [isDev]="isDev"
+    isDev=true
     [isSolo]="isSolo"
     [board]="activeBoard"
     [level]="getLevel(activeBoardIndex)"

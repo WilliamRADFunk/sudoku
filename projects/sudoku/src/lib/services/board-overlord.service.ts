@@ -169,7 +169,6 @@ export class BoardOverlordService {
         console.log('setConnectedCells', level, registeredIndex, [row, col], this.boardsByLevel);
         const currentBoard = this.boardsByLevel[level][registeredIndex];
         const currCell = currentBoard.cellStates[row][col];
-        console.log('currCell', currCell);
         currCell.userAssignedValue = value;
         // Move onto the next level.
         if (isUp) {

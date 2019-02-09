@@ -57,6 +57,29 @@ let fillCounter: number = 0;
 let fillRowLast: number = 0;
 let shuffledPlacements: [number, number][];
 
+const getNeighbors = (row: number, col: number, skipQuad?: boolean): number[] => {
+    const neighbors = [
+        ...board.cellStates[row].slice(0, col).filter(c => c && c.userAssignedValue).map(c => c.userAssignedValue),
+        ...board.cellStates[row].slice(col + 1, 9).filter(c => c && c.userAssignedValue).map(c => c.userAssignedValue)
+    ];
+    for (let i = 0; i < 9; i++) {
+        if (i === row || !(board.cellStates[i][col] && board.cellStates[i][col].userAssignedValue)) { continue; }
+        neighbors.push(board.cellStates[i][col].userAssignedValue);
+    }
+
+    if (!skipQuad) {
+        const quadCenter = quadrantCenters[quadLookup[row][col]];
+        for (let j = -1; j < 2; j++) {
+            for (let k = -1; k < 2; k++) {
+                const cell = board.cellStates[quadCenter[0] + j][quadCenter[1] + k];
+                const val = cell && cell.userAssignedValue;
+                if (val) { neighbors.push(val); }
+            }
+        }
+    }
+    return neighbors;
+};
+
 const fillCell = (row: number, col: number): boolean => {
     if (col >= 9) {
         row++;
@@ -143,29 +166,6 @@ const guessAtCell = (index: number): boolean => {
     } else {
         return true;
     }
-};
-
-const getNeighbors = (row: number, col: number, skipQuad?: boolean): number[] => {
-    const neighbors = [
-        ...board.cellStates[row].slice(0, col).filter(c => c && c.userAssignedValue).map(c => c.userAssignedValue),
-        ...board.cellStates[row].slice(col + 1, 9).filter(c => c && c.userAssignedValue).map(c => c.userAssignedValue)
-    ];
-    for (let i = 0; i < 9; i++) {
-        if (i === row || !(board.cellStates[i][col] && board.cellStates[i][col].userAssignedValue)) { continue; }
-        neighbors.push(board.cellStates[i][col].userAssignedValue);
-    }
-
-    if (!skipQuad) {
-        const quadCenter = quadrantCenters[quadLookup[row][col]];
-        for (let j = -1; j < 2; j++) {
-            for (let k = -1; k < 2; k++) {
-                const cell = board.cellStates[quadCenter[0] + j][quadCenter[1] + k];
-                const val = cell && cell.userAssignedValue;
-                if (val) { neighbors.push(val); }
-            }
-        }
-    }
-    return neighbors;
 };
 
 const obscureCells = (): boolean => {

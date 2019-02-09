@@ -24,13 +24,10 @@ const quadrantPositions: [number, number][][] = [
 export class PlayAreaComponent implements OnChanges, OnDestroy, OnInit {
     activeBoard: Board;
     @Input() activeBoardIndex: number;
-    isDev: boolean = true;
     isSolo: boolean;
     @Input() levels: number;
     private mainCounter: number;
-    private startTime: number;
     sub: Subscription;
-    subBoardIterations: number[] = [];
     private totalNumberOfBoards: number = 0;
 
     constructor(
@@ -45,14 +42,14 @@ export class PlayAreaComponent implements OnChanges, OnDestroy, OnInit {
 
     async ngOnInit(): Promise<void> {
         this.isSolo = this.levels === 1 ? true : false;
-        this.startTime = new Date().getTime();
+        const startTime = new Date().getTime();
         this.loadTrackerService.currLoadAmount.subscribe(amt => {
             if (amt < 100) {
                 setTimeout(() => {
                     this.addAnotherBoard();
                 }, 250);
             } else {
-                console.log(`Total Time to build ${this.levels} levels: ${(new Date().getTime() - this.startTime) / 60000} minutes`);
+                console.log(`Total Time to build ${this.levels} levels: ${(new Date().getTime() - startTime) / 60000} minutes`);
                 let boardBuildMsg = 'Number of boards by seconds:\n';
                 this.boardOverlordService.getBoardBuildTimes().forEach((quantity, index) => {
                     if (quantity) {
@@ -138,7 +135,12 @@ export class PlayAreaComponent implements OnChanges, OnDestroy, OnInit {
         if (!index) {
             return 0;
         } else if (this.getLevel(index) > 1) {
-            return Math.abs(index - this.boardOverlordService.getLevelLength(this.getLevel(index) - 1));
+            let totalSubstracted = 0;
+            const lvlAbove = this.getLevel(index) - 1;
+            for (let i = lvlAbove; i > 0; i--) {
+                totalSubstracted += this.boardOverlordService.getLevelLength(i);
+            }
+            return Math.abs(index - totalSubstracted);
         } else {
             return Math.abs(index + 1 - this.boardOverlordService.getLevelLength(this.getLevel(index) - 1));
         }
@@ -148,14 +150,14 @@ export class PlayAreaComponent implements OnChanges, OnDestroy, OnInit {
         const quadrant = index % 9;
         const quadPosList = quadrantPositions[quadrant].slice();
         let parentBoardIndex = 0;
+        let totalSubstracted = 0;
         if (index) {
-            parentBoardIndex = Math.floor(Math.abs(index - this.boardOverlordService.getLevelLength(relatedLevel)) / 9);
+            for (let i = relatedLevel; i > 0; i--) {
+                totalSubstracted += this.boardOverlordService.getLevelLength(i);
+            }
+            parentBoardIndex = Math.floor(Math.abs(index - 1 - totalSubstracted) / 9);
         }
         const boardInQuestion = this.boardOverlordService.getBoard(relatedLevel, parentBoardIndex).cellStates;
         return quadPosList.map(pos => JSON.parse(JSON.stringify(boardInQuestion[pos[0]][pos[1]])));
-    }
-
-    log9(n) {
-        return Math.log(n) / (9 ? Math.log(9) : 1);
     }
 }
