@@ -1,4 +1,5 @@
-import { Row } from '../models/row';
+import { of } from 'rxjs';
+
 import { Board } from '../models/board';
 import { CellMaker } from './CellMaker';
 import { Cell } from '../models/cell';
@@ -230,7 +231,11 @@ export const stringify = (b: Board): string => {
     return map;
 };
 
-export const BoardBuilder = (primers: Row, level: number, boardRegistryIndex: number): [Board, number] => {
+export const BoardBuilder = async (
+    primers: Cell[],
+    level: number,
+    boardRegistryIndex: number
+): Promise<{ board: Board; clueCount: number }> => {
     // Reset file variables
     clueCount = 81;
     fillBail = false;
@@ -241,10 +246,11 @@ export const BoardBuilder = (primers: Row, level: number, boardRegistryIndex: nu
     primers = primers || null;
     let successfulBuild = true;
     board = {
+        boardRegistryIndex: boardRegistryIndex,
         cellStates: [],
+        inputPrimers: primers,
         isSolved: false,
-        level: level,
-        boardRegistryIndex: boardRegistryIndex
+        level: level
     };
     // Retries if a generated board requires too many clues to be unique.
     do {
@@ -262,5 +268,6 @@ export const BoardBuilder = (primers: Row, level: number, boardRegistryIndex: nu
         fillBail = false;
         successfulBuild = fillCell(0, 0);
     } while (!successfulBuild || !obscureCells());
-    return [JSON.parse(JSON.stringify(board)), clueCount];
+    const boardCopy: Board = JSON.parse(JSON.stringify(board));
+    return of({ board: boardCopy, clueCount }).toPromise();
 };

@@ -1,11 +1,7 @@
-import { Component, OnDestroy, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnChanges, OnDestroy, OnInit, Input, SimpleChanges } from '@angular/core';
 import { BoardHandlerService } from './services/board-handler.service';
-import { Cell } from './models/cell';
 import { Subscription } from 'rxjs';
 import { Board } from './models/board';
-import { Row } from './models/row';
-import { BoardOverlordService } from './services/board-overlord.service';
-import { BoardBuilder } from './utils/BoardBuilder';
 
 @Component({
 	selector: 'su-do-ku',
@@ -13,12 +9,10 @@ import { BoardBuilder } from './utils/BoardBuilder';
     styleUrls: ['./sudoku.component.scss'],
     providers: [ BoardHandlerService ]
 })
-export class SudokuComponent implements OnDestroy, OnInit {
+export class SudokuComponent implements OnChanges, OnDestroy, OnInit {
 	activeControl: number = 0;
 	activeControlMode: boolean = true;
-    board: Board;
-    @Output() boardUpdate: EventEmitter<Board> = new EventEmitter<Board>();
-    @Input() inputPrimers: Row;
+    @Input() board: Board;
     @Input() isDev?: boolean;
     @Input() isSolo?: boolean;
     @Input() level: number;
@@ -27,9 +21,7 @@ export class SudokuComponent implements OnDestroy, OnInit {
 	subscriptions: Subscription[] = [];
 	title: string = 'sudoku';
 
-	constructor(
-        private readonly boardHandlerService: BoardHandlerService,
-        private readonly boardOverlordService: BoardOverlordService) { }
+	constructor(private readonly boardHandlerService: BoardHandlerService) { }
 
 	ngOnDestroy() {
 		this.subscriptions.forEach(s => s && s.unsubscribe());
@@ -37,33 +29,26 @@ export class SudokuComponent implements OnDestroy, OnInit {
 	}
 
 	ngOnInit(): void {
-        const start = new Date().getTime();
-        const boardBuilt = BoardBuilder(this.isSolo ? null : this.inputPrimers, this.level, this.boardRegistryIndex);
-        this.board = boardBuilt[0];
-        this.boardHandlerService.assignBoard(this.board);
-        const timeTaken = (new Date().getTime() - start) / 1000;
-        console.log('BuildTime: ', timeTaken, 'Seconds, ', (81 - boardBuilt[1]), 'Clues');
-        this.boardOverlordService.updateBoardBuildTimes(Math.ceil(timeTaken));
-        this.boardOverlordService.registerBoard(this.board);
-        this.boardUpdate.emit(JSON.parse(JSON.stringify(this.board)));
 		this.subscriptions.push(this.boardHandlerService.activeControlDigit.subscribe(num => {
 			this.activeControl = num;
 		}));
 		this.subscriptions.push(this.boardHandlerService.activeControlMode.subscribe(isPerm => {
 			this.activeControlMode = isPerm;
 		}));
-	}
+    }
+
+    ngOnChanges(e: SimpleChanges) {
+        if (e.board) {
+            this.board = null;
+			setTimeout(() => {
+                this.board = e.board.currentValue;
+                this.boardHandlerService.assignBoard(this.board);
+            }, 0);
+        }
+    }
 
 	pressedDigitControl(num: number): void {
 		this.boardHandlerService.activateDigitControl(num);
-	}
-
-	rebuildBoard(): void {
-		this.board = null;
-		setTimeout(() => {
-            this.board = BoardBuilder(
-                this.isSolo ? null : this.inputPrimers, this.level, this.boardRegistryIndex)[0];
-        }, 250);
 	}
 
 	toggleControls(): void {

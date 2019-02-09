@@ -90,6 +90,17 @@ export class BoardOverlordService {
         return count;
     }
 
+    flagsUpdated(flags: number[], row: number, col: number, level: number, registeredIndex: number): void {
+        console.log('BoardOverlordService', 'flagsUpdated', level, registeredIndex);
+        const currentBoard = this.boardsByLevel[level][registeredIndex];
+        const currCell = currentBoard.cellStates[row][col];
+        currCell.flagValues = flags;
+    }
+
+    getBoard(indexLevel: number, registeredIndex: number): Board {
+        return JSON.parse(JSON.stringify(this.boardsByLevel[indexLevel][registeredIndex]));
+    }
+
     getBoardBuildTimes(): number[] {
         return this.boardBuildTimes.slice();
     }

@@ -56,7 +56,9 @@ export class BoardHandlerService {
 			cell.flagValues.sort();
 			return;
 		}
-		cell.flagValues = filterFlags;
+        cell.flagValues = filterFlags;
+        console.log('BoardHandlerService', 'clickCell', 'flagsUpdated', level, registeredIndex);
+        this.boardOverlordService.flagsUpdated(filterFlags, row, col, level, registeredIndex);
     }
 
 	getCell(row: number, col: number): Cell {

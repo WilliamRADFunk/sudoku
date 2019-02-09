@@ -1,18 +1,14 @@
-<su-do-ku
-    (boardUpdate)="boardChanged($event)"
-    [isDev]=true
-    [isSolo]="false"
+<su-do-ku *ngIf="activeBoardIndex === -1 && activeBoard"
+    [isDev]="isDev"
+    [isSolo]="isSolo"
+    [board]="activeBoard"
     level="0"
-    boardRegistryIndex="0"
-    [class.d-none]="activeBoardIndex !== -1"></su-do-ku>
+    boardRegistryIndex="0"></su-do-ku>
 
-<div *ngIf="boardsByLevel[0]?.length">
-    <su-do-ku *ngFor="let s of subBoardIterations; let i = index;"
-        (boardUpdate)="boardChanged($event)"
-        [isDev]=true
-        [isSolo]="false"
-        [inputPrimers]="getPrimers(i, getLevel(i) - 1)"
-        [level]="getLevel(i)"
-        [boardRegistryIndex]="getBoardRegistryIndex(i)"
-        [class.d-none]="activeBoardIndex !== i"></su-do-ku>
-</div>
+<su-do-ku *ngIf="activeBoardIndex !== -1"
+    [isDev]="isDev"
+    [isSolo]="isSolo"
+    [board]="activeBoard"
+    [level]="getLevel(activeBoardIndex)"
+    [boardRegistryIndex]="getBoardRegistryIndex(activeBoardIndex)"></su-do-ku>
+

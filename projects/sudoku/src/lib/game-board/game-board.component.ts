@@ -21,6 +21,8 @@ export class GameBoardComponent implements OnChanges {
                 this.board = e.board.currentValue;
                 this.isLoading = false;
             }, 0);
-		}
+		} else if (e.board && !e.board.currentValue) {
+            this.isLoading = true;
+        }
 	}
 }

@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit, Input } from '@angular/core';
-import { Board, Cell } from 'sudoku';
+import { Component, OnChanges, OnDestroy, OnInit, Input, SimpleChanges } from '@angular/core';
+import { Board, BoardBuilder, Cell } from 'sudoku';
 import { LoadTrackerService } from '../services/load-tracker.service';
 import { Subscription } from 'rxjs';
 import { BoardOverlordService } from 'sudoku/lib/services/board-overlord.service';
@@ -21,11 +21,13 @@ const quadrantPositions: [number, number][][] = [
   templateUrl: './play-area.component.html',
   styleUrls: ['./play-area.component.scss']
 })
-export class PlayAreaComponent implements OnDestroy, OnInit {
+export class PlayAreaComponent implements OnChanges, OnDestroy, OnInit {
+    activeBoard: Board;
     @Input() activeBoardIndex: number;
-    public readonly boardsByLevel: Board[][] = [];
+    isDev: boolean = true;
+    isSolo: boolean;
     @Input() levels: number;
-    private mainCounter: number = 0;
+    private mainCounter: number;
     private startTime: number;
     sub: Subscription;
     subBoardIterations: number[] = [];
@@ -41,11 +43,14 @@ export class PlayAreaComponent implements OnDestroy, OnInit {
         }
     }
 
-    ngOnInit() {
+    async ngOnInit(): Promise<void> {
+        this.isSolo = this.levels === 1 ? true : false;
         this.startTime = new Date().getTime();
         this.loadTrackerService.currLoadAmount.subscribe(amt => {
             if (amt < 100) {
-                setTimeout(() => { this.subBoardIterations.push(this.mainCounter); }, 250);
+                setTimeout(() => {
+                    this.addAnotherBoard();
+                }, 250);
             } else {
                 console.log(`Total Time to build ${this.levels} levels: ${(new Date().getTime() - this.startTime) / 60000} minutes`);
                 let boardBuildMsg = 'Number of boards by seconds:\n';
@@ -57,23 +62,65 @@ export class PlayAreaComponent implements OnDestroy, OnInit {
                 console.log(boardBuildMsg);
             }
         });
+        // Determine total number of boards to build.
         for (let i = 0; i < this.levels; i++) {
             this.totalNumberOfBoards += Math.pow(9, i);
         }
-    }
-
-    boardChanged(board: Board): void {
-        this.mainCounter++;
-        if (!this.boardsByLevel[board.level]) {
-            this.boardsByLevel[board.level] = [];
-        }
-        this.boardsByLevel[board.level][board.boardRegistryIndex] = board;
-        if (this.levels > 1) {
+        // There will always be at least 1 level, and 1 board. Build that first.
+        const board1 = (await BoardBuilder(null, 0, 0)).board;
+        this.mainCounter = 1;
+        this.boardOverlordService.updateBoardBuildTimes(1);
+        this.boardOverlordService.registerBoard(board1);
+        this.activeBoard = board1;
+        if (this.mainCounter / this.totalNumberOfBoards < 1) {
             this.loadTrackerService.updateLoad((this.mainCounter / this.totalNumberOfBoards) * 100);
         } else {
             this.loadTrackerService.updateLoad(100);
         }
     }
+
+    ngOnChanges(e: SimpleChanges) {
+        if (e.activeBoardIndex && !e.levels) {
+            const index = e.activeBoardIndex.currentValue;
+            if (index === -1) {
+                this.activeBoard = this.boardOverlordService.getBoard(0, 0);
+            } else {
+                this.activeBoard = this.boardOverlordService.getBoard(
+                    this.getLevel(index),
+                    this.getBoardRegistryIndex(index));
+            }
+        }
+    }
+
+    async addAnotherBoard(): Promise<void> {
+        // Starts index at 0 and iterates from there as this
+        // is what made the template iterations work best.
+        const index = this.mainCounter - 1;
+        // Calculate new board's level.
+        const boardLvl = this.getLevel(index);
+        // Index location board lives on in its level array (easier lookup).
+        const boardRegistryIndex = this.getBoardRegistryIndex(index);
+        // Primers from the related board in the level above.
+        const inputPrimers = this.getPrimers(index, boardLvl - 1);
+        // TODO: Next line can be deleted when all is said and done.
+        const start = new Date().getTime();
+
+        // Builds the next board.
+        const anotherBoardConstruct = (await BoardBuilder(inputPrimers, boardLvl, boardRegistryIndex));
+
+        // TODO: Next two lines can be deleted when all is said and done.
+        const timeTaken = (new Date().getTime() - start) / 1000;
+        console.log('BuildTime: ', timeTaken, 'Seconds, ', (81 - anotherBoardConstruct.clueCount), 'Clues');
+
+        // Let overlord know another board is ready.
+        this.boardOverlordService.updateBoardBuildTimes(Math.ceil(timeTaken));
+        this.boardOverlordService.registerBoard(anotherBoardConstruct.board);
+
+        // Iterate mainCounter to track number of currently existing boards.
+        this.mainCounter++;
+        this.loadTrackerService.updateLoad((this.mainCounter / this.totalNumberOfBoards) * 100);
+    }
+
     getLevel(index: number): number {
         if (!index) {
             return 1;
@@ -91,9 +138,9 @@ export class PlayAreaComponent implements OnDestroy, OnInit {
         if (!index) {
             return 0;
         } else if (this.getLevel(index) > 1) {
-            return Math.abs(index - this.boardsByLevel[this.getLevel(index) - 1].length);
+            return Math.abs(index - this.boardOverlordService.getLevelLength(this.getLevel(index) - 1));
         } else {
-            return Math.abs(index + 1 - this.boardsByLevel[this.getLevel(index) - 1].length);
+            return Math.abs(index + 1 - this.boardOverlordService.getLevelLength(this.getLevel(index) - 1));
         }
     }
 
@@ -102,9 +149,9 @@ export class PlayAreaComponent implements OnDestroy, OnInit {
         const quadPosList = quadrantPositions[quadrant].slice();
         let parentBoardIndex = 0;
         if (index) {
-            parentBoardIndex = Math.floor(Math.abs(index - this.boardsByLevel[relatedLevel].length) / 9);
+            parentBoardIndex = Math.floor(Math.abs(index - this.boardOverlordService.getLevelLength(relatedLevel)) / 9);
         }
-        const boardInQuestion = this.boardsByLevel[relatedLevel][parentBoardIndex].cellStates;
+        const boardInQuestion = this.boardOverlordService.getBoard(relatedLevel, parentBoardIndex).cellStates;
         return quadPosList.map(pos => JSON.parse(JSON.stringify(boardInQuestion[pos[0]][pos[1]])));
     }
 
