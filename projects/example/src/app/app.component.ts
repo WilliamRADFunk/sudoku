@@ -35,11 +35,22 @@ export class AppComponent implements OnDestroy, OnInit {
             this.chosenViewBoard.length = level + 1;
         }
         this.chosenViewBoard[level || 0] = num;
+        console.log('choseBoardView', num, level, this.chosenViewBoard[level || 0]);
         this.updateActiveBoard();
     }
 
     getLevelArray() {
         return Array(this.levels).fill(1, 0, this.levels);
+    }
+
+    getLevelOptions(levelIndex: number) {
+        if (!levelIndex) {
+            return [2, 3, 4, 5, 6, 7, 8, 9, 10];
+        } else {
+            const base = (Math.pow(9, levelIndex) + 2) + (this.chosenViewBoard[levelIndex] * 9);
+            console.log('getLevelOptions', base);
+            return [base, base + 1, base + 2, base + 3, base + 4, base + 5, base + 6, base + 7, base + 8];
+        }
     }
 
     getLevelsExposed() {

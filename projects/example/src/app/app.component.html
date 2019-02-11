@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-2 w-100 text-center">
+    <div class="col-3 w-100 text-center">
         <span *ngIf="levels && levels > 1" [style.visibility]="isDoneLoading() ? 'visible' : 'hidden'">
             <span class=" d-block text-white mb-5 mt-5">Board # {{ this.activeBoard + 2 }} of {{ totalNumberOfBoards }}</span>
             <span class=" d-block text-white mt-5"><u>Level 1</u></span>
@@ -15,19 +15,19 @@
                 <div *ngFor="let lvl of getLevelsExposed(); let i = index;">
                     <span class=" d-block text-white mt-5"><u>Level {{ i + 2 }}</u></span>
                     <div class="btn-group btn-group-sm d-inline-block mt-3">
-                        <button *ngFor="let num of [1, 2, 3, 4, 5, 6, 7, 8, 9];"
+                        <button *ngFor="let num of getLevelOptions(i);"
                             class="btn shadow"
-                            [class.btn-success]="chosenViewBoard.length <= (i + 2) && chosenViewBoard[i + 1] === num - 1"
-                            [class.btn-warning]="chosenViewBoard.length > (i + 2) && chosenViewBoard[i + 1] === num - 1"
-                            [class.btn-info]="chosenViewBoard[i + 1] !== num - 1"
-                            (click)="choseBoardView((num - 1), (i + 1))"
+                            [class.btn-success]="chosenViewBoard.length <= (i + 2) && chosenViewBoard[i + 1] === num - 2"
+                            [class.btn-warning]="chosenViewBoard.length > (i + 2) && chosenViewBoard[i + 1] === num - 2"
+                            [class.btn-info]="chosenViewBoard[i + 1] !== num - 2"
+                            (click)="choseBoardView((num - 2), (i + 1))"
                             type="button">{{ num }}</button>
                     </div>
                 </div>
             </span>
         </span>
     </div>
-    <div class="col-8 w-100">
+    <div class="col-7 w-100">
         <sudoku-start-menu *ngIf="!levels" (levelSelected)="startGame($event)"></sudoku-start-menu>
         <sudoku-loading-view [class.d-none]="loadedAmount === 0 || isDoneLoading()"></sudoku-loading-view>
         <sudoku-play-area *ngIf="levels"
