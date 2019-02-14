@@ -35,11 +35,29 @@ export class AppComponent implements OnDestroy, OnInit {
             this.chosenViewBoard.length = level + 1;
         }
         this.chosenViewBoard[level || 0] = num;
+        console.log('choseBoardView', num, level, this.chosenViewBoard[level || 0]);
         this.updateActiveBoard();
     }
 
     getLevelArray() {
         return Array(this.levels).fill(1, 0, this.levels);
+    }
+
+    getLevelOptions(levelIndex: number) {
+        if (!levelIndex) {
+            return [2, 3, 4, 5, 6, 7, 8, 9, 10];
+        } else if (levelIndex === 1) {
+            const base = (Math.pow(9, levelIndex) + 2) + (this.chosenViewBoard[levelIndex] * 9);
+            return [base, base + 1, base + 2, base + 3, base + 4, base + 5, base + 6, base + 7, base + 8];
+        } else {
+            let totalB4 = 0;
+            for (let i = 0; i < levelIndex; i++) {
+                totalB4 += Math.pow(9, i);
+            }
+            const base = totalB4 + (this.chosenViewBoard[levelIndex] * 9) + 1;
+            const ans = [base, base + 1, base + 2, base + 3, base + 4, base + 5, base + 6, base + 7, base + 8];
+            return ans;
+        }
     }
 
     getLevelsExposed() {
@@ -78,16 +96,6 @@ export class AppComponent implements OnDestroy, OnInit {
             this.activeBoard = this.chosenViewBoard[1];
             return;
         }
-        // A convoluted way of navigating through an exponentially
-        // increasing number of connected boards.
-        let index = this.powerFactorial(this.chosenViewBoard.length - 2) - 1;
-        for (let i = 2; i <= this.chosenViewBoard.length - 1; i++) {
-            index += this.chosenViewBoard[i - 1] * Math.pow(9, (i - 1));
-        }
-        index += this.chosenViewBoard[this.chosenViewBoard.length - 1];
-        if (this.chosenViewBoard.length > 3) {
-            index += 1;
-        }
-        this.activeBoard = index;
+        this.activeBoard = this.chosenViewBoard[this.chosenViewBoard.length - 1];
     }
 }
