@@ -11,6 +11,10 @@ export class LoadTrackerService {
     constructor() { }
 
     updateLoad(amt: number): void {
-        this.loadAmount.next(amt);
+        if (amt >= 1) {
+            this.loadAmount.next(Math.floor(amt));
+        } else {
+            this.loadAmount.next(amt);
+        }
     }
 }
