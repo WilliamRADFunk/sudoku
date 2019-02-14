@@ -25,6 +25,9 @@ export class StartMenuComponent {
             case 4: {
                 return 'Build time can take more than 10 minutes';
             }
+            case 5: {
+                return 'Build time can take 1.5 hours (Don\'t do it).';
+            }
             default: {
                 return 'Not a valid option';
             }
@@ -32,7 +35,7 @@ export class StartMenuComponent {
     }
 
     levelChange(level: number): void {
-        this.activeLevel = (level >= 1 && 4 >= level) ? level : 1;
+        this.activeLevel = (level >= 1 && 5 >= level) ? level : 1;
     }
 
     startGame(): void {

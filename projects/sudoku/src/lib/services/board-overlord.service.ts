@@ -157,7 +157,8 @@ export class BoardOverlordService {
             this.boardsByLevel[0].length,
             this.boardsByLevel[1] && this.boardsByLevel[1].length,
             this.boardsByLevel[2] && this.boardsByLevel[2].length,
-            this.boardsByLevel[3] && this.boardsByLevel[3].length);
+            this.boardsByLevel[3] && this.boardsByLevel[3].length,
+            this.boardsByLevel[4] && this.boardsByLevel[4].length);
     }
 
     setConnectedCells(value: number, row: number, col: number, level: number, registeredIndex: number, isUp: boolean): void {

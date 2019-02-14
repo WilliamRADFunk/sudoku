@@ -11,6 +11,6 @@ export class LoadTrackerService {
     constructor() { }
 
     updateLoad(amt: number): void {
-        this.loadAmount.next(Math.floor(amt));
+        this.loadAmount.next(amt);
     }
 }
