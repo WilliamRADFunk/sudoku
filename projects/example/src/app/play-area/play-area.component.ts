@@ -1,8 +1,9 @@
 import { Component, OnChanges, OnDestroy, OnInit, Input, SimpleChanges } from '@angular/core';
-import { Board, BoardBuilder, Cell } from 'sudoku';
+import { Board, BoardBuilder, BoardOverlordService, Cell } from 'sudoku';
 import { LoadTrackerService } from '../services/load-tracker.service';
 import { Subscription } from 'rxjs';
-import { BoardOverlordService } from 'sudoku/lib/services/board-overlord.service';
+import { getLevel } from '../utils/get-level';
+import { getBoardRegistryIndex } from '../utils/get-board-registry-index';
 
 const quadrantPositions: [number, number][][] = [
     [ [0, 0], [0, 1], [0, 2], [1, 0], [1, 1], [1, 2], [2, 0], [2, 1], [2, 2] ],
@@ -83,8 +84,8 @@ export class PlayAreaComponent implements OnChanges, OnDestroy, OnInit {
                 this.activeBoard = this.boardOverlordService.getBoard(0, 0);
             } else {
                 this.activeBoard = this.boardOverlordService.getBoard(
-                    this.getLevel(index),
-                    this.getBoardRegistryIndex(index));
+                    getLevel(index),
+                    getBoardRegistryIndex(index, this.boardOverlordService));
             }
         }
     }
@@ -94,9 +95,9 @@ export class PlayAreaComponent implements OnChanges, OnDestroy, OnInit {
         // is what made the template iterations work best.
         const index = this.mainCounter - 1;
         // Calculate new board's level.
-        const boardLvl = this.getLevel(index);
+        const boardLvl = getLevel(index);
         // Index location board lives on in its level array (easier lookup).
-        const boardRegistryIndex = this.getBoardRegistryIndex(index);
+        const boardRegistryIndex = getBoardRegistryIndex(index, this.boardOverlordService);
         // Primers from the related board in the level above.
         const inputPrimers = this.getPrimers(index, boardLvl - 1);
         // TODO: Next line can be deleted when all is said and done.
@@ -116,34 +117,6 @@ export class PlayAreaComponent implements OnChanges, OnDestroy, OnInit {
         // Iterate mainCounter to track number of currently existing boards.
         this.mainCounter++;
         this.loadTrackerService.updateLoad((this.mainCounter / this.totalNumberOfBoards) * 100);
-    }
-
-    getLevel(index: number): number {
-        if (!index) {
-            return 1;
-        }
-        let remainder = index;
-        for (let i = 1; i < this.levels; i++) {
-            remainder -= Math.pow(9, i);
-            if (remainder < 0) {
-                return Math.max(i, 1);
-            }
-        }
-    }
-
-    getBoardRegistryIndex(index: number): number {
-        if (!index) {
-            return 0;
-        } else if (this.getLevel(index) > 1) {
-            let totalSubstracted = 0;
-            const lvlAbove = this.getLevel(index) - 1;
-            for (let i = lvlAbove; i > 0; i--) {
-                totalSubstracted += this.boardOverlordService.getLevelLength(i);
-            }
-            return Math.abs(index - totalSubstracted);
-        } else {
-            return Math.abs(index + 1 - this.boardOverlordService.getLevelLength(this.getLevel(index) - 1));
-        }
     }
 
     getPrimers(index: number, relatedLevel: number): Cell[] {

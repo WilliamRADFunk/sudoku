@@ -1,0 +1,22 @@
+<span *ngIf="level !== undefined && undefined !== boardRegistryIndex">
+    <su-do-ku
+        isDev=true
+        [isSolo]=false
+        [board]="activeBoard"
+        [level]="level"
+        [boardRegistryIndex]="boardRegistryIndex"></su-do-ku>
+
+    <su-do-ku
+        isDev=true
+        [isSolo]=false
+        [board]="activeBoard"
+        [level]="level"
+        [boardRegistryIndex]="boardRegistryIndex + 3"></su-do-ku>
+
+    <su-do-ku
+        isDev=true
+        [isSolo]=false
+        [board]="activeBoard"
+        [level]="level"
+        [boardRegistryIndex]="boardRegistryIndex + 6"></su-do-ku>
+</span>

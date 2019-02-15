@@ -36,6 +36,9 @@
             [levels]="levels"></sudoku-play-area>
     </div>
     <div class="col-2 w-100">
-        <span *ngIf="levels" [style.visibility]="isDoneLoading() ? 'visible' : 'hidden'"></span>
+        <sudoku-sidebar *ngIf="levels"
+            [activeBoardIndex]="activeBoard"
+            [levels]="levels"
+            [style.visibility]="isDoneLoading() ? 'visible' : 'hidden'"></sudoku-sidebar>
     </div>
 </div>
