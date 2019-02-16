@@ -13,8 +13,8 @@ export class SudokuComponent implements OnChanges, OnDestroy, OnInit {
 	activeControl: number = 0;
 	activeControlMode: boolean = true;
     @Input() board: Board;
+    @Input() hideControls?: boolean = false;
     @Input() isDev?: boolean = false;
-    @Input() isSolo?: boolean;
     @Input() level: number;
     @Input() boardRegistryIndex: number;
 	reveal: boolean = false;

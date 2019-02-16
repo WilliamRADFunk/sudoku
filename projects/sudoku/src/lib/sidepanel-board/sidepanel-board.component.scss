@@ -1,0 +1,27 @@
+sudoku-sidepanel-quadrant:nth-child(n) {
+	border-right: 1px solid #333333;
+}
+sudoku-sidepanel-quadrant:nth-child(3n) {
+	border-right: none;
+}
+sudoku-sidepanel-quadrant.quadrant-size:not(.first-row) {
+	border-top: 1px solid #333333;
+}
+.quadrant-size {
+	height: 4vw;
+    min-height: 4vw;
+}
+.board-size {
+    display: block;
+    height: 12vw;
+    left: 0;
+	min-height: 12vw;
+	min-width: 12vw;
+    position: relative;
+    width: 12vw;
+
+    & > .row {
+        flex-wrap: nowrap;
+        margin: 0;
+    }
+}

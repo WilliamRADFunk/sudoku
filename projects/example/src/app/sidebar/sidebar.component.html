@@ -1,22 +1,16 @@
-<span *ngIf="level !== undefined && undefined !== boardRegistryIndex">
-    <su-do-ku
-        isDev=true
-        [isSolo]=false
+<div *ngIf="level !== undefined && undefined !== boardRegistryIndex" class="pt-5">
+    <sudoku-sidepanel-board
         [board]="activeBoard"
         [level]="level"
-        [boardRegistryIndex]="boardRegistryIndex"></su-do-ku>
+        [boardRegistryIndex]="boardRegistryIndex"></sudoku-sidepanel-board>
 
-    <su-do-ku
-        isDev=true
-        [isSolo]=false
+    <sudoku-sidepanel-board
         [board]="activeBoard"
         [level]="level"
-        [boardRegistryIndex]="boardRegistryIndex + 3"></su-do-ku>
+        [boardRegistryIndex]="boardRegistryIndex + 3"></sudoku-sidepanel-board>
 
-    <su-do-ku
-        isDev=true
-        [isSolo]=false
+    <sudoku-sidepanel-board
         [board]="activeBoard"
         [level]="level"
-        [boardRegistryIndex]="boardRegistryIndex + 6"></su-do-ku>
-</span>
+        [boardRegistryIndex]="boardRegistryIndex + 6"></sudoku-sidepanel-board>
+</div>

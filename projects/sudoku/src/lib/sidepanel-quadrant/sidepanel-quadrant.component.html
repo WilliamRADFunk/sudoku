@@ -1,0 +1,10 @@
+<div *ngIf="showQuadrant" class="d-inline-block m-0 p-0">
+	<div *ngFor="let row of [0, 1, 2];" class="row no-gutters">
+		<sudoku-sidepanel-cell
+			*ngFor="let col of [0, 1, 2];"
+            [level]="level"
+            [position]="[getRow(row), getCol(col), quadrant]"
+            [boardRegistryIndex]="boardRegistryIndex"
+			[reveal]="reveal"></sudoku-sidepanel-cell>
+	</div>
+</div>

@@ -22,12 +22,14 @@ export class SidebarComponent implements OnChanges {
             const index = e.activeBoardIndex.currentValue;
             if (index === -1) {
                 this.activeBoard = this.boardOverlordService.getBoard(0, 0);
+                this.level = 0;
+                this.boardRegistryIndex = 0;
             } else {
-                this.activeBoard = this.boardOverlordService.getBoard(
-                    getLevel(index),
-                    getBoardRegistryIndex(index, this.boardOverlordService));
+                this.level = getLevel(index, this.levels);
+                this.boardRegistryIndex = getBoardRegistryIndex(index, this.levels, this.boardOverlordService);
+                this.activeBoard = this.boardOverlordService.getBoard(this.level, this.boardRegistryIndex);
             }
+            console.log('SidebarComponent', this.level, this.boardRegistryIndex);
         }
     }
-
 }

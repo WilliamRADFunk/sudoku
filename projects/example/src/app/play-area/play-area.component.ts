@@ -25,7 +25,6 @@ const quadrantPositions: [number, number][][] = [
 export class PlayAreaComponent implements OnChanges, OnDestroy, OnInit {
     activeBoard: Board;
     @Input() activeBoardIndex: number;
-    isSolo: boolean;
     @Input() levels: number;
     private mainCounter: number;
     sub: Subscription;
@@ -42,7 +41,6 @@ export class PlayAreaComponent implements OnChanges, OnDestroy, OnInit {
     }
 
     async ngOnInit(): Promise<void> {
-        this.isSolo = this.levels === 1 ? true : false;
         const startTime = new Date().getTime();
         this.loadTrackerService.currLoadAmount.subscribe(amt => {
             if (amt < 100) {
@@ -84,8 +82,8 @@ export class PlayAreaComponent implements OnChanges, OnDestroy, OnInit {
                 this.activeBoard = this.boardOverlordService.getBoard(0, 0);
             } else {
                 this.activeBoard = this.boardOverlordService.getBoard(
-                    getLevel(index),
-                    getBoardRegistryIndex(index, this.boardOverlordService));
+                    getLevel(index, this.levels),
+                    getBoardRegistryIndex(index, this.levels, this.boardOverlordService));
             }
         }
     }
@@ -95,9 +93,9 @@ export class PlayAreaComponent implements OnChanges, OnDestroy, OnInit {
         // is what made the template iterations work best.
         const index = this.mainCounter - 1;
         // Calculate new board's level.
-        const boardLvl = getLevel(index);
+        const boardLvl = getLevel(index, this.levels);
         // Index location board lives on in its level array (easier lookup).
-        const boardRegistryIndex = getBoardRegistryIndex(index, this.boardOverlordService);
+        const boardRegistryIndex = getBoardRegistryIndex(index, this.levels, this.boardOverlordService);
         // Primers from the related board in the level above.
         const inputPrimers = this.getPrimers(index, boardLvl - 1);
         // TODO: Next line can be deleted when all is said and done.
@@ -117,6 +115,14 @@ export class PlayAreaComponent implements OnChanges, OnDestroy, OnInit {
         // Iterate mainCounter to track number of currently existing boards.
         this.mainCounter++;
         this.loadTrackerService.updateLoad((this.mainCounter / this.totalNumberOfBoards) * 100);
+    }
+
+    getBoardRegistryIndex(activeBoardIndex: number) {
+        return getBoardRegistryIndex(activeBoardIndex, this.levels, this.boardOverlordService);
+    }
+
+    getLevel(index: number) {
+        return getLevel(index, this.levels);
     }
 
     getPrimers(index: number, relatedLevel: number): Cell[] {

@@ -30,7 +30,6 @@ describe('SudokuComponent', () => {
 		app.inputPrimers = [];
 		app.level = 1;
 		app.boardRegistryIndex = 0;
-		app.isSolo = true;
 		app.isDev = false;
 		expect(app).toBeTruthy();
 	});

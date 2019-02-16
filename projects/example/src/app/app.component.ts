@@ -35,7 +35,6 @@ export class AppComponent implements OnDestroy, OnInit {
             this.chosenViewBoard.length = level + 1;
         }
         this.chosenViewBoard[level || 0] = num;
-        console.log('choseBoardView', num, level, this.chosenViewBoard[level || 0]);
         this.updateActiveBoard();
     }
 
