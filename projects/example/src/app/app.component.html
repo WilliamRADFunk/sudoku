@@ -12,11 +12,11 @@
                     type="button">{{ 1 }}</button>
             </div>
             <span *ngIf="chosenViewBoard.length >= 1">
-                <div *ngFor="let lvl of getLevelsExposed(); let i = index;">
+                <div *ngFor="let lvl of getLevelsExposed(); let i = index;" class="board-nav-buttons">
                     <span class=" d-block text-white mt-5"><u>Level {{ i + 2 }}</u></span>
-                    <div class="btn-group btn-group-sm d-inline-block mt-3">
+                    <div class="btn-group btn-group-sm d-block mt-3">
                         <button *ngFor="let num of getLevelOptions(i);"
-                            class="btn shadow"
+                            class="btn shadow px-0 d-inline-block"
                             [class.btn-success]="chosenViewBoard.length <= (i + 2) && chosenViewBoard[i + 1] === num - 2"
                             [class.btn-warning]="chosenViewBoard.length > (i + 2) && chosenViewBoard[i + 1] === num - 2"
                             [class.btn-info]="chosenViewBoard[i + 1] !== num - 2"
@@ -35,7 +35,7 @@
             [activeBoardIndex]="activeBoard"
             [levels]="levels"></sudoku-play-area>
     </div>
-    <div *ngIf="levels && levels > 1" class="col-sm-2 order-3 w-100 d-none d-sm-block">
+    <div *ngIf="levels && isDoneLoading()" class="col-sm-2 order-3 w-100 d-none d-sm-block">
         <sudoku-sidebar
             [activeBoardIndex]="activeBoard"
             [levels]="levels"

@@ -1,5 +1,6 @@
-import { Component, OnChanges, Input, SimpleChanges } from '@angular/core';
+import { Component, OnChanges, Input, SimpleChanges, HostListener } from '@angular/core';
 import { Board } from '../models/board';
+import { BoardOverlordService } from '../services/board-overlord.service';
 
 @Component({
 	selector: 'sudoku-quadrant',
@@ -15,7 +16,7 @@ export class QuadrantComponent implements OnChanges {
 
 	showQuadrant: boolean = true;
 
-	constructor() { }
+	constructor(private readonly boardOverlordService: BoardOverlordService) { }
 
 	ngOnChanges(e: SimpleChanges) {
 		if (e.board) {
@@ -31,5 +32,9 @@ export class QuadrantComponent implements OnChanges {
 
 	getRow(outer: number): number {
 		return ((Math.floor(this.quadrant / 3) * 3) + outer);
-	}
+    }
+
+    @HostListener('mouseover') onHover() {
+        this.boardOverlordService.onQuadrantHover(this.level, this.boardRegistryIndex, this.quadrant);
+    }
 }

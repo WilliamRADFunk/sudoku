@@ -1,6 +1,7 @@
 import { Component, OnChanges, OnDestroy, OnInit, Input, SimpleChanges } from '@angular/core';
-import { BoardHandlerService } from './services/board-handler.service';
 import { Subscription } from 'rxjs';
+
+import { BoardHandlerService } from './services/board-handler.service';
 import { Board } from './models/board';
 
 @Component({

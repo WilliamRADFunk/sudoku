@@ -1,7 +1,8 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { Cell } from '../models/cell';
 import { Subscription } from 'rxjs';
-import { CellMaker } from '../utils/CellMaker';
+
+import { Cell } from '../models/cell';
+import { BoardHandlerService } from '../services/board-handler.service';
 
 @Component({
   selector: 'sudoku-sidepanel-cell',
@@ -10,7 +11,7 @@ import { CellMaker } from '../utils/CellMaker';
 })
 export class SidepanelCellComponent implements OnDestroy, OnInit {
 	activeControlMode: boolean;
-	cell: Cell = CellMaker(3, [0, 0, 0], false, false);
+	cell: Cell;
 	gameOver: boolean;
     @Input() level: number;
     @Input() position: [number, number, number];
@@ -18,7 +19,7 @@ export class SidepanelCellComponent implements OnDestroy, OnInit {
 	@Input() reveal: boolean;
     subscriptions: Subscription[] = [];
 
-    constructor() { }
+    constructor(private readonly boardHandler: BoardHandlerService) { }
 
 	ngOnDestroy() {
 		this.subscriptions.forEach(s => s && s.unsubscribe());
@@ -26,5 +27,12 @@ export class SidepanelCellComponent implements OnDestroy, OnInit {
 	}
 
     ngOnInit() {
+        this.cell = this.boardHandler.getCell(this.position[0], this.position[1]);
+		this.subscriptions.push(this.boardHandler.gameOver.subscribe(go => {
+			this.gameOver = go;
+		}));
+		this.subscriptions.push(this.boardHandler.activeControlMode.subscribe(isPerm => {
+			this.activeControlMode = isPerm;
+        }));
     }
 }

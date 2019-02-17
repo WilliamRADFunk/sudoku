@@ -25,3 +25,6 @@ sudoku-sidepanel-quadrant.quadrant-size:not(.first-row) {
         margin: 0;
     }
 }
+div.active-board {
+    border: 3px solid blue !important;
+}

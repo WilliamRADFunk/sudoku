@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+
 import { Board } from '../models/board';
 
 const quadrantPositions: [number, number][][] = [
@@ -27,6 +29,8 @@ export class BoardOverlordService {
     private boardBuildTimes: number[] = Array(20).fill(0);
     private oldWinBoards: [number, number][] = [];
     private newWinBoards: [number, number][] = [];
+    activeSidepanelIndex: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+    sidepanelBoards: BehaviorSubject<Board[]> = new BehaviorSubject<Board[]>([]);
 
     constructor() { }
 
@@ -145,6 +149,36 @@ export class BoardOverlordService {
                 (registeredIndex * 9) + currCell.position[2],
                 false);
         }
+    }
+
+    onQuadrantHover(level: number, boardRegistryIndex: number, quadrant: number) {
+        const localLevel = Number(level) + 1;
+        if (!this.boardsByLevel[localLevel]) {
+            this.sidepanelBoards.next([]);
+            return;
+        }
+        let boards = [];
+        if (quadrant % 3 === 0) {
+            boards = [
+                this.boardsByLevel[localLevel][(boardRegistryIndex * 9)],
+                this.boardsByLevel[localLevel][(boardRegistryIndex * 9) + 3],
+                this.boardsByLevel[localLevel][(boardRegistryIndex * 9) + 6]
+            ];
+        } else if (quadrant % 3 === 1) {
+            boards = [
+                this.boardsByLevel[localLevel][(boardRegistryIndex * 9) + 1],
+                this.boardsByLevel[localLevel][(boardRegistryIndex * 9) + 4],
+                this.boardsByLevel[localLevel][(boardRegistryIndex * 9) + 7]
+            ];
+        } else {
+            boards = [
+                this.boardsByLevel[localLevel][(boardRegistryIndex * 9) + 2],
+                this.boardsByLevel[localLevel][(boardRegistryIndex * 9) + 5],
+                this.boardsByLevel[localLevel][(boardRegistryIndex * 9) + 8]
+            ];
+        }
+        this.sidepanelBoards.next(boards);
+        this.activeSidepanelIndex.next(Math.floor(quadrant / 3));
     }
 
     registerBoard(board: Board): void {

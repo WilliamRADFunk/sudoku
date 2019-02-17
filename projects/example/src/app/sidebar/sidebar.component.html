@@ -1,16 +1,19 @@
-<div *ngIf="level !== undefined && undefined !== boardRegistryIndex" class="pt-5">
+<div *ngIf="board3" class="pt-5">
     <sudoku-sidepanel-board
-        [board]="activeBoard"
+        [active]="activeSidepanelIndex === 0"
+        [board]="board1"
         [level]="level"
         [boardRegistryIndex]="boardRegistryIndex"></sudoku-sidepanel-board>
 
     <sudoku-sidepanel-board
-        [board]="activeBoard"
+        [active]="activeSidepanelIndex === 1"
+        [board]="board2"
         [level]="level"
         [boardRegistryIndex]="boardRegistryIndex + 3"></sudoku-sidepanel-board>
 
     <sudoku-sidepanel-board
-        [board]="activeBoard"
+        [active]="activeSidepanelIndex === 2"
+        [board]="board3"
         [level]="level"
         [boardRegistryIndex]="boardRegistryIndex + 6"></sudoku-sidepanel-board>
 </div>
