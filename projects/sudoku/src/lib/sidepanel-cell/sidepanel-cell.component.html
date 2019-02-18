@@ -1,6 +1,6 @@
 <div *ngIf="cell.isClue"
 	class="cell-size align-middle text-center"
-	[class.bg-success]="gameOver"
+	[class.winner]="gameOver"
 	[class.text-white]="gameOver"
     [class.hover-color]="cell.active">
 	<div class="font-weight-bold clue-text">{{ cell.value }}</div>
@@ -8,7 +8,7 @@
 
 <div *ngIf="!cell.isClue"
 	class="cell-size"
-	[class.bg-success]="gameOver"
+	[class.winner]="gameOver"
 	[class.text-white]="gameOver"
     [class.hover-color]="cell.active"
 	style="position: relative;">

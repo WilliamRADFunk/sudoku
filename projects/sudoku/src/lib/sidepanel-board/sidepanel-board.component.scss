@@ -4,8 +4,11 @@ sudoku-sidepanel-quadrant:nth-child(n) {
 sudoku-sidepanel-quadrant:nth-child(3n) {
 	border-right: none;
 }
-sudoku-sidepanel-quadrant.quadrant-size:not(.first-row) {
+.row.quad-row:last-child {
 	border-top: 1px solid #333333;
+}
+.row.quad-row:first-child {
+    border-bottom: 1px solid #333333;
 }
 .quadrant-size {
 	height: 4vw;

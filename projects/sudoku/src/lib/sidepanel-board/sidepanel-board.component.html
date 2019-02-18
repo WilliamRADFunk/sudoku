@@ -8,7 +8,7 @@
                 </span>
             </div>
             <span *ngIf="!isLoading" class="board-size">
-                <div *ngFor="let row of [0, 1, 2];" class="row">
+                <div *ngFor="let row of [0, 1, 2];" class="row quad-row">
                     <sudoku-sidepanel-quadrant
                         *ngFor="let col of [1, 2, 3];"
                         class="quadrant-size"
