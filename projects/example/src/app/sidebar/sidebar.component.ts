@@ -31,20 +31,21 @@ export class SidebarComponent implements OnChanges, OnDestroy, OnInit {
 	}
 
     ngOnInit() {
-        this.boardOverlordService.sidepanelBoards.subscribe(boards => {
-            if (boards.length) {
-                this.board1 = boards[0];
-                this.board2 = boards[1];
-                this.board3 = boards[2];
-            } else {
-                this.board3 = null;
-                this.board2 = null;
-                this.board1 = null;
-            }
-        });
-        this.boardOverlordService.activeSidepanelIndex.subscribe(index => {
+        this.subscriptions.push(this.boardOverlordService.sidepanelBoards
+            .subscribe(boards => {
+                if (boards.length) {
+                    this.board1 = boards[0];
+                    this.board2 = boards[1];
+                    this.board3 = boards[2];
+                } else {
+                    this.board3 = null;
+                    this.board2 = null;
+                    this.board1 = null;
+                }
+        }));
+        this.subscriptions.push(this.boardOverlordService.activeSidepanelIndex.subscribe(index => {
             this.activeSidepanelIndex = index;
-        });
+        }));
         this.boardOverlordService.onQuadrantHover(0, 0, 0);
     }
 

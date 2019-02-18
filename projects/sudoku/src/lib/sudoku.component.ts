@@ -14,7 +14,6 @@ export class SudokuComponent implements OnChanges, OnDestroy, OnInit {
 	activeControl: number = 0;
 	activeControlMode: boolean = true;
     @Input() board: Board;
-    @Input() hideControls?: boolean = false;
     @Input() isDev?: boolean = false;
     @Input() level: number;
     @Input() boardRegistryIndex: number;
@@ -42,8 +41,8 @@ export class SudokuComponent implements OnChanges, OnDestroy, OnInit {
         if (e.board) {
             this.board = null;
 			setTimeout(() => {
+                this.boardHandlerService.assignBoard(e.board.currentValue);
                 this.board = e.board.currentValue;
-                this.boardHandlerService.assignBoard(this.board);
             }, 0);
         }
     }

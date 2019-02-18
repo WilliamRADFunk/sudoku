@@ -1,9 +1,15 @@
 .cell-size {
+    box-sizing: border-box;
 	font-size: 0.75vw;
 	height: 1.32222222vw;
 	min-height: 1.32222222vw;
-	min-width: 1.32222222vw;
+    min-width: 1.32222222vw;
+    padding: 0.5px;
 	width: 1.32222222vw;
+}
+
+.hover-color {
+    background-color: darksalmon !important;
 }
 
 .clue-text {
@@ -12,4 +18,5 @@
 
 .locked-cell-text {
     color: #85BB65;
+    font-weight: bold;
 }

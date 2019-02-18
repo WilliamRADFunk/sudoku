@@ -25,7 +25,14 @@ export class BoardHandlerService {
     }
 
     assignBoard(board: Board): void {
+        this.gameOverLocal = false;
+        this.gameOver.next(this.gameOverLocal);
         this.board = board;
+        if (solveCheck(0, board)) {
+            this.gameOverLocal = true;
+            this.gameOver.next(this.gameOverLocal);
+            console.log('Board Complete!');
+        }
     }
 
 	clickCell(row: number, col: number, level: number, registeredIndex: number): void {
@@ -40,12 +47,11 @@ export class BoardHandlerService {
 			// Otherwise use new digit / or erase if eraser.
 			cell.userAssignedValue = (cell.userAssignedValue === this.activeControlDigitLocal) ?
 				null : (this.activeControlDigitLocal || null);
-			if (solveCheck(0)) {
+			if (solveCheck(0, this.board)) {
 				this.gameOverLocal = true;
 				this.gameOver.next(this.gameOverLocal);
-				console.log('Winner. Winner. Chicken Dinner!');
+				console.log('Board Complete!');
             }
-            console.log('BoardHandlerService', 'clickCell', 'boardUpdated', level, registeredIndex);
             this.boardOverlordService.boardUpdated(cell.userAssignedValue, row, col, level, registeredIndex);
 			return;
 		}
@@ -57,7 +63,6 @@ export class BoardHandlerService {
 			return;
 		}
         cell.flagValues = filterFlags;
-        console.log('BoardHandlerService', 'clickCell', 'flagsUpdated', level, registeredIndex);
         this.boardOverlordService.flagsUpdated(filterFlags, row, col, level, registeredIndex);
     }
 

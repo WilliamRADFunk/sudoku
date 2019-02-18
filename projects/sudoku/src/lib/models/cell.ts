@@ -1,4 +1,5 @@
 export interface Cell {
+    active?: boolean;
     clueByParent?: boolean;
     flagValues: number[];
     hiddenByParent?: boolean;

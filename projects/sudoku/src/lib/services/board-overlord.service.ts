@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 import { Board } from '../models/board';
+import { Cell } from '../models/cell';
 
 const quadrantPositions: [number, number][][] = [
     [ [0, 0], [0, 1], [0, 2], [1, 0], [1, 1], [1, 2], [2, 0], [2, 1], [2, 2] ],
@@ -25,6 +26,7 @@ const primerPlacements: [number, number][] = [
     providedIn: 'root'
 })
 export class BoardOverlordService {
+    private activeCell: Cell;
     private boardsByLevel: Board[][] = [];
     private boardBuildTimes: number[] = Array(20).fill(0);
     private oldWinBoards: [number, number][] = [];
@@ -35,7 +37,6 @@ export class BoardOverlordService {
     constructor() { }
 
     boardUpdated(value: number, row: number, col: number, level: number, registeredIndex: number): void {
-        console.log('BoardOverlordService', 'boardUpdated', level, registeredIndex);
         this.setConnectedCells(value, row, col, level, registeredIndex, true);
         this.setConnectedCells(value, row, col, level, registeredIndex, false);
 
@@ -56,7 +57,7 @@ export class BoardOverlordService {
             return lvl.some(b => !b.isSolved);
         });
         if (!notSolved) {
-            console.log('BoardOverlordService', 'boardUpdated', 'Game Won!');
+            console.log('Game Won! Winner Winner Chicken Dinner!');
             return;
         }
     }
@@ -95,7 +96,6 @@ export class BoardOverlordService {
     }
 
     flagsUpdated(flags: number[], row: number, col: number, level: number, registeredIndex: number): void {
-        console.log('BoardOverlordService', 'flagsUpdated', level, registeredIndex);
         const currentBoard = this.boardsByLevel[level][registeredIndex];
         const currCell = currentBoard.cellStates[row][col];
         currCell.flagValues = flags;
@@ -119,7 +119,6 @@ export class BoardOverlordService {
             return;
         }
         // Set the cell and lock it if necessary.
-        console.log('lockWinCells', level, registeredIndex, this.boardsByLevel);
         const currentBoard = this.boardsByLevel[level][registeredIndex];
         const currCell = currentBoard.cellStates[row][col];
         currCell.locked = true;
@@ -129,7 +128,6 @@ export class BoardOverlordService {
             const primer = primerPlacements.findIndex(p => p[0] === row && p[1] === col);
             if (primer > -1) {
                 const nextRowCell = quadrantPositions[registeredIndex][primer];
-                console.log('lockWinCells', 'going up', nextRowCell, Math.floor(registeredIndex / 9));
                 this.lockWinCells(
                     nextRowCell[0],
                     nextRowCell[1],
@@ -141,7 +139,6 @@ export class BoardOverlordService {
         } else {
             const primerIndex = quadrantPositions[currCell.position[2]].findIndex(cell => (cell[0] === row && cell[1] === col));
             const nextRowCell = primerPlacements[primerIndex];
-            console.log('lockWinCells', 'going down', nextRowCell, (registeredIndex * 9) + currCell.position[2]);
             this.lockWinCells(
                 nextRowCell[0],
                 nextRowCell[1],
@@ -149,6 +146,37 @@ export class BoardOverlordService {
                 (registeredIndex * 9) + currCell.position[2],
                 false);
         }
+    }
+
+    onCellExit() {
+        if (this.activeCell) {
+            this.activeCell.active = false;
+            this.activeCell = null;
+        }
+    }
+
+    onCellHover(row: number, col: number, level: number, boardRegistryIndex: number) {
+        // Only if there is a lower level. Otherwise bail out.
+        const lowerLevel = Number(level) + 1;
+        if (lowerLevel >= this.boardsByLevel.length) {
+            return;
+        }
+
+        const currentBoard = this.boardsByLevel[level][boardRegistryIndex];
+        const currCell = currentBoard.cellStates[row][col];
+        const primerIndex = quadrantPositions[currCell.position[2]].findIndex(cell => (cell[0] === row && cell[1] === col));
+        const nextRowCell = primerPlacements[primerIndex];
+
+        const lowerBoard = this.boardsByLevel[lowerLevel][(boardRegistryIndex * 9) + currCell.position[2]];
+        const lowerCell = lowerBoard.cellStates[nextRowCell[0]][nextRowCell[1]];
+
+        if (this.activeCell) {
+            this.activeCell.active = false;
+            this.activeCell = null;
+        }
+
+        this.activeCell = lowerCell;
+        this.activeCell.active = true;
     }
 
     onQuadrantHover(level: number, boardRegistryIndex: number, quadrant: number) {
@@ -201,7 +229,6 @@ export class BoardOverlordService {
             return;
         }
         // Set the cell and lock it if necessary.
-        console.log('setConnectedCells', level, registeredIndex, [row, col], this.boardsByLevel);
         const currentBoard = this.boardsByLevel[level][registeredIndex];
         const currCell = currentBoard.cellStates[row][col];
         currCell.userAssignedValue = value;
@@ -210,7 +237,6 @@ export class BoardOverlordService {
             const primer = primerPlacements.findIndex(p => p[0] === row && p[1] === col);
             if (primer > -1) {
                 const nextRowCell = quadrantPositions[registeredIndex % 9][primer];
-                console.log('setConnectedCells', 'going up', nextRowCell, Math.floor(registeredIndex / 9));
                 this.setConnectedCells(
                     value,
                     nextRowCell[0],
@@ -223,7 +249,6 @@ export class BoardOverlordService {
         } else {
             const primerIndex = quadrantPositions[currCell.position[2]].findIndex(cell => (cell[0] === row && cell[1] === col));
             const nextRowCell = primerPlacements[primerIndex];
-            console.log('setConnectedCells', 'going down', nextRowCell, (registeredIndex * 9) + currCell.position[2]);
             this.setConnectedCells(
                 value,
                 nextRowCell[0],

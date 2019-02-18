@@ -50,14 +50,13 @@ export const quadrantCenters: { [key: number]: [number, number] } = {
 export const opts: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 export const clueCutoff: number = 68;
 
-let board: Board;
 let clueCount: number = 81;
 let fillBail: boolean = false;
 let fillCounter: number = 0;
 let fillRowLast: number = 0;
 let shuffledPlacements: [number, number][];
 
-const getNeighbors = (row: number, col: number, skipQuad?: boolean): number[] => {
+const getNeighbors = (row: number, col: number, board: Board, skipQuad?: boolean): number[] => {
     const neighbors = [
         ...board.cellStates[row].slice(0, col).filter(c => c && c.userAssignedValue).map(c => c.userAssignedValue),
         ...board.cellStates[row].slice(col + 1, 9).filter(c => c && c.userAssignedValue).map(c => c.userAssignedValue)
@@ -80,7 +79,7 @@ const getNeighbors = (row: number, col: number, skipQuad?: boolean): number[] =>
     return neighbors;
 };
 
-const fillCell = (row: number, col: number): boolean => {
+const fillCell = (row: number, col: number, board: Board): boolean => {
     if (col >= 9) {
         row++;
         col = 0;
@@ -91,7 +90,7 @@ const fillCell = (row: number, col: number): boolean => {
     // Do not pass Go. Do not collect another recursive loop.
     if (fillBail) { return false; }
 
-    const neighbors = getNeighbors(row, col);
+    const neighbors = getNeighbors(row, col, board);
     const options = shuffle(opts.filter(y => !neighbors.includes(y)));
     // Chosen based off cells in upper level.
     const primer = board.cellStates[row][col];
@@ -104,7 +103,7 @@ const fillCell = (row: number, col: number): boolean => {
             fillRowLast = row;
             fillCounter++;
         }
-        return fillCell(row, col + 1);
+        return fillCell(row, col + 1, board);
     }
 
     let counter = 0;
@@ -127,22 +126,22 @@ const fillCell = (row: number, col: number): boolean => {
         cell.userAssignedValue = options[counter];
         board.cellStates[row][col] = cell;
         counter++;
-    } while (!fillCell(row, col + 1));
+    } while (!fillCell(row, col + 1, board));
 
     return true;
 };
 
-const guessAtCell = (index: number): boolean => {
+const guessAtCell = (index: number, board: Board): boolean => {
     if (index >= placements.length) {
         return true;
     }
 
     const place = placements[index];
     if (board.cellStates[place[0]][place[1]].isClue) {
-        return guessAtCell(index + 1);
+        return guessAtCell(index + 1, board);
     }
 
-    const neighbors = getNeighbors(place[0], place[1]);
+    const neighbors = getNeighbors(place[0], place[1], board);
     const options = shuffle(opts.filter(y => !neighbors.includes(y)));
 
     // If too many options exist for any given cell,
@@ -154,7 +153,7 @@ const guessAtCell = (index: number): boolean => {
     let counter = 0;
     for (let i = 0; i < options.length; i++) {
         board.cellStates[place[0]][place[1]].userAssignedValue = options[i];
-        if (guessAtCell(index + 1)) {
+        if (guessAtCell(index + 1, board)) {
             counter++;
         }
         board.cellStates[place[0]][place[1]].userAssignedValue = 0;
@@ -168,7 +167,7 @@ const guessAtCell = (index: number): boolean => {
     }
 };
 
-const obscureCells = (): boolean => {
+const obscureCells = (board: Board): boolean => {
     for (let i = 0; i < shuffledPlacements.length; i++) {
         const place = shuffledPlacements[i];
         const currCell = board.cellStates[place[0]][place[1]];
@@ -176,7 +175,7 @@ const obscureCells = (): boolean => {
         currCell.isClue = false;
         currCell.userAssignedValue = 0;
         // Has to be a clue to make a unique solution
-        if (currCell.clueByParent || !guessAtCell(0)) {
+        if (currCell.clueByParent || !guessAtCell(0, board)) {
             currCell.isClue = true;
             currCell.userAssignedValue = currCell.value;
             clueCount--;
@@ -202,15 +201,15 @@ const obscureCells = (): boolean => {
     }
 };
 
-export const solveCheck = (index: number) => {
+export const solveCheck = (index: number, board: Board) => {
     if (index >= placements.length) {
         return true;
     }
     const place = placements[index];
     if (board.cellStates[place[0]][place[1]].isClue) {
-        return solveCheck(index + 1);
+        return solveCheck(index + 1, board);
     }
-    const neighbors = getNeighbors(place[0], place[1], true);
+    const neighbors = getNeighbors(place[0], place[1], board, true);
     const choice = board.cellStates[place[0]][place[1]].userAssignedValue;
     if (!choice) {
         return false;
@@ -218,7 +217,7 @@ export const solveCheck = (index: number) => {
     if (neighbors.includes(choice)) {
         return false;
     }
-    return solveCheck(index + 1);
+    return solveCheck(index + 1, board);
 };
 
 export const stringify = (b: Board): string => {
@@ -245,7 +244,7 @@ export const BoardBuilder = async (
 
     primers = primers || null;
     let successfulBuild = true;
-    board = {
+    const board = {
         boardRegistryIndex: boardRegistryIndex,
         cellStates: [],
         inputPrimers: primers,
@@ -266,8 +265,8 @@ export const BoardBuilder = async (
         fillCounter = 0;
         fillRowLast = 0;
         fillBail = false;
-        successfulBuild = fillCell(0, 0);
-    } while (!successfulBuild || !obscureCells());
+        successfulBuild = fillCell(0, 0, board);
+    } while (!successfulBuild || !obscureCells(board));
     const boardCopy: Board = JSON.parse(JSON.stringify(board));
     return of({ board: boardCopy, clueCount }).toPromise();
 };
