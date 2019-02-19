@@ -39,7 +39,9 @@ export class CellComponent implements OnDestroy, OnInit {
 	}
 
 	cellClicked() {
-		this.boardHandler.clickCell(this.position[0], this.position[1], this.level, this.boardRegistryIndex);
+        if (!this.gameOver) {
+            this.boardHandler.clickCell(this.position[0], this.position[1], this.level, this.boardRegistryIndex);
+        }
 	}
 
     @HostListener('mouseover') onHover() {

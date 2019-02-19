@@ -1,4 +1,6 @@
-<div class="col-6 mw-100 center bg-white shadow-lg border rounded">
+<div class="col-6 mw-100 center shadow-lg border rounded"
+    [class.bg-white]="!gameOver"
+    [class.bg-success]="gameOver">
 	<div *ngIf="isLoading" class="board-size d-flex align-items-center">
 		<span class="ml-auto mr-auto">
 			<i class="fa fa-refresh fa-5x fa-spin" aria-hidden="true"></i>
