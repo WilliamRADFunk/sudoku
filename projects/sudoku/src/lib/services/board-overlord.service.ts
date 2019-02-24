@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 import { Board } from '../models/board';
 import { Cell } from '../models/cell';
@@ -32,6 +32,7 @@ export class BoardOverlordService {
     private oldWinBoards: [number, number][] = [];
     private newWinBoards: [number, number][] = [];
     activeSidepanelIndex: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+    gameOver: Subject<boolean> = new Subject<boolean>();
     sidepanelBoards: BehaviorSubject<Board[]> = new BehaviorSubject<Board[]>([]);
 
     constructor() { }
@@ -58,6 +59,7 @@ export class BoardOverlordService {
         });
         if (!notSolved) {
             console.log('Game Won! Winner Winner Chicken Dinner!');
+            this.gameOver.next(true);
             return;
         }
     }
@@ -102,6 +104,7 @@ export class BoardOverlordService {
     }
 
     flushBoards() {
+        this.gameOver.next(false);
         this.activeCell = null;
         this.boardsByLevel = [];
         this.boardBuildTimes = Array(20).fill(0);

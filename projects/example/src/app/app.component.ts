@@ -1,8 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import { LoadTrackerService } from './services/load-tracker.service';
 import { BoardOverlordService } from 'sudoku';
+import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
 	selector: 'app-root',
@@ -12,25 +13,43 @@ import { BoardOverlordService } from 'sudoku';
 export class AppComponent implements OnDestroy, OnInit {
     activeBoard: number = -1;
     chosenViewBoard: number[] = [-1];
+    @ViewChild('content') content: any;
+    gameOver: boolean = false;
     levels: number;
     loadedAmount: number = 0;
-    sub: Subscription;
+    subs: Subscription[] = [];
     totalNumberOfBoards: number = 0;
 
     constructor(
         private readonly boardOverlordService: BoardOverlordService,
-        private readonly loadTrackerService: LoadTrackerService) {}
+        private readonly loadTrackerService: LoadTrackerService,
+        private modalService: NgbModal) {}
 
     ngOnDestroy() {
-        if (this.sub) {
-            this.sub.unsubscribe();
-        }
+        this.subs.forEach(sub => sub && sub.unsubscribe());
     }
 
     ngOnInit() {
-        this.sub = this.loadTrackerService.currLoadAmount.subscribe(amt => {
+        this.subs.push(this.loadTrackerService.currLoadAmount.subscribe(amt => {
             setTimeout(() => { this.loadedAmount = amt; }, 200);
-        });
+        }));
+        this.subs.push(this.boardOverlordService.gameOver.subscribe(go => {
+            this.gameOver = go;
+            if (this.gameOver) {
+                this.modalService.open(this.content, {
+                    centered: true,
+                    size: 'lg',
+                    windowClass: 'transparent-modal'
+                }).result.then(() => {
+                        // Already handled this means of closing the modal.
+                    }, reason => {
+                        // Since player clicked outside modal, have to handle the restart.
+                        if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+                            this.goToMenu()
+                        }
+                    });
+            }
+        }));
     }
 
     choseBoardView(num: number, level: number) {
@@ -70,11 +89,31 @@ export class AppComponent implements OnDestroy, OnInit {
     }
 
     goToMenu() {
-        this.sub.unsubscribe();
+        if (this.modalService.hasOpenModals()) {
+            this.modalService.dismissAll();
+        }
+        this.subs.forEach(sub => sub && sub.unsubscribe());
         this.loadTrackerService.restart();
-        this.sub = this.loadTrackerService.currLoadAmount.subscribe(amt => {
+        this.subs.push(this.loadTrackerService.currLoadAmount.subscribe(amt => {
             setTimeout(() => { this.loadedAmount = amt; }, 200);
-        });
+        }));
+        this.subs.push(this.boardOverlordService.gameOver.subscribe(go => {
+            this.gameOver = go;
+            if (this.gameOver) {
+                this.modalService.open(this.content, {
+                        centered: true,
+                        size: 'lg',
+                        windowClass: 'transparent-modal'
+                }).result.then(() => {
+                        // Already handled this means of closing the modal.
+                    }, reason => {
+                        // Since player clicked outside modal, have to handle the restart.
+                        if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+                            this.goToMenu()
+                        }
+                    });
+            }
+        }));
         this.levels = 0;
         this.activeBoard = -1;
         this.chosenViewBoard = [-1];
