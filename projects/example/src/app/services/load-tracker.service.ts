@@ -10,6 +10,11 @@ export class LoadTrackerService {
 
     constructor() { }
 
+    restart() {
+        this.loadAmount = new Subject<number>();
+        this.currLoadAmount = this.loadAmount.asObservable();
+    }
+
     updateLoad(amt: number): void {
         if (amt >= 1) {
             this.loadAmount.next(Math.floor(amt));

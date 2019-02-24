@@ -43,7 +43,9 @@ export class PlayAreaComponent implements OnChanges, OnDestroy, OnInit {
     async ngOnInit(): Promise<void> {
         const startTime = new Date().getTime();
         this.loadTrackerService.currLoadAmount.subscribe(amt => {
-            if (amt < 100) {
+            if (!amt) {
+                return;
+            } else if (amt < 100) {
                 setTimeout(() => {
                     this.addAnotherBoard();
                 }, 250);

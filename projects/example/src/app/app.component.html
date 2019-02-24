@@ -25,11 +25,14 @@
                     </div>
                 </div>
             </span>
+            <span>
+                <button class="btn btn-primary mt-5" (click)="goToMenu()">Quit Game</button>
+            </span>
         </span>
     </div>
     <div class="col-12 order-1 order-sm-2 w-100" [class.col-sm-8]="levels && levels > 1">
         <sudoku-start-menu *ngIf="!levels" (levelSelected)="startGame($event)"></sudoku-start-menu>
-        <sudoku-loading-view [class.d-none]="loadedAmount === 0 || isDoneLoading()"></sudoku-loading-view>
+        <sudoku-loading-view *ngIf="levels" [class.d-none]="loadedAmount === 0 || isDoneLoading()"></sudoku-loading-view>
         <sudoku-play-area *ngIf="levels"
             [class.d-none]="!isDoneLoading()"
             [activeBoardIndex]="activeBoard"

@@ -101,6 +101,16 @@ export class BoardOverlordService {
         currCell.flagValues = flags;
     }
 
+    flushBoards() {
+        this.activeCell = null;
+        this.boardsByLevel = [];
+        this.boardBuildTimes = Array(20).fill(0);
+        this.oldWinBoards = [];
+        this.newWinBoards = [];
+        this.activeSidepanelIndex.next(0);
+        this.sidepanelBoards.next([]);
+    }
+
     getBoard(indexLevel: number, registeredIndex: number): Board {
         return JSON.parse(JSON.stringify(this.boardsByLevel[indexLevel][registeredIndex]));
     }

@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import { LoadTrackerService } from './services/load-tracker.service';
+import { BoardOverlordService } from 'sudoku';
 
 @Component({
 	selector: 'app-root',
@@ -16,7 +17,9 @@ export class AppComponent implements OnDestroy, OnInit {
     sub: Subscription;
     totalNumberOfBoards: number = 0;
 
-    constructor(private readonly loadTrackerService: LoadTrackerService) {}
+    constructor(
+        private readonly boardOverlordService: BoardOverlordService,
+        private readonly loadTrackerService: LoadTrackerService) {}
 
     ngOnDestroy() {
         if (this.sub) {
@@ -25,7 +28,7 @@ export class AppComponent implements OnDestroy, OnInit {
     }
 
     ngOnInit() {
-        this.loadTrackerService.currLoadAmount.subscribe(amt => {
+        this.sub = this.loadTrackerService.currLoadAmount.subscribe(amt => {
             setTimeout(() => { this.loadedAmount = amt; }, 200);
         });
     }
@@ -64,6 +67,20 @@ export class AppComponent implements OnDestroy, OnInit {
             return [1];
         }
         return this.chosenViewBoard.length < this.levels ? Array(this.chosenViewBoard.length) : Array(this.levels - 1);
+    }
+
+    goToMenu() {
+        this.sub.unsubscribe();
+        this.loadTrackerService.restart();
+        this.sub = this.loadTrackerService.currLoadAmount.subscribe(amt => {
+            setTimeout(() => { this.loadedAmount = amt; }, 200);
+        });
+        this.levels = 0;
+        this.activeBoard = -1;
+        this.chosenViewBoard = [-1];
+        this.loadedAmount = 0;
+        this.totalNumberOfBoards = 0;
+        this.boardOverlordService.flushBoards();
     }
 
     isDoneLoading() {
