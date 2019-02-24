@@ -45,7 +45,7 @@ export class AppComponent implements OnDestroy, OnInit {
                     }, reason => {
                         // Since player clicked outside modal, have to handle the restart.
                         if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-                            this.goToMenu()
+                            this.goToMenu();
                         }
                     });
             }
@@ -109,7 +109,7 @@ export class AppComponent implements OnDestroy, OnInit {
                     }, reason => {
                         // Since player clicked outside modal, have to handle the restart.
                         if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-                            this.goToMenu()
+                            this.goToMenu();
                         }
                     });
             }
