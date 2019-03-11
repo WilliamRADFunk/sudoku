@@ -1,7 +1,7 @@
-<div class="row">
-    <div *ngIf="levels && levels > 1" class="col-12 col-sm-2 order-2 order-sm-1 w-100 text-center">
+<div class="row no-gutters">
+    <div *ngIf="levels && levels > 1" class="col-12 col-md-2 order-2 order-md-1 w-100 text-center">
         <span [style.visibility]="isDoneLoading() ? 'visible' : 'hidden'">
-            <span class=" d-block text-white mb-2 mt-5">Board # {{ this.activeBoard + 2 }} of {{ totalNumberOfBoards }}</span>
+            <span class=" d-block text-white mb-2 mt-md-1 mt-4">Board # {{ this.activeBoard + 2 }} of {{ totalNumberOfBoards }}</span>
             <span class=" d-block text-success text-shadow font-weight-bold mb-2 mt-0">Total Completed # {{ this.boardsCompleted }} / {{ totalNumberOfBoards }}</span>
             <span class=" d-block text-white mt-5"><u>Level 1</u></span>
             <div class="btn-group btn-group-sm d-inline-block mt-3">
@@ -14,7 +14,7 @@
             </div>
             <span *ngIf="chosenViewBoard.length >= 1">
                 <div *ngFor="let lvl of getLevelsExposed(); let i = index;" class="board-nav-buttons">
-                    <span class=" d-block text-white mt-5"><u>Level {{ i + 2 }}</u></span>
+                    <span class=" d-block text-white mt-md-5 mt-2"><u>Level {{ i + 2 }}</u></span>
                     <div class="btn-group btn-group-sm d-block mt-3">
                         <button *ngFor="let num of getLevelOptions(i);"
                             class="btn shadow px-0 d-inline-block"
@@ -31,7 +31,7 @@
             </span>
         </span>
     </div>
-    <div class="col-12 order-1 order-sm-2 w-100" [class.col-sm-8]="levels && levels > 1">
+    <div class="col-12 order-1 order-md-2 w-100" [class.col-md-8]="levels && levels > 1">
         <sudoku-start-menu *ngIf="!levels" (levelSelected)="startGame($event)"></sudoku-start-menu>
         <sudoku-loading-view *ngIf="levels" [class.d-none]="loadedAmount === 0 || isDoneLoading()"></sudoku-loading-view>
         <sudoku-play-area *ngIf="levels"
@@ -39,7 +39,7 @@
             [activeBoardIndex]="activeBoard"
             [levels]="levels"></sudoku-play-area>
     </div>
-    <div *ngIf="levels && isDoneLoading()" class="col-sm-2 order-3 w-100 d-none d-sm-block">
+    <div *ngIf="levels && isDoneLoading()" class="col-md-2 order-3 w-100 d-none d-md-block">
         <sudoku-sidebar
             [activeBoardIndex]="activeBoard"
             [levels]="levels"

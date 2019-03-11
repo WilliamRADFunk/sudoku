@@ -2,7 +2,7 @@
 <div class="container-fluid">
 	<div class="d-flex justify-content-center">
 		<div class="col-2"></div>
-		<div class="col-8 text-center text-white mt-5">
+		<div class="col-8 text-center text-white mt-2">
             <span class="h1 d-block d-sm-inline-block mb-2 mb-sm-0">SuDoKu</span>
             <span *ngIf="isDev">
                 <button
@@ -14,12 +14,12 @@
 		</div>
 		<div class="col-2"></div>
 	</div>
-	<div class="d-flex justify-content-center mt-2 mt-sm-5">
+	<div class="d-flex justify-content-center mt-1 mt-sm-3">
 		<div class="col-2"></div>
 		<sudoku-game-board [board]="board" [reveal]="reveal" [level]="level" [boardRegistryIndex]="boardRegistryIndex"></sudoku-game-board>
 		<div class="col-2"></div>
 	</div>
-	<div class="d-flex justify-content-center mt-2 mt-sm-5">
+	<div class="d-flex justify-content-center mt-1 mt-sm-3">
 		<div class="col-xl-2"></div>
 		<div class="col-12 col-xl-8 text-center">
 			<div class="btn-group btn-group-sm d-inline-block d-lg-none">
