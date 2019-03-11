@@ -8,6 +8,7 @@ import { SudokuModule } from 'sudoku';
 import { StartMenuComponent } from './start-menu/start-menu.component';
 import { LoadingViewComponent } from './loading-view/loading-view.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
+import { HelpScreenComponent } from './help-screen/help-screen.component';
 
 @NgModule({
 	declarations: [
@@ -15,7 +16,8 @@ import { SidebarComponent } from './sidebar/sidebar.component';
         PlayAreaComponent,
         StartMenuComponent,
         LoadingViewComponent,
-		SidebarComponent
+		SidebarComponent,
+		HelpScreenComponent
 	],
 	imports: [
 		BrowserModule,

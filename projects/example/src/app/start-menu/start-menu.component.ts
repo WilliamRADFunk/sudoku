@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { LoadTrackerService } from '../services/load-tracker.service';
 
 @Component({
     selector: 'sudoku-start-menu',
@@ -9,8 +8,13 @@ import { LoadTrackerService } from '../services/load-tracker.service';
 export class StartMenuComponent {
     activeLevel: number = 1;
     @Output() levelSelected: EventEmitter<number> = new EventEmitter<number>();
+    @Output() helpSelected: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-    constructor(private readonly loadTrackerService: LoadTrackerService) { }
+    constructor() { }
+
+    enterHelp() {
+        this.helpSelected.emit(true);
+    }
 
     getTooltipMsg(num: number): string {
         switch (num) {

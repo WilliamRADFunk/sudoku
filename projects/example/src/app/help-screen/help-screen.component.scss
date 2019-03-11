@@ -7,11 +7,25 @@
     text-shadow: 2px 2px #555555;
 }
 
+.h4 {
+    color: #FFFFFF;
+    font-family: 'Bradley Hand', cursive;
+    font-size: 18px;
+    text-shadow: 0.5px 0.5px #555555;
+}
+
 @media only screen and (max-width: 767px) {
     .h1 {
         border-bottom: 2px solid #FFFFFF;
         font-size: 30px;
         line-height: 40px;
         text-shadow: 1px 1px #555555;
+    }
+
+    .h4 {
+        color: #FFFFFF;
+        font-family: 'Bradley Hand', cursive;
+        font-size: 14px;
+        text-shadow: 0.25px 0.25px #555555;
     }
 }

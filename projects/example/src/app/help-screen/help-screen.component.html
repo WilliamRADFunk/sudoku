@@ -1,0 +1,114 @@
+<div class="container-fluid">
+  <div class="col-10 col-md-6 offset-1 offset-md-3">
+    <div class="row text-center">
+      <div class="col-6 col-md-2 order-6 order-md-1 my-auto">
+        <button
+          class="btn btn-sm btn-dark btn-default shadow rounded"
+          (click)="exitHelp()"
+          type="button">Exit</button>
+      </div>
+      <div class="col-12 col-md-8 order-1 order-md-6 mt-2 mb-3">
+        <span class="h1">SuDoKu ExTrEme</span>
+      </div>
+      <div class="col-6 col-md-2 order-12 my-auto">
+        <div class="btn-group btn-group-sm d-sm-inline-block">
+          <button
+            class="btn btn-info shadow"
+            [disabled]="activePage <= 1"
+            (click)="prevPage()"
+            type="button"><span class="fa fa-backward"></span></button>
+          <button
+            class="btn btn-info shadow"
+            [disabled]="activePage >= totalPages"
+            (click)="nextPage()"
+            type="button"><span class="fa fa-forward"></span></button>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="activePage === 1" class="d-flex justify-content-center">
+      <div class="col text-justify text-white pb-2 pt-2">
+        <div class="h4">
+          Each quadrant must have numbers 1 through 9 without duplicates.
+          <br/>
+          <br/>
+          <div class="text-center"><img class="img-fluid" src="assets/images/img-help-01.png"/></div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="activePage === 2" class="d-flex justify-content-center">
+      <div class="col text-justify text-white pb-2 pt-2">
+        <div class="h4">
+          There can be no duplicate numbers in any row or column.
+          <br/>
+          <br/>
+          <div class="text-center"><img class="img-fluid" src="assets/images/img-help-02.png"/></div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="activePage === 3" class="d-flex justify-content-center">
+      <div class="col text-justify text-white pb-2 pt-2">
+        <div class="h4">
+          Every SuDoKu board has exactly one correct combination of numbers,
+          and all spaces must be filled to complete a board.
+          <br/>
+          <br/>
+          When all boards are complete...you win!
+          <br/>
+          <br/>
+          <div class="text-center"><img class="img-fluid" src="assets/images/img-help-03.png"/></div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="activePage === 4" class="d-flex justify-content-center">
+      <div class="col text-justify text-white pb-2 pt-2">
+        <div class="h4">
+          There are 2 modes for interacting with a SuDoKu board.
+          <br/>
+          <br/>
+          Answer Mode is the pencil icon (activated by clicking flag button)
+          and any number highlighted will be the number you enter into a cell when you click there.
+          <br/>
+          <br/>
+          <div class="text-center"><img class="img-fluid" src="assets/images/img-help-04.png"/></div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="activePage === 5" class="d-flex justify-content-center">
+      <div class="col text-justify text-white pb-2 pt-2">
+        <div class="h4">
+          There other mode for interacting with a SuDoKu board is Flag Mode.
+          <br/>
+          <br/>
+          Flag Mode is the button with a flag icon (activated by clicking pencil button)
+          and any number highlighted will be the number you enter into a cell when you click there.
+          <br/>
+          <br/>
+          This has no effect on the outcome of a game, but can help you keep track of your options.
+          <br/>
+          <br/>
+          <div class="text-center"><img class="img-fluid" src="assets/images/img-help-05.png"/></div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="activePage === 6" class="d-flex justify-content-center">
+      <div class="col text-justify text-white pb-2 pt-2">
+        <div class="h4">
+          Each level of Sudoku Extreme increases the number of boards in play exponentially:
+          1, 9, 81, 729, 6561, ...
+          <br/>
+          <br/>
+          Build time increases significantly for each level chosen as all boards are interconnected.
+          <br/>
+          <br/>
+          With the exception of the highest level,
+          <br/>
+          each board's quadrant is associated with an entire sudoku board in the level above it.
+          <br/>
+          <br/>
+          Since there are 9 quadrants to a board,
+          each board has 9 additional boards associated with it in the level above.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

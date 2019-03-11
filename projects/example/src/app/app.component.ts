@@ -17,6 +17,7 @@ export class AppComponent implements OnDestroy, OnInit {
     chosenViewBoard: number[] = [-1];
     @ViewChild('content') content: any;
     gameOver: boolean = false;
+    helpMode: boolean = false;
     levels: number;
     loadedAmount: number = 0;
     subs: Subscription[] = [];
@@ -66,6 +67,14 @@ export class AppComponent implements OnDestroy, OnInit {
         }
         this.chosenViewBoard[level || 0] = num;
         this.updateActiveBoard();
+    }
+
+    enterHelp(e: boolean) {
+        this.helpMode = true;
+    }
+
+    exitHelp() {
+        this.helpMode = false;
     }
 
     getLevelArray() {
