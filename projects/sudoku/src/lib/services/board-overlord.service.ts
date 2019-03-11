@@ -110,6 +110,7 @@ export class BoardOverlordService {
     flushBoards() {
         this.gameOver.next(false);
         this.activeCell = null;
+        this.activeQuadrant.next(-1);
         this.boardsByLevel = [];
         this.boardBuildTimes = Array(20).fill(0);
         this.oldWinBoards = [];

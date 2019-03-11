@@ -3,7 +3,7 @@
     <div class="row text-center">
       <div class="col-6 col-md-2 order-6 order-md-1 my-auto">
         <button
-          class="btn btn-sm btn-dark btn-default shadow rounded"
+          class="btn btn-sm btn-dark btn-default text-shadow shadow rounded"
           (click)="exitHelp()"
           type="button">Exit</button>
       </div>
@@ -13,12 +13,12 @@
       <div class="col-6 col-md-2 order-12 my-auto">
         <div class="btn-group btn-group-sm d-sm-inline-block">
           <button
-            class="btn btn-info shadow"
+            class="btn btn-info text-shadow shadow"
             [disabled]="activePage <= 1"
             (click)="prevPage()"
             type="button"><span class="fa fa-backward"></span></button>
           <button
-            class="btn btn-info shadow"
+            class="btn btn-info text-shadow shadow"
             [disabled]="activePage >= totalPages"
             (click)="nextPage()"
             type="button"><span class="fa fa-forward"></span></button>

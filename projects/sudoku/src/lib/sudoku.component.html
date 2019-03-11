@@ -6,7 +6,7 @@
             <span class="h1 d-block d-sm-inline-block mb-2 mb-sm-0">SuDoKu ExTrEme</span>
             <span *ngIf="isDev">
                 <button
-                    class="btn btn-sm btn-primary shadow rounded ml-sm-5 mr-2 mr-sm-0"
+                    class="btn btn-sm btn-primary text-shadow shadow rounded ml-sm-5 mr-2 mr-sm-0"
                     (click)="toggleReveal()"
                     [disabled]="!board"
                     type="button">{{reveal ? 'Hide' : 'Show'}}</button>
@@ -24,24 +24,24 @@
 		<div class="col-12 col-xl-8 text-center">
 			<div class="btn-group btn-group-sm d-inline-block d-lg-none">
 				<button *ngIf="activeControlMode"
-					class="btn btn-info shadow fa fa-pencil"
+					class="btn btn-info text-shadow shadow fa fa-pencil"
 					(click)="toggleControls()"
 					[disabled]="!board"
 					type="button"></button>
 				<button *ngIf="!activeControlMode"
-					class="btn btn-info shadow fa fa-flag"
+					class="btn btn-info text-shadow shadow fa fa-flag"
 					(click)="toggleControls()"
 					[disabled]="!board"
 					type="button"></button>
 				<button *ngFor="let num of [1, 2, 3, 4, 5, 6, 7, 8, 9]"
-					class="btn shadow"
+					class="btn text-shadow shadow"
 					[class.btn-success]="activeControl === num"
 					[class.btn-info]="activeControl !== num"
 					(click)="pressedDigitControl(num)"
 					[disabled]="!board"
 					type="button">{{ num }}</button>
 				<button
-					class="btn shadow fa fa-eraser"
+					class="btn text-shadow shadow fa fa-eraser"
 					[class.btn-success]="!activeControl"
 					[class.btn-info]="activeControl"
 					(click)="pressedDigitControl(0)"
@@ -50,24 +50,24 @@
 			</div>
 			<div class="btn-group btn-group-lg d-none d-lg-inline-block">
 				<button *ngIf="activeControlMode"
-					class="btn btn-info shadow fa fa-pencil"
+					class="btn btn-info text-shadow shadow fa fa-pencil"
 					(click)="toggleControls()"
 					[disabled]="!board"
 					type="button"></button>
 				<button *ngIf="!activeControlMode"
-					class="btn btn-info shadow fa fa-flag"
+					class="btn btn-info text-shadow shadow fa fa-flag"
 					(click)="toggleControls()"
 					[disabled]="!board"
 					type="button"></button>
 				<button *ngFor="let num of [1, 2, 3, 4, 5, 6, 7, 8, 9]"
-					class="btn shadow"
+					class="btn text-shadow shadow"
 					[class.btn-success]="activeControl === num"
 					[class.btn-info]="activeControl !== num"
 					(click)="pressedDigitControl(num)"
 					[disabled]="!board"
 					type="button">{{ num }}</button>
 				<button
-					class="btn shadow fa fa-eraser"
+					class="btn text-shadow shadow fa fa-eraser"
 					[class.btn-success]="!activeControl"
 					[class.btn-info]="activeControl"
 					(click)="pressedDigitControl(0)"

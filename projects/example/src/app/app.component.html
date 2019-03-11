@@ -1,37 +1,39 @@
 <div class="row no-gutters">
-    <div *ngIf="levels && levels > 1" class="col-12 col-md-2 order-2 order-md-1 w-100 text-center">
+    <div *ngIf="levels" class="col-12 col-md-2 order-2 order-md-1 w-100 text-center">
         <span [style.visibility]="isDoneLoading() ? 'visible' : 'hidden'">
-            <span class=" d-block text-white mb-2 mt-md-1 mt-4">Board # {{ this.activeBoard + 2 }} of {{ totalNumberOfBoards }}</span>
+            <span class=" d-block text-white text-shadow mb-2 mt-md-1 mt-4">Board # {{ this.activeBoard + 2 }} of {{ totalNumberOfBoards }}</span>
             <span class=" d-block text-success text-shadow font-weight-bold mb-2 mt-0">Total Completed # {{ this.boardsCompleted }} / {{ totalNumberOfBoards }}</span>
-            <span class=" d-block text-white mt-5"><u>Level 1</u></span>
-            <div class="btn-group btn-group-sm d-inline-block mt-3">
-                <button
-                    class="btn shadow"
-                    [class.btn-success]="chosenViewBoard.length === 1"
-                    [class.btn-warning]="chosenViewBoard.length > 1"
-                    (click)="choseBoardView(-1, 0)"
-                    type="button">{{ 1 }}</button>
-            </div>
-            <span *ngIf="chosenViewBoard.length >= 1">
-                <div *ngFor="let lvl of getLevelsExposed(); let i = index;" class="board-nav-buttons">
-                    <span class=" d-block text-white mt-md-5 mt-2"><u>Level {{ i + 2 }}</u></span>
-                    <div class="btn-group btn-group-sm d-block mt-3">
-                        <button *ngFor="let num of getLevelOptions(i);"
-                            class="btn shadow px-0 d-inline-block"
-                            [class.btn-success]="chosenViewBoard.length <= (i + 2) && chosenViewBoard[i + 1] === num - 2"
-                            [class.btn-warning]="chosenViewBoard.length > (i + 2) && chosenViewBoard[i + 1] === num - 2"
-                            [class.btn-info]="chosenViewBoard[i + 1] !== num - 2"
-                            (click)="choseBoardView((num - 2), (i + 1))"
-                            type="button">{{ num }}</button>
-                    </div>
+            <div *ngIf="levels > 1">
+                <span class=" d-block text-white text-shadow mt-md-5 mt-2"><u>Level 1</u></span>
+                <div class="btn-group btn-group-sm d-inline-block mt-3">
+                    <button
+                        class="btn text-shadow shadow"
+                        [class.btn-success]="chosenViewBoard.length === 1"
+                        [class.btn-warning]="chosenViewBoard.length > 1"
+                        (click)="choseBoardView(-1, 0)"
+                        type="button">{{ 1 }}</button>
                 </div>
-            </span>
+                <span *ngIf="chosenViewBoard.length >= 1">
+                    <div *ngFor="let lvl of getLevelsExposed(); let i = index;" class="board-nav-buttons">
+                        <span class=" d-block text-white text-shadow mt-md-5 mt-2"><u>Level {{ i + 2 }}</u></span>
+                        <div class="btn-group btn-group-sm d-block mt-3">
+                            <button *ngFor="let num of getLevelOptions(i);"
+                                class="btn text-shadow shadow px-0 d-inline-block"
+                                [class.btn-success]="chosenViewBoard.length <= (i + 2) && chosenViewBoard[i + 1] === num - 2"
+                                [class.btn-warning]="chosenViewBoard.length > (i + 2) && chosenViewBoard[i + 1] === num - 2"
+                                [class.btn-info]="chosenViewBoard[i + 1] !== num - 2"
+                                (click)="choseBoardView((num - 2), (i + 1))"
+                                type="button">{{ num }}</button>
+                        </div>
+                    </div>
+                </span>
+            </div>
             <span>
-                <button class="btn btn-primary mt-5" (click)="goToMenu()">Quit Game</button>
+                <button class="btn btn-dark text-shadow mt-md-5 mt-4" (click)="goToMenu()">Quit Game</button>
             </span>
         </span>
     </div>
-    <div class="col-12 order-1 order-md-2 w-100" [class.col-md-8]="levels && levels > 1">
+    <div class="col-12 order-1 order-md-2 w-100" [class.col-md-8]="levels">
         <sudoku-start-menu *ngIf="!levels && !helpMode" (helpSelected)="enterHelp($event)" (levelSelected)="startGame($event)"></sudoku-start-menu>
         <sudoku-loading-view *ngIf="levels" [class.d-none]="loadedAmount === 0 || isDoneLoading()"></sudoku-loading-view>
         <sudoku-play-area *ngIf="levels"
@@ -54,10 +56,10 @@
         <div class="after"></div>
     </div>
     <div class="modal-header" id="modal-gameover-title">
-      <h4 class="modal-title text-center text-white">YOU WON!</h4>
+      <h4 class="modal-title text-center text-white text-shadow">YOU WON!</h4>
     </div>
     <div class="modal-body" id="modal-gameover-body"></div>
     <div class="modal-footer text-center" id="modal-gameover-footer">
-      <button type="button" class="btn btn-primary" (click)="goToMenu()">Menu</button>
+      <button type="button" class="btn btn-primary text-shadow" (click)="goToMenu()">Menu</button>
     </div>
 </ng-template>
