@@ -34,6 +34,7 @@ export class BoardOverlordService {
     activeQuadrant: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
     activeSidepanelIndex: BehaviorSubject<number> = new BehaviorSubject<number>(0);
     gameOver: Subject<boolean> = new Subject<boolean>();
+    numCompletedBoards: BehaviorSubject<number> = new BehaviorSubject<number>(0);
     sidepanelBoards: BehaviorSubject<Board[]> = new BehaviorSubject<Board[]>([]);
 
     constructor() { }
@@ -54,6 +55,8 @@ export class BoardOverlordService {
             this.oldWinBoards.push(...this.newWinBoards);
             this.newWinBoards = [];
         }
+
+        this.numCompletedBoards.next(this.oldWinBoards.length);
 
         const notSolved = this.boardsByLevel.some(lvl => {
             return lvl.some(b => !b.isSolved);
@@ -111,6 +114,7 @@ export class BoardOverlordService {
         this.boardBuildTimes = Array(20).fill(0);
         this.oldWinBoards = [];
         this.newWinBoards = [];
+        this.numCompletedBoards.next(0);
         this.activeSidepanelIndex.next(0);
         this.sidepanelBoards.next([]);
     }

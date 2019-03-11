@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { distinctUntilChanged } from 'rxjs/operators';
 
 import { LoadTrackerService } from './services/load-tracker.service';
 import { BoardOverlordService } from 'sudoku';
@@ -12,6 +13,7 @@ import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 })
 export class AppComponent implements OnDestroy, OnInit {
     activeBoard: number = -1;
+    boardsCompleted: number = 0;
     chosenViewBoard: number[] = [-1];
     @ViewChild('content') content: any;
     gameOver: boolean = false;
@@ -27,9 +29,15 @@ export class AppComponent implements OnDestroy, OnInit {
 
     ngOnDestroy() {
         this.subs.forEach(sub => sub && sub.unsubscribe());
+        this.subs.length = 0;
     }
 
     ngOnInit() {
+        this.subs.push(this.boardOverlordService.numCompletedBoards
+            .pipe(distinctUntilChanged())
+            .subscribe(numBoards => {
+                this.boardsCompleted = numBoards;
+            }));
         this.subs.push(this.loadTrackerService.currLoadAmount.subscribe(amt => {
             setTimeout(() => { this.loadedAmount = amt; }, 200);
         }));
