@@ -1,4 +1,6 @@
-<div *ngIf="showQuadrant" class="d-inline-block m-0 p-0">
+<div *ngIf="showQuadrant"
+	class="d-inline-block m-0 p-0"
+	[ngClass]="getActiveColumnStyles()">
 	<div *ngFor="let row of [0, 1, 2];" class="row no-gutters">
 		<sudoku-cell
 			*ngFor="let col of [0, 1, 2];"

@@ -31,6 +31,7 @@ export class BoardOverlordService {
     private boardBuildTimes: number[] = Array(20).fill(0);
     private oldWinBoards: [number, number][] = [];
     private newWinBoards: [number, number][] = [];
+    activeQuadrant: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
     activeSidepanelIndex: BehaviorSubject<number> = new BehaviorSubject<number>(0);
     gameOver: Subject<boolean> = new Subject<boolean>();
     sidepanelBoards: BehaviorSubject<Board[]> = new BehaviorSubject<Board[]>([]);
@@ -219,6 +220,7 @@ export class BoardOverlordService {
             ];
         }
         this.sidepanelBoards.next(boards);
+        this.activeQuadrant.next(quadrant);
         this.activeSidepanelIndex.next(Math.floor(quadrant / 3));
     }
 
