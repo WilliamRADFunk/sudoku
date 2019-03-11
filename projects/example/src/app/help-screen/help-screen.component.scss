@@ -22,6 +22,16 @@
   }
 }
 
+.iso-img {
+  // transform: rotateX(15deg) rotateY(-45deg) rotateZ(-15deg);
+  &.iso-img-bottom {
+    transform: scale(0.5, 0.5) translate(25%, -270%) rotateX(60deg) rotateY(0deg) rotateZ(-45deg);;
+  }
+  &.iso-img-top {
+    transform: rotateX(60deg) rotateY(0deg) rotateZ(-45deg);;
+  }
+}
+
 @media only screen and (max-width: 767px) {
     .h1 {
         border-bottom: 2px solid #FFFFFF;
