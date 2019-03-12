@@ -64,8 +64,50 @@ export class BoardOverlordService {
         if (!notSolved) {
             console.log('Game Won! Winner Winner Chicken Dinner!');
             this.gameOver.next(true);
-            return;
         }
+        console.log('stringifiedBoard', this.parameterizeBoards());
+    }
+
+    parameterizeBoards() {
+        let answer = '';
+        answer += this.boardsByLevel.length;
+        for (let i = 0; i < this.boardsByLevel.length; i++) {
+            for (let j = 0; j < this.boardsByLevel[i].length; j++) {
+                for (let k = 0; k < this.boardsByLevel[i][j].cellStates.length; k++) {
+                    let boardString = '2';
+                    for (let m = 0; m < this.boardsByLevel[i][j].cellStates[k].length; m++) {
+                        const cell = this.boardsByLevel[i][j].cellStates[k][m];
+                        boardString += cell.clueByParent ? '1' : '0';
+                        [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ].forEach(flag => {
+                            boardString += cell.flagValues.includes(flag) ? flag : 0;
+                        });
+                        boardString += cell.hiddenByParent ? '1' : '0';
+                        boardString += cell.immutable ? '1' : '0';
+                        boardString += cell.isClue ? '1' : '0';
+                        boardString += cell.locked ? '1' : '0';
+                        cell.position.forEach(pos => {
+                            boardString += pos;
+                        });
+                        boardString += cell.userAssignedValue;
+                        boardString += cell.value;
+                    }
+                    const hex = Number(boardString).toString(16);
+                    let zeroIndex = -1;
+                    hex.split('').forEach((char, index) => {
+                        if (char === '0' && zeroIndex === -1) {
+                            zeroIndex = index;
+                        } else if (char !== '0') {
+                            zeroIndex = -1;
+                        }
+                    });
+                    const numOfZeroes = hex.substring(zeroIndex).length;
+                    answer += 'Z' + hex.substring(0, zeroIndex) + 'X' + numOfZeroes;
+                }
+            }
+        }
+        console.log('length', answer.length);
+
+        return answer;
     }
 
     checkForCompletion(board: Board): boolean {

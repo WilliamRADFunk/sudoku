@@ -140,6 +140,14 @@ export class AppComponent implements OnDestroy, OnInit {
         this.helpMode = false;
     }
 
+    invisibleLoadingView() {
+        return this.loadedAmount === 0 || this.isDoneLoading() || this.helpMode;
+    }
+
+    invisiblePlayArea() {
+        return !this.isDoneLoading() || this.helpMode;
+    }
+
     isDoneLoading() {
         return this.loadedAmount >= 100;
     }
@@ -149,6 +157,22 @@ export class AppComponent implements OnDestroy, OnInit {
             return 0;
         }
         return Math.pow(9, n) + Math.pow(9, (n - 1));
+    }
+
+    showGameReady() {
+        return this.levels;
+    }
+
+    showNavigationPanel() {
+        return this.levels && !this.helpMode;
+    }
+
+    showRightPanel() {
+        return this.levels && this.isDoneLoading();
+    }
+
+    showStartMenu() {
+        return !this.levels && !this.helpMode;
     }
 
     startGame(level: number): void {
