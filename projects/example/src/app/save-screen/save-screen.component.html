@@ -11,7 +11,7 @@
           type="button">Exit</button>
       </div>
       <div class="col-12 col-md-8 order-1 order-md-6 mt-2 mb-3">
-        <span class="h1">SuDoKu ExTrEme</span>
+        <span class="h1">SuDoKu ExTrEmE</span>
       </div>
       <div class="col-4 col-md-1 order-9 my-auto">
         <button
@@ -40,21 +40,30 @@
         </button>
       </div>
     </div>
-    <div class="d-flex justify-content-center">
-      <div class="col text-left text-white pb-2 pt-2">
-        <div class="h4">
-          Copy the long string below. This is your game key.
-          <br/>
-          <br/>
-          Paste your key into the load screen from the start menu to play from this current state.
-          <br/>
-          <br/>
+    <div *ngIf="isLoading">
+      <div class="row text-center">
+        <div class="col">
+          <span class="fa fa-spinner fa-lg fa-spin"></span>
         </div>
       </div>
     </div>
-    <div class="row text-center">
-      <div class="col">
-        <textarea readonly class="rounded w-100 p-2" [(ngModel)]="key"></textarea>
+    <div *ngIf="!isLoading">
+      <div class="d-flex justify-content-center">
+        <div class="col text-left text-white pb-2 pt-2">
+          <div class="h4">
+            Copy the long string below. This is your game key.
+            <br/>
+            <br/>
+            Paste your key into the load screen from the start menu to play from this current state.
+            <br/>
+            <br/>
+          </div>
+        </div>
+      </div>
+      <div class="row text-center">
+        <div class="col">
+          <textarea readonly class="rounded w-100 p-2" [(ngModel)]="key"></textarea>
+        </div>
       </div>
     </div>
   </div>

@@ -4,7 +4,8 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 const validKeySizes: number[] = [
   1541,
   15401,
-  140141
+  140141,
+  1262801
 ];
 
 @Component({

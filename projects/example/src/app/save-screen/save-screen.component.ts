@@ -10,13 +10,18 @@ import { BoardOverlordService } from 'sudoku';
   styleUrls: ['./save-screen.component.scss']
 })
 export class SaveScreenComponent implements OnInit {
+  isLoading: boolean = false;
   key: string = '';
   @Output() saveSelected: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   constructor(private readonly boardOverlordService: BoardOverlordService) { }
 
   ngOnInit() {
-    this.key = this.boardOverlordService.getSaveGameKey();
+    this.isLoading = true;
+    setTimeout(() => {
+      this.key = this.boardOverlordService.getSaveGameKey();
+      this.isLoading = false;
+    }, 200);
   }
 
   copyToClipboard() {
