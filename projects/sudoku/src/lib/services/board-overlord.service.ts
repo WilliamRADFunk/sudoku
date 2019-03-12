@@ -143,8 +143,8 @@ export class BoardOverlordService {
         key += this.boardsByLevel.length;
         for (let i = 0; i < this.boardsByLevel.length; i++) {
             for (let j = 0; j < this.boardsByLevel[i].length; j++) {
+                let boardString = '';
                 for (let k = 0; k < this.boardsByLevel[i][j].cellStates.length; k++) {
-                    let boardString = '2';
                     for (let m = 0; m < this.boardsByLevel[i][j].cellStates[k].length; m++) {
                         const cell = this.boardsByLevel[i][j].cellStates[k][m];
                         boardString += cell.clueByParent ? '1' : '0';
@@ -173,8 +173,8 @@ export class BoardOverlordService {
                     //     }
                     // });
                     // const numOfZeroes = hex.substring(zeroIndex).length;
-                    key += 'Z' + boardString;
                 }
+                key += 'Z' + boardString;
             }
         }
         return key;
@@ -331,6 +331,7 @@ export class BoardOverlordService {
         this.loadKey = loadKey;
         this.boardsByLevel.length = Number(loadKey[0]);
         let mangledBoards = loadKey.substring(2).split('Z');
+        console.log('mangledBoards', mangledBoards[0], this.boardsByLevel.length);
         for (let i = 0; i < this.boardsByLevel.length; i++) {
             this.boardsByLevel[i] = [];
             const numBoardsInLevel = Math.pow(9, i);
@@ -353,7 +354,7 @@ export class BoardOverlordService {
                 console.log('dehexed - 4', dehexed, dehexed[0], mangledBoards.length);
                 let winningBoard = true;
                 const inputPrimers = [];
-                const newCellState = [];
+                const newCellState = [ [], [], [], [], [], [], [], [], [] ];
                 for (let m = 0; m < 81; m++) {
                     const startingIndex = m * 19;
                     const cell = {
@@ -378,7 +379,7 @@ export class BoardOverlordService {
                     cell.userAssignedValue = Number(dehexed[startingIndex + 17]);
                     cell.value = Number(dehexed[startingIndex + 18]);
 
-                    newCellState.push(cell);
+                    newCellState[Math.floor(m / 9)].push(cell);
                     if (!cell.locked) {
                         winningBoard = false;
                     }
@@ -396,6 +397,7 @@ export class BoardOverlordService {
                 this.boardsByLevel[i][j] = parsedBoard;
             }
         }
+        console.log('Done Setting setLoadString');
     }
     updateBoardBuildTimes(seconds: number): void {
         this.boardBuildTimes[seconds]++;
