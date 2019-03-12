@@ -158,21 +158,9 @@ export class BoardOverlordService {
                         cell.position.forEach(pos => {
                             boardString += pos;
                         });
-                        boardString += cell.userAssignedValue;
-                        boardString += cell.value;
+                        boardString += cell.userAssignedValue || '0';
+                        boardString += cell.value || '0';
                     }
-                    // console.log('before conversion', boardString);
-                    // const hex = Number(boardString).toString(16);
-                    // console.log('converted back', new BigNumber(parseInt(hex, 16)).toFixed());
-                    // let zeroIndex = -1;
-                    // hex.split('').forEach((char, index) => {
-                    //     if (char === '0' && zeroIndex === -1) {
-                    //         zeroIndex = index;
-                    //     } else if (char !== '0') {
-                    //         zeroIndex = -1;
-                    //     }
-                    // });
-                    // const numOfZeroes = hex.substring(zeroIndex).length;
                 }
                 key += 'Z' + boardString;
             }
@@ -331,27 +319,13 @@ export class BoardOverlordService {
         this.loadKey = loadKey;
         this.boardsByLevel.length = Number(loadKey[0]);
         let mangledBoards = loadKey.substring(2).split('Z');
-        console.log('mangledBoards', mangledBoards[0], this.boardsByLevel.length);
         for (let i = 0; i < this.boardsByLevel.length; i++) {
             this.boardsByLevel[i] = [];
             const numBoardsInLevel = Math.pow(9, i);
             this.boardsByLevel[i].length = numBoardsInLevel;
             for (let j = 0; j < numBoardsInLevel; j++) {
-                // const boardZeroSplit = mangledBoards[0].split('X');
-                // let dehexed = boardZeroSplit[0];
-                // console.log('dehexed - 0', dehexed);
-                // const zeroes = Number(boardZeroSplit[1]);
-                // console.log('dehexed - 1', zeroes);
-                // for (let k = 0; k < zeroes; k++) {
-                //     dehexed += '0';
-                // }
-                // console.log('dehexed - 2', dehexed);
-                // const dexNum = parseInt(dehexed, 16);
-                // console.log('dehexed - 3', dexNum);
-                // dehexed = new BigNumber(dexNum).toFixed().substring(1);
-                const dehexed = mangledBoards[0].substring(1);
+                const dehexed = mangledBoards[0];
                 mangledBoards = mangledBoards.splice(1);
-                console.log('dehexed - 4', dehexed, dehexed[0], mangledBoards.length);
                 let winningBoard = true;
                 const inputPrimers = [];
                 const newCellState = [ [], [], [], [], [], [], [], [], [] ];
@@ -384,7 +358,7 @@ export class BoardOverlordService {
                         winningBoard = false;
                     }
                     if (cell.immutable) {
-                        inputPrimers.push(cell.value);
+                        inputPrimers.push(cell);
                     }
                 }
                 const parsedBoard = {
@@ -397,7 +371,6 @@ export class BoardOverlordService {
                 this.boardsByLevel[i][j] = parsedBoard;
             }
         }
-        console.log('Done Setting setLoadString');
     }
     updateBoardBuildTimes(seconds: number): void {
         this.boardBuildTimes[seconds]++;

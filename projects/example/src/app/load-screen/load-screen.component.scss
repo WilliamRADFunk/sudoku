@@ -27,6 +27,10 @@
   min-height: 300px;
 }
 
+.close:focus {
+  outline: none;
+}
+
 @media only screen and (max-width: 767px) {
     .h1 {
         border-bottom: 2px solid #FFFFFF;

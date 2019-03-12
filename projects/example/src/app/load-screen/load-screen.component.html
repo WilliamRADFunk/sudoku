@@ -22,7 +22,16 @@
             ngbTooltip="Load Game"
             tooltipClass="sudoku-tooltip"
             placement="bottom"
-            type="button"><span class="fa fa-floppy-o"></span></button>
+            type="button"><span class="fa fa-upload"></span></button>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex justify-content-center">
+      <div class="col text-left text-white pb-2 pt-2">
+        <div class="h4">
+          Paste your save game key into the textarea below and press the green button to load your saved game.
+          <br/>
+          <br/>
         </div>
       </div>
     </div>
@@ -33,3 +42,23 @@
     </div>
   </div>
 </div>
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Invalid Save Game Key</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form>
+      <div class="form-group">
+        <label for="dateOfBirth">{{ getErrorMessage() }}</label>
+        <div class="input-group"></div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Exit click')">Close</button>
+  </div>
+</ng-template>

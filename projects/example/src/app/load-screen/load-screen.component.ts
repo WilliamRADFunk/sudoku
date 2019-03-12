@@ -1,4 +1,11 @@
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, ViewChild } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+
+const validKeySizes: number[] = [
+  1541,
+  15401,
+  140141
+];
 
 @Component({
   selector: 'sudoku-load-screen',
@@ -6,10 +13,12 @@ import { Component, OnInit, EventEmitter, Output } from '@angular/core';
   styleUrls: ['./load-screen.component.scss']
 })
 export class LoadScreenComponent implements OnInit {
+  @ViewChild('content') content: any;
+  errorMessage: string = '';
   key: string = '';
   @Output() loadSelected: EventEmitter<string> = new EventEmitter<string>();
 
-  constructor() { }
+  constructor(private modalService: NgbModal) { }
 
   ngOnInit() {
   }
@@ -18,7 +27,27 @@ export class LoadScreenComponent implements OnInit {
     this.loadSelected.emit(null);
   }
 
+  getErrorMessage() {
+    return this.errorMessage;
+  }
+
   loadGame() {
-    this.loadSelected.emit(this.key);
+    const loadKey = this.key.trim().replace(/(\r\n|\n|\r)/gm, '').trim();
+    const loadKeyLength = loadKey.length;
+    if (!validKeySizes.some(vKeySize => vKeySize === loadKeyLength)) {
+      this.errorMessage = 'The key you entered is of an invalid length';
+      this.modalService.open(this.content, {
+        centered: true,
+        size: 'lg',
+      }).result.then(() => {}, reason => {});
+    } else if (loadKey.match(".*[a-zA-Y]+.*")) {
+      this.errorMessage = 'The key you entered constains invalid characters';
+      this.modalService.open(this.content, {
+        centered: true,
+        size: 'lg',
+      }).result.then(() => {}, reason => {});
+    } else {
+      this.loadSelected.emit(loadKey);
+    }
   }
 }
