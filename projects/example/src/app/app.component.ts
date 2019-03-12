@@ -87,8 +87,12 @@ export class AppComponent implements OnDestroy, OnInit {
         this.helpMode = false;
     }
 
-    exitLoad() {
+    exitLoad(e: string) {
         this.loadMode = false;
+        if (e) {
+            this.boardOverlordService.setLoadString(e);
+            this.startGame(Number(e[0]));
+        }
     }
 
     exitSave() {

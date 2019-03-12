@@ -41,6 +41,11 @@ export class PlayAreaComponent implements OnChanges, OnDestroy, OnInit {
     }
 
     async ngOnInit(): Promise<void> {
+        if (this.boardOverlordService.getLoadGameKey()) {
+            this.activeBoard = this.boardOverlordService.getBoard(0, 0);
+            setTimeout(() => { this.loadTrackerService.updateLoad(100); }, 100);
+            return;
+        }
         const startTime = new Date().getTime();
         this.loadTrackerService.currLoadAmount.subscribe(amt => {
             if (!amt) {

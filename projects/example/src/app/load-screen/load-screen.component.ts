@@ -6,7 +6,8 @@ import { Component, OnInit, EventEmitter, Output } from '@angular/core';
   styleUrls: ['./load-screen.component.scss']
 })
 export class LoadScreenComponent implements OnInit {
-  @Output() loadSelected: EventEmitter<boolean> = new EventEmitter<boolean>();
+  key: string = '';
+  @Output() loadSelected: EventEmitter<string> = new EventEmitter<string>();
 
   constructor() { }
 
@@ -14,6 +15,10 @@ export class LoadScreenComponent implements OnInit {
   }
 
   exitLoad() {
-    this.loadSelected.emit(false);
+    this.loadSelected.emit(null);
+  }
+
+  loadGame() {
+    this.loadSelected.emit(this.key);
   }
 }

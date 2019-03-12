@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
+import { BigNumber } from 'bignumber.js';
 
 import { Board } from '../models/board';
 import { Cell } from '../models/cell';
@@ -29,6 +30,7 @@ export class BoardOverlordService {
     private activeCell: Cell;
     private boardsByLevel: Board[][] = [];
     private boardBuildTimes: number[] = Array(20).fill(0);
+    private loadKey: string = '';
     private oldWinBoards: [number, number][] = [];
     private newWinBoards: [number, number][] = [];
     activeQuadrant: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
@@ -117,6 +119,7 @@ export class BoardOverlordService {
         this.numCompletedBoards.next(0);
         this.activeSidepanelIndex.next(0);
         this.sidepanelBoards.next([]);
+        this.loadKey = '';
     }
 
     getBoard(indexLevel: number, registeredIndex: number): Board {
@@ -129,6 +132,10 @@ export class BoardOverlordService {
 
     getLevelLength(level: number): number {
         return this.boardsByLevel[level].length;
+    }
+
+    getLoadGameKey() {
+        return this.loadKey;
     }
     
     getSaveGameKey() {
@@ -154,17 +161,19 @@ export class BoardOverlordService {
                         boardString += cell.userAssignedValue;
                         boardString += cell.value;
                     }
-                    const hex = Number(boardString).toString(16);
-                    let zeroIndex = -1;
-                    hex.split('').forEach((char, index) => {
-                        if (char === '0' && zeroIndex === -1) {
-                            zeroIndex = index;
-                        } else if (char !== '0') {
-                            zeroIndex = -1;
-                        }
-                    });
-                    const numOfZeroes = hex.substring(zeroIndex).length;
-                    key += 'Z' + hex.substring(0, zeroIndex) + 'X' + numOfZeroes;
+                    // console.log('before conversion', boardString);
+                    // const hex = Number(boardString).toString(16);
+                    // console.log('converted back', new BigNumber(parseInt(hex, 16)).toFixed());
+                    // let zeroIndex = -1;
+                    // hex.split('').forEach((char, index) => {
+                    //     if (char === '0' && zeroIndex === -1) {
+                    //         zeroIndex = index;
+                    //     } else if (char !== '0') {
+                    //         zeroIndex = -1;
+                    //     }
+                    // });
+                    // const numOfZeroes = hex.substring(zeroIndex).length;
+                    key += 'Z' + boardString;
                 }
             }
         }
@@ -316,6 +325,76 @@ export class BoardOverlordService {
                 Number(level) + 1,
                 (registeredIndex * 9) + currCell.position[2],
                 false);
+        }
+    }
+    setLoadString(loadKey: string) {
+        this.loadKey = loadKey;
+        this.boardsByLevel.length = Number(loadKey[0]);
+        let mangledBoards = loadKey.substring(2).split('Z');
+        for (let i = 0; i < this.boardsByLevel.length; i++) {
+            this.boardsByLevel[i] = [];
+            const numBoardsInLevel = Math.pow(9, i);
+            this.boardsByLevel[i].length = numBoardsInLevel;
+            for (let j = 0; j < numBoardsInLevel; j++) {
+                // const boardZeroSplit = mangledBoards[0].split('X');
+                // let dehexed = boardZeroSplit[0];
+                // console.log('dehexed - 0', dehexed);
+                // const zeroes = Number(boardZeroSplit[1]);
+                // console.log('dehexed - 1', zeroes);
+                // for (let k = 0; k < zeroes; k++) {
+                //     dehexed += '0';
+                // }
+                // console.log('dehexed - 2', dehexed);
+                // const dexNum = parseInt(dehexed, 16);
+                // console.log('dehexed - 3', dexNum);
+                // dehexed = new BigNumber(dexNum).toFixed().substring(1);
+                const dehexed = mangledBoards[0].substring(1);
+                mangledBoards = mangledBoards.splice(1);
+                console.log('dehexed - 4', dehexed, dehexed[0], mangledBoards.length);
+                let winningBoard = true;
+                const inputPrimers = [];
+                const newCellState = [];
+                for (let m = 0; m < 81; m++) {
+                    const startingIndex = m * 19;
+                    const cell = {
+                        clueByParent: !!Number(dehexed[startingIndex]),
+                        flagValues: [],
+                        hiddenByParent: false,
+                        immutable: false,
+                        isClue: false,
+                        locked: false,
+                        position: [0, 0, 0],
+                        userAssignedValue: null,
+                        value: null
+                    };
+                    cell.flagValues = dehexed.substr(startingIndex + 1, 9).split('').filter(x => !!x).map(z => Number(z));
+                    cell.hiddenByParent = !!Number(dehexed[startingIndex + 10]);
+                    cell.immutable = !!Number(dehexed[startingIndex + 11]);
+                    cell.isClue = !!Number(dehexed[startingIndex + 12]);
+                    cell.locked = !!Number(dehexed[startingIndex + 13]);
+                    cell.position[0] = Number(dehexed[startingIndex + 14]);
+                    cell.position[1] = Number(dehexed[startingIndex + 15]);
+                    cell.position[2] = Number(dehexed[startingIndex + 16]);
+                    cell.userAssignedValue = Number(dehexed[startingIndex + 17]);
+                    cell.value = Number(dehexed[startingIndex + 18]);
+
+                    newCellState.push(cell);
+                    if (!cell.locked) {
+                        winningBoard = false;
+                    }
+                    if (cell.immutable) {
+                        inputPrimers.push(cell.value);
+                    }
+                }
+                const parsedBoard = {
+                    boardRegistryIndex: j,
+                    cellStates: newCellState,
+                    inputPrimers: inputPrimers,
+                    isSolved: winningBoard,
+                    level: i
+                };
+                this.boardsByLevel[i][j] = parsedBoard;
+            }
         }
     }
     updateBoardBuildTimes(seconds: number): void {
