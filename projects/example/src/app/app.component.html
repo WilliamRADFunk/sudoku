@@ -1,10 +1,10 @@
 <div class="row no-gutters">
-    <div *ngIf="levels" class="col-12 col-md-2 order-2 order-md-1 w-100 text-center">
+    <div *ngIf="levels && !helpMode" class="col-12 col-md-2 order-2 order-md-1 w-100 text-center">
         <span [style.visibility]="isDoneLoading() ? 'visible' : 'hidden'">
             <span class=" d-block text-white text-shadow mb-2 mt-md-1 mt-4">Board # {{ this.activeBoard + 2 }} of {{ totalNumberOfBoards }}</span>
             <span class=" d-block text-success text-shadow font-weight-bold mb-2 mt-0">Total Completed # {{ this.boardsCompleted }} / {{ totalNumberOfBoards }}</span>
             <div *ngIf="levels > 1">
-                <span class=" d-block text-white text-shadow mt-md-5 mt-2"><u>Level 1</u></span>
+                <span class="d-block text-white text-shadow mt-md-5 mt-2"><u>Level 1</u></span>
                 <div class="btn-group btn-group-sm d-inline-block mt-3">
                     <button
                         class="btn text-shadow shadow"
@@ -28,25 +28,36 @@
                     </div>
                 </span>
             </div>
-            <span>
-                <button class="btn btn-dark text-shadow mt-md-5 mt-4" (click)="goToMenu()">Quit Game</button>
-            </span>
+            <div class="d-flex justify-content-center">
+                <div class="col text-center text-white mt-md-5 mt-4 mb-2">
+                    <button
+                        class="btn btn-sm btn-dark btn-default text-shadow shadow rounded"
+                        (click)="enterHelp(true)"
+                        type="button">Tutorial</button>
+                </div>
+                <div class="col text-center text-white mt-md-5 mt-4 mb-2">
+                    <button
+                        class="btn btn-sm btn-dark btn-default text-shadow shadow rounded"
+                        (click)="goToMenu()"
+                        type="button">Quit</button>
+                </div>
+            </div>
         </span>
     </div>
-    <div class="col-12 order-1 order-md-2 w-100" [class.col-md-8]="levels">
+    <div class="col-12 order-1 order-md-2 w-100" [class.col-md-8]="levels && !helpMode">
         <sudoku-start-menu *ngIf="!levels && !helpMode" (helpSelected)="enterHelp($event)" (levelSelected)="startGame($event)"></sudoku-start-menu>
-        <sudoku-loading-view *ngIf="levels" [class.d-none]="loadedAmount === 0 || isDoneLoading()"></sudoku-loading-view>
+        <sudoku-loading-view *ngIf="levels" [class.d-none]="loadedAmount === 0 || isDoneLoading() || helpMode"></sudoku-loading-view>
         <sudoku-play-area *ngIf="levels"
-            [class.d-none]="!isDoneLoading()"
+            [class.d-none]="!isDoneLoading() || helpMode"
             [activeBoardIndex]="activeBoard"
             [levels]="levels"></sudoku-play-area>
-        <sudoku-help-screen *ngIf="!levels && helpMode" (helpSelected)="exitHelp($event)"></sudoku-help-screen>
+        <sudoku-help-screen *ngIf="helpMode" (helpSelected)="exitHelp($event)"></sudoku-help-screen>
     </div>
     <div *ngIf="levels && isDoneLoading()" class="col-md-2 order-3 w-100 d-none d-md-block">
         <sudoku-sidebar
             [activeBoardIndex]="activeBoard"
             [levels]="levels"
-            [style.visibility]="isDoneLoading() ? 'visible' : 'hidden'"></sudoku-sidebar>
+            [style.visibility]="!helpMode ? 'visible' : 'hidden'"></sudoku-sidebar>
     </div>
 </div>
 

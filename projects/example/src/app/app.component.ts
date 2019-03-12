@@ -137,6 +137,7 @@ export class AppComponent implements OnDestroy, OnInit {
         this.loadedAmount = 0;
         this.totalNumberOfBoards = 0;
         this.boardOverlordService.flushBoards();
+        this.helpMode = false;
     }
 
     isDoneLoading() {

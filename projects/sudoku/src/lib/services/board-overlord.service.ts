@@ -202,6 +202,7 @@ export class BoardOverlordService {
         const localLevel = Number(level) + 1;
         if (!this.boardsByLevel[localLevel]) {
             this.sidepanelBoards.next([]);
+            this.activeQuadrant.next(-1);
             return;
         }
         let boards = [];
