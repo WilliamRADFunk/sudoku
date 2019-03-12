@@ -33,31 +33,55 @@
                     <button
                         class="btn btn-sm btn-dark btn-default text-shadow shadow rounded"
                         (click)="enterHelp(true)"
+                        ngbTooltip="See Help Screen"
+                        tooltipClass="sudoku-tooltip"
+                        placement="bottom"
                         type="button">Tutorial</button>
                 </div>
                 <div class="col text-center text-white mt-md-5 mt-4 mb-2">
                     <button
                         class="btn btn-sm btn-dark btn-default text-shadow shadow rounded"
+                        (click)="enterSave(true)"
+                        ngbTooltip="Get Save Key"
+                        tooltipClass="sudoku-tooltip"
+                        placement="bottom"
+                        type="button">Save</button>
+                </div>
+                <div class="col text-center text-white mt-md-5 mt-4 mb-2">
+                    <button
+                        class="btn btn-sm btn-dark btn-default text-shadow shadow rounded"
                         (click)="goToMenu()"
+                        ngbTooltip="Return to Menu"
+                        tooltipClass="sudoku-tooltip"
+                        placement="bottom"
                         type="button">Quit</button>
                 </div>
             </div>
         </span>
     </div>
-    <div class="col-12 order-1 order-md-2 w-100" [class.col-md-8]="levels && !helpMode">
-        <sudoku-start-menu *ngIf="showStartMenu()" (helpSelected)="enterHelp($event)" (levelSelected)="startGame($event)"></sudoku-start-menu>
-        <sudoku-loading-view *ngIf="showGameReady()" [class.d-none]="invisibleLoadingView()"></sudoku-loading-view>
+    <div class="col-12 order-1 order-md-2 w-100" [class.col-md-8]="levels && !helpMode && !loadMode && !saveMode">
+        <sudoku-start-menu *ngIf="showStartMenu()"
+            (helpSelected)="enterHelp($event)"
+            (levelSelected)="startGame($event)"
+            (loadSelected)="enterLoad($event)"></sudoku-start-menu>
+        <sudoku-loading-view *ngIf="showGameReady()"
+            [class.d-none]="invisibleLoadingView()"></sudoku-loading-view>
         <sudoku-play-area *ngIf="showGameReady()"
             [class.d-none]="invisiblePlayArea()"
             [activeBoardIndex]="activeBoard"
             [levels]="levels"></sudoku-play-area>
-        <sudoku-help-screen *ngIf="helpMode" (helpSelected)="exitHelp($event)"></sudoku-help-screen>
+        <sudoku-help-screen *ngIf="helpMode"
+            (helpSelected)="exitHelp($event)"></sudoku-help-screen>
+        <sudoku-load-screen *ngIf="loadMode"
+            (loadSelected)="exitLoad($event)"></sudoku-load-screen>
+        <sudoku-save-screen *ngIf="saveMode"
+            (saveSelected)="exitSave($event)"></sudoku-save-screen>
     </div>
     <div *ngIf="showRightPanel()" class="col-md-2 order-3 w-100 d-none d-md-block">
         <sudoku-sidebar
             [activeBoardIndex]="activeBoard"
             [levels]="levels"
-            [style.visibility]="!helpMode ? 'visible' : 'hidden'"></sudoku-sidebar>
+            [style.visibility]="(!helpMode && !loadMode && !saveMode) ? 'visible' : 'hidden'"></sudoku-sidebar>
     </div>
 </div>
 
@@ -71,6 +95,12 @@
     </div>
     <div class="modal-body" id="modal-gameover-body"></div>
     <div class="modal-footer text-center" id="modal-gameover-footer">
-      <button type="button" class="btn btn-primary text-shadow" (click)="goToMenu()">Menu</button>
+      <button
+        type="button"
+        class="btn btn-primary text-shadow"
+        (click)="goToMenu()"
+        ngbTooltip="Return to Menu"
+        tooltipClass="sudoku-tooltip"
+        placement="bottom">Exit</button>
     </div>
 </ng-template>

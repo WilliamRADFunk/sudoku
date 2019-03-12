@@ -20,6 +20,8 @@ export class AppComponent implements OnDestroy, OnInit {
     helpMode: boolean = false;
     levels: number;
     loadedAmount: number = 0;
+    loadMode: boolean = false;
+    saveMode: boolean = false;
     subs: Subscription[] = [];
     totalNumberOfBoards: number = 0;
 
@@ -73,8 +75,24 @@ export class AppComponent implements OnDestroy, OnInit {
         this.helpMode = true;
     }
 
+    enterLoad(e: boolean) {
+        this.loadMode = true;
+    }
+
+    enterSave(e: boolean) {
+        this.saveMode = true;
+    }
+
     exitHelp() {
         this.helpMode = false;
+    }
+
+    exitLoad() {
+        this.loadMode = false;
+    }
+
+    exitSave() {
+        this.saveMode = false;
     }
 
     getLevelArray() {
@@ -141,11 +159,11 @@ export class AppComponent implements OnDestroy, OnInit {
     }
 
     invisibleLoadingView() {
-        return this.loadedAmount === 0 || this.isDoneLoading() || this.helpMode;
+        return this.loadedAmount === 0 || this.isDoneLoading() || this.helpMode || this.loadMode || this.saveMode;
     }
 
     invisiblePlayArea() {
-        return !this.isDoneLoading() || this.helpMode;
+        return !this.isDoneLoading() || this.helpMode || this.loadMode || this.saveMode;
     }
 
     isDoneLoading() {
@@ -164,7 +182,7 @@ export class AppComponent implements OnDestroy, OnInit {
     }
 
     showNavigationPanel() {
-        return this.levels && !this.helpMode;
+        return this.levels && !this.helpMode && !this.loadMode && !this.saveMode;
     }
 
     showRightPanel() {
@@ -172,7 +190,7 @@ export class AppComponent implements OnDestroy, OnInit {
     }
 
     showStartMenu() {
-        return !this.levels && !this.helpMode;
+        return !this.levels && !this.helpMode && !this.loadMode && !this.saveMode;
     }
 
     startGame(level: number): void {

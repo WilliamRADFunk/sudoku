@@ -1,0 +1,35 @@
+<div class="container-fluid">
+  <div class="col-10 col-md-6 offset-1 offset-md-3">
+    <div class="row text-center">
+      <div class="col-6 col-md-2 order-6 order-md-1 my-auto">
+        <button
+          class="btn btn-sm btn-dark btn-default text-shadow shadow rounded"
+          (click)="exitLoad()"
+          ngbTooltip="Return to Menu"
+          tooltipClass="sudoku-tooltip"
+          placement="bottom"
+          type="button">Exit</button>
+      </div>
+      <div class="col-12 col-md-8 order-1 order-md-6 mt-2 mb-3">
+        <span class="h1">SuDoKu ExTrEme</span>
+      </div>
+      <div class="col-6 col-md-2 order-12 my-auto">
+        <div class="btn-group btn-group-sm d-sm-inline-block">
+          <button
+            class="btn btn-success text-shadow shadow"
+            [disabled]="!key"
+            (click)="loadGame()"
+            ngbTooltip="Load Game"
+            tooltipClass="sudoku-tooltip"
+            placement="bottom"
+            type="button"><span class="fa fa-floppy-o"></span></button>
+        </div>
+      </div>
+    </div>
+    <div class="row text-center">
+      <div class="col">
+        <textarea class="rounded w-100 p-2" [(ngModel)]="key"></textarea>
+      </div>
+    </div>
+  </div>
+</div>

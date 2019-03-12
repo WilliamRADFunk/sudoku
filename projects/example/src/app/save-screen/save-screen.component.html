@@ -1,0 +1,61 @@
+<div class="container-fluid">
+  <div class="col-10 col-md-6 offset-1 offset-md-3">
+    <div class="row text-center">
+      <div class="col-4 col-md-1 order-6 order-md-1 my-auto">
+        <button
+          class="btn btn-sm btn-dark btn-default text-shadow shadow rounded"
+          (click)="exitSave()"
+          ngbTooltip="Return to Game"
+          tooltipClass="sudoku-tooltip"
+          placement="bottom"
+          type="button">Exit</button>
+      </div>
+      <div class="col-12 col-md-8 order-1 order-md-6 mt-2 mb-3">
+        <span class="h1">SuDoKu ExTrEme</span>
+      </div>
+      <div class="col-4 col-md-1 order-9 my-auto">
+        <button
+          class="btn btn-sm btn-info text-shadow shadow"
+          [disabled]="!key"
+          (click)="copyToClipboard()"
+          container="body"
+          ngbTooltip="Paste to Clipboard"
+          tooltipClass="sudoku-tooltip"
+          placement="bottom"
+          type="button">
+          <span class="fa fa-clipboard"></span>
+        </button>
+      </div>
+      <div class="col-4 col-md-1 order-12 my-auto">
+        <button
+          class="btn btn-sm btn-info text-shadow shadow"
+          [disabled]="!key"
+          (click)="download()"
+          container="body"
+          ngbTooltip="Download"
+          tooltipClass="sudoku-tooltip"
+          placement="bottom"
+          type="button">
+          <span class="fa fa-download"></span>
+        </button>
+      </div>
+    </div>
+    <div class="d-flex justify-content-center">
+      <div class="col text-left text-white pb-2 pt-2">
+        <div class="h4">
+          Copy the long string below. This is your game key.
+          <br/>
+          <br/>
+          Paste your key into the load screen from the start menu to play from this current state.
+          <br/>
+          <br/>
+        </div>
+      </div>
+    </div>
+    <div class="row text-center">
+      <div class="col">
+        <textarea readonly class="rounded w-100 p-2" [(ngModel)]="key"></textarea>
+      </div>
+    </div>
+  </div>
+</div>

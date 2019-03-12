@@ -7,8 +7,9 @@ import { Component, EventEmitter, Output } from '@angular/core';
 })
 export class StartMenuComponent {
     activeLevel: number = 1;
-    @Output() levelSelected: EventEmitter<number> = new EventEmitter<number>();
     @Output() helpSelected: EventEmitter<boolean> = new EventEmitter<boolean>();
+    @Output() levelSelected: EventEmitter<number> = new EventEmitter<number>();
+    @Output() loadSelected: EventEmitter<boolean> = new EventEmitter<boolean>();
 
     constructor() { }
 
@@ -41,6 +42,10 @@ export class StartMenuComponent {
 
     levelChange(level: number): void {
         this.activeLevel = (level >= 1 && 5 >= level) ? level : 1;
+    }
+
+    loadGame(): void {
+        this.loadSelected.emit(true);
     }
 
     startGame(): void {

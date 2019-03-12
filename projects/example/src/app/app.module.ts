@@ -9,6 +9,9 @@ import { StartMenuComponent } from './start-menu/start-menu.component';
 import { LoadingViewComponent } from './loading-view/loading-view.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { HelpScreenComponent } from './help-screen/help-screen.component';
+import { LoadScreenComponent } from './load-screen/load-screen.component';
+import { SaveScreenComponent } from './save-screen/save-screen.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
 	declarations: [
@@ -17,10 +20,13 @@ import { HelpScreenComponent } from './help-screen/help-screen.component';
         StartMenuComponent,
         LoadingViewComponent,
 		SidebarComponent,
-		HelpScreenComponent
+		HelpScreenComponent,
+		LoadScreenComponent,
+		SaveScreenComponent
 	],
 	imports: [
 		BrowserModule,
+		FormsModule,
 		NgbModule,
 		SudokuModule
 	],
