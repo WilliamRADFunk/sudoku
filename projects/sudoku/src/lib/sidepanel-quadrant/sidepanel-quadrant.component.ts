@@ -9,8 +9,8 @@ import { Board } from '../models/board';
 export class SidepanelQuadrantComponent implements OnChanges {
 	@Input() quadrant: number;
 	@Input() board: Board;
-    @Input() level: number;
-    @Input() boardRegistryIndex: number;
+  @Input() level: number;
+  @Input() boardRegistryIndex: number;
 	@Input() reveal: boolean;
 
 	showQuadrant: boolean = true;

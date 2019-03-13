@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SaveScreenComponent } from './save-screen.component';
+import { SudokuModule, BoardOverlordService } from 'sudoku';
+import { FormsModule } from '@angular/forms';
 
 describe('SaveScreenComponent', () => {
   let component: SaveScreenComponent;
@@ -8,7 +10,12 @@ describe('SaveScreenComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SaveScreenComponent ]
+      imports: [
+        FormsModule,
+        SudokuModule
+      ],
+      declarations: [ SaveScreenComponent ],
+      providers: [ BoardOverlordService ]
     })
     .compileComponents();
   }));

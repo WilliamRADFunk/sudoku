@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SidebarComponent } from './sidebar.component';
+import { SudokuModule, BoardOverlordService } from 'sudoku';
 
 describe('SidebarComponent', () => {
   let component: SidebarComponent;
@@ -8,7 +9,9 @@ describe('SidebarComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SidebarComponent ]
+      imports: [ SudokuModule ],
+      declarations: [ SidebarComponent ],
+      providers: [ BoardOverlordService ]
     })
     .compileComponents();
   }));
@@ -16,6 +19,8 @@ describe('SidebarComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(SidebarComponent);
     component = fixture.componentInstance;
+    component.activeBoardIndex = -1;
+    component.level = 1;
     fixture.detectChanges();
   });
 

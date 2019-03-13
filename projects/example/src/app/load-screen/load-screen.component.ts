@@ -41,7 +41,7 @@ export class LoadScreenComponent implements OnInit {
         centered: true,
         size: 'lg',
       }).result.then(() => {}, reason => {});
-    } else if (loadKey.match(".*[a-zA-Y]+.*")) {
+    } else if (loadKey.match('.*[a-zA-Y]+.*')) {
       this.errorMessage = 'The key you entered constains invalid characters';
       this.modalService.open(this.content, {
         centered: true,

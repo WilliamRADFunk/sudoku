@@ -39,7 +39,7 @@ export class QuadrantComponent implements OnChanges, OnDestroy, OnInit {
 			setTimeout(() => { this.showQuadrant = true; }, 0);
 		}
 	}
-	
+
 	getActiveColumnStyles() {
 		const quadrantStyles = {
 			'bottom-quadrant': false,

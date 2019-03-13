@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { QuadrantComponent } from './quadrant.component';
 import { CellComponent } from '../cell/cell.component';
+import { BoardHandlerService } from '../services/board-handler.service';
 
 describe('QuadrantComponent', () => {
 	let component: QuadrantComponent;
@@ -12,6 +13,9 @@ describe('QuadrantComponent', () => {
 			declarations: [
 				QuadrantComponent,
 				CellComponent
+			],
+			providers: [
+				BoardHandlerService
 			]
 		}).compileComponents();
 	}));

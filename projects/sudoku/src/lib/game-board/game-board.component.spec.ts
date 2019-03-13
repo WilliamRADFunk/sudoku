@@ -3,6 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { GameBoardComponent } from './game-board.component';
 import { QuadrantComponent } from '../quadrant/quadrant.component';
 import { CellComponent } from '../cell/cell.component';
+import { BoardHandlerService } from '../services/board-handler.service';
 
 describe('GameBoardComponent', () => {
 	let component: GameBoardComponent;
@@ -14,6 +15,9 @@ describe('GameBoardComponent', () => {
 				GameBoardComponent,
 				QuadrantComponent,
 				CellComponent
+			],
+			providers: [
+				BoardHandlerService
 			]
 		}).compileComponents();
 	}));

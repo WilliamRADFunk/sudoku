@@ -137,7 +137,7 @@ export class BoardOverlordService {
     getLoadGameKey() {
         return this.loadKey;
     }
-    
+
     getSaveGameKey() {
         let key = '';
         key += this.boardsByLevel.length;
