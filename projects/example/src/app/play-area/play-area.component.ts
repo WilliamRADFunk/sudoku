@@ -55,14 +55,14 @@ export class PlayAreaComponent implements OnChanges, OnDestroy, OnInit {
                     this.addAnotherBoard();
                 }, 250);
             } else {
-                console.log(`Total Time to build ${this.levels} levels: ${(new Date().getTime() - startTime) / 60000} minutes`);
-                let boardBuildMsg = 'Number of boards by seconds:\n';
-                this.boardOverlordService.getBoardBuildTimes().forEach((quantity, index) => {
-                    if (quantity) {
-                        boardBuildMsg += `Boards taking ${index} second${quantity === 1 ? '' : 's'}: ${quantity}\n`;
-                    }
-                });
-                console.log(boardBuildMsg);
+                // console.log(`Total Time to build ${this.levels} levels: ${(new Date().getTime() - startTime) / 60000} minutes`);
+                // let boardBuildMsg = 'Number of boards by seconds:\n';
+                // this.boardOverlordService.getBoardBuildTimes().forEach((quantity, index) => {
+                //     if (quantity) {
+                //         boardBuildMsg += `Boards taking ${index} second${quantity === 1 ? '' : 's'}: ${quantity}\n`;
+                //     }
+                // });
+                // console.log(boardBuildMsg);
             }
         });
         // Determine total number of boards to build.
@@ -102,7 +102,7 @@ export class PlayAreaComponent implements OnChanges, OnDestroy, OnInit {
         // Calculate new board's level.
         const boardLvl = getLevel(index, this.levels);
         // Index location board lives on in its level array (easier lookup).
-        const boardRegistryIndex = getBoardRegistryIndex(index, this.levels, this.boardOverlordService);
+        const boardRegistryIndex = this.getBoardRegistryIndex(index);
         // Primers from the related board in the level above.
         const inputPrimers = this.getPrimers(index, boardLvl - 1);
         // TODO: Next line can be deleted when all is said and done.
@@ -112,11 +112,11 @@ export class PlayAreaComponent implements OnChanges, OnDestroy, OnInit {
         const anotherBoardConstruct = (await BoardBuilder(inputPrimers, boardLvl, boardRegistryIndex));
 
         // TODO: Next two lines can be deleted when all is said and done.
-        const timeTaken = (new Date().getTime() - start) / 1000;
-        console.log('BuildTime: ', timeTaken, 'Seconds, ', (81 - anotherBoardConstruct.clueCount), 'Clues');
+        // const timeTaken = (new Date().getTime() - start) / 1000;
+        // console.log('BuildTime: ', timeTaken, 'Seconds, ', (81 - anotherBoardConstruct.clueCount), 'Clues');
 
         // Let overlord know another board is ready.
-        this.boardOverlordService.updateBoardBuildTimes(Math.ceil(timeTaken));
+        // this.boardOverlordService.updateBoardBuildTimes(Math.ceil(timeTaken));
         this.boardOverlordService.registerBoard(anotherBoardConstruct.board);
 
         // Iterate mainCounter to track number of currently existing boards.
@@ -141,7 +141,7 @@ export class PlayAreaComponent implements OnChanges, OnDestroy, OnInit {
             for (let i = relatedLevel; i > 0; i--) {
                 totalSubstracted += this.boardOverlordService.getLevelLength(i);
             }
-            parentBoardIndex = Math.floor(Math.abs(index - 1 - totalSubstracted) / 9);
+            parentBoardIndex = Math.floor(Math.abs(index - totalSubstracted) / 9);
         }
         const boardInQuestion = this.boardOverlordService.getBoard(relatedLevel, parentBoardIndex).cellStates;
         return quadPosList.map(pos => JSON.parse(JSON.stringify(boardInQuestion[pos[0]][pos[1]])));

@@ -31,7 +31,7 @@ export class BoardHandlerService {
         if (solveCheck(0, board)) {
             this.gameOverLocal = true;
             this.gameOver.next(this.gameOverLocal);
-            console.log('Board Complete!');
+            // console.log('Board Complete!');
         }
     }
 
@@ -50,7 +50,7 @@ export class BoardHandlerService {
 			if (solveCheck(0, this.board)) {
 				this.gameOverLocal = true;
 				this.gameOver.next(this.gameOverLocal);
-				console.log('Board Complete!');
+				// console.log('Board Complete!');
             }
             this.boardOverlordService.boardUpdated(cell.userAssignedValue, row, col, level, registeredIndex);
 			return;

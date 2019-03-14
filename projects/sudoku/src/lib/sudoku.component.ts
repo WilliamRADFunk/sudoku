@@ -40,7 +40,6 @@ export class SudokuComponent implements OnChanges, OnDestroy, OnInit {
     ngOnChanges(e: SimpleChanges) {
         if (e.board) {
 			this.board = null;
-			console.log('board', e.board);
 			setTimeout(() => {
                 this.boardHandlerService.assignBoard(e.board.currentValue);
                 this.board = e.board.currentValue;
