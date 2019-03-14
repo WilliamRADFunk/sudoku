@@ -5,7 +5,8 @@ const validKeySizes: number[] = [
   1541,
   15401,
   140141,
-  1262801
+  1262801,
+  11366741
 ];
 
 @Component({
