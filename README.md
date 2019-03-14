@@ -1,5 +1,5 @@
 # SuDoKu ExTrEmE
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.1.4.
+Take your sudoku up a notch, or 2, or 3, or hundreds.
 
 ## Purpose
 
