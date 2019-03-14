@@ -93,7 +93,7 @@ export class BoardOverlordService {
         let count = false;
         for (let i = 0; i < this.boardsByLevel.length; i++) {
             for (let j = 0; j < this.boardsByLevel[i].length; j++) {
-                if (!this.oldWinBoards.includes([i, j]) && this.checkForCompletion(this.boardsByLevel[i][j])) {
+                if (!this.oldWinBoards.some(brd => (brd[0] === i && brd[1] === j)) && this.checkForCompletion(this.boardsByLevel[i][j])) {
                     this.newWinBoards.push([i, j]);
                     count = true;
                 }
