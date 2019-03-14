@@ -41,10 +41,7 @@ export class BoardOverlordService {
 
     constructor() { }
 
-    boardUpdated(value: number, row: number, col: number, level: number, registeredIndex: number): void {
-        this.setConnectedCells(value, row, col, level, registeredIndex, true);
-        this.setConnectedCells(value, row, col, level, registeredIndex, false);
-
+    boardCheckupFull() {
         if (this.checkAllBoardsForCompletion()) {
             this.newWinBoards.forEach(brd => {
                 for (let r = 0; r < 9; r++) {
@@ -67,6 +64,13 @@ export class BoardOverlordService {
             console.log('Game Won! Winner Winner Chicken Dinner!');
             this.gameOver.next(true);
         }
+    }
+
+    boardUpdated(value: number, row: number, col: number, level: number, registeredIndex: number): void {
+        this.setConnectedCells(value, row, col, level, registeredIndex, true);
+        this.setConnectedCells(value, row, col, level, registeredIndex, false);
+
+        this.boardCheckupFull();
     }
 
     checkForCompletion(board: Board): boolean {

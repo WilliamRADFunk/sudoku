@@ -31,7 +31,7 @@ export class BoardHandlerService {
         if (solveCheck(0, board)) {
             this.gameOverLocal = true;
             this.gameOver.next(this.gameOverLocal);
-            // console.log('Board Complete!');
+            this.boardOverlordService.boardCheckupFull();
         }
     }
 

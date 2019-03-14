@@ -132,7 +132,13 @@ export class AppComponent implements OnDestroy, OnInit {
             this.modalService.dismissAll();
         }
         this.subs.forEach(sub => sub && sub.unsubscribe());
+        this.subs.length = 0;
         this.loadTrackerService.restart();
+        this.subs.push(this.boardOverlordService.numCompletedBoards
+            .pipe(distinctUntilChanged())
+            .subscribe(numBoards => {
+                this.boardsCompleted = numBoards;
+            }));
         this.subs.push(this.loadTrackerService.currLoadAmount.subscribe(amt => {
             setTimeout(() => { this.loadedAmount = amt; }, 200);
         }));
@@ -159,7 +165,10 @@ export class AppComponent implements OnDestroy, OnInit {
         this.loadedAmount = 0;
         this.totalNumberOfBoards = 0;
         this.boardOverlordService.flushBoards();
+        this.boardsCompleted = 0;
         this.helpMode = false;
+        this.saveMode = false;
+        this.loadMode = false;
     }
 
     invisibleLoadingView() {
