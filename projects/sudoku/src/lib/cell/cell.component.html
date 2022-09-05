@@ -13,10 +13,10 @@
 		<div>{{ cell.value }}</div>
 	</span>
 	<span *ngIf="!reveal">
-		<div *ngIf="activeControlMode && cell.userAssignedValue"
+		<div *ngIf="cell.userAssignedValue"
             class="align-middle text-center"
-            [class.locked-cell-text]="cell.locked && !gameOver">{{ cell.userAssignedValue}}</div>
-		<div *ngIf="!activeControlMode"
+            [class.locked-cell-text]="cell.locked && !gameOver">{{ cell.userAssignedValue }}</div>
+		<div
 			class="flags">
 			<span *ngFor="let flag of cell.flagValues" class="flag flag-{{flag}}">{{ flag }}</span>
 		</div>

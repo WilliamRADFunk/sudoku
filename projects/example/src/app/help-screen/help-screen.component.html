@@ -96,8 +96,8 @@
     <div *ngIf="activePage === 6" class="d-flex justify-content-center">
       <div class="col text-left text-white pb-2 pt-2">
         <div class="h4">
-          Each level of Sudoku Extreme increases the number of boards in play exponentially:
-          1, 9, 81, 729, 6561, ...
+          Each level (x) of Sudoku Extreme increases the number of boards in play exponentially (9^x-1 + Math.floor(9^x-2)):
+          1, 10, 91, 820, 7381, ...
           <br/>
           <br/>
           Build time increases significantly for each level chosen as all boards are interconnected.
