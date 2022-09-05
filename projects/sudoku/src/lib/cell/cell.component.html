@@ -16,7 +16,7 @@
 		<div *ngIf="cell.userAssignedValue"
             class="align-middle text-center"
             [class.locked-cell-text]="cell.locked && !gameOver">{{ cell.userAssignedValue }}</div>
-		<div
+		<div *ngIf="!cell.userAssignedValue"
 			class="flags">
 			<span *ngFor="let flag of cell.flagValues" class="flag flag-{{flag}}">{{ flag }}</span>
 		</div>
